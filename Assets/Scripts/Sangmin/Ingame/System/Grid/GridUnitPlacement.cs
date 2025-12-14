@@ -9,33 +9,20 @@ namespace Sangmin
         public int gridWidth = 6;
         public int gridHeight = 4;
         public float cellSize = 1.0f;
+        public Vector2 scale;
         public GameObject gridParent;
+        public Color selectedColor = Color.yellow;
         public Color availableColor = Color.green;
         public Color blockedColor = Color.red;
 
-        private GameObject[,] grids = new GameObject[6, 4];
-        private UnitGrid[,] cellInfos = new UnitGrid[6, 4];
-        private Unit selectedUnit;
-        private UnitGrid selectedGrid;
-        public bool isUnitSelected => selectedUnit != null;
-        private UnitGrid highlightedCell;
+        private UnitCell[,] cellInfos = new UnitCell[6, 4];
+        private UnitCell selectedCell;
+        public bool isCellSelected => selectedCell != null;
 
         private static GridUnitPlacement _instance;
         public static GridUnitPlacement Instance
         {
-            get
-            {
-                if (_instance == null)
-                {
-                    _instance = FindObjectOfType<GridUnitPlacement>();
-                    if (_instance == null)
-                    {
-                        GameObject obj = new GameObject("GridUnitPlacement");
-                        _instance = obj.AddComponent<GridUnitPlacement>();
-                    }
-                }
-                return _instance;
-            }
+            get { return _instance; }
         }
 
         private void OnDestroy()
@@ -48,18 +35,22 @@ namespace Sangmin
 
         void Awake()
         {
+            if (_instance == null)
+                _instance = this;
+            else
+                Destroy(this.gameObject);
+
+            scale = new Vector2(transform.localScale.x, transform.localScale.y);
+
             // 1차원 배열(cellInfos)을 2차원 배열로 변경
-            UnitGrid[] unitGrids = gridParent.GetComponentsInChildren<UnitGrid>();
+            UnitCell[] unitCells = gridParent.GetComponentsInChildren<UnitCell>();
             for (int x = 0; x < gridWidth; x++)
             {
                 for (int y = 0; y < gridHeight; y++)
                 {
                     int index = x * gridHeight + y;
-                    if (index < unitGrids.Length)
-                    {
-                        grids[x, y] = unitGrids[index].gameObject;
-                        cellInfos[x, y] = unitGrids[index];
-                    }
+                    if (index < unitCells.Length)
+                        cellInfos[x, y] = unitCells[index];
                 }
             }
         }
@@ -69,105 +60,87 @@ namespace Sangmin
 
         }
 
-        public void SelectGrid(GameObject grid)
+        public void PlaceUnitFromFront(Unit unit)
         {
             for (int x = 0; x < gridWidth; x++)
             {
                 for (int y = 0; y < gridHeight; y++)
                 {
-                    if (grid.Equals(grids[x,y]))
+                    if (!cellInfos[x, y].isOccupied)
                     {
-                        selectedGrid = cellInfos[x,y];
+                        // UnitCell에 유닛을 배정하는 코드
+                        cellInfos[x, y].PlaceUnit(unit);
+                        return;
                     }
                 }
             }
-            // 그리드 선택 후 안에 유닛 있는지 확인, 확인이 되면 유닛이 있는 유의미한 그리드를 선택한 것으로 상태를 변경
+        }
+
+        public void SelectCell(GameObject cell)
+        {
+            Debug.Log($"Selected cell: {cell.name}");
+
+            for (int x = 0; x < gridWidth; x++)
+            {
+                for (int y = 0; y < gridHeight; y++)
+                {
+                    if (cell.Equals(cellInfos[x, y].gameObject))
+                    {
+                        // 셀 안에 유닛 있는지 확인, 확인이 되면 유닛이 있는 유의미한 셀을 선택한 것
+                        if (cellInfos[x, y].isOccupied)
+                            selectedCell = cellInfos[x, y];
+                        else
+                            return;
+                    }
+                }
+            }
+
+            // 유닛이 이미 놓여져 있는지 색깔로 여부 표시
+            DrawHighlight();
+
             // 여기서부터 유닛 이동이든, 유닛 선택 시 사거리 표시 및 스테이터스 표시 등이 거능
-            // selectedUnit = grid;
-            // UpdateHighlight(posX, posY);
         }
 
         public void UnSelectUnit()
         {
-
+            selectedCell = null;
+            ClearHighlight();
         }
+
+        // 드래그 중에 이동할 칸의 표시를 할 필요가 있음
 
         public void MoveUnit(GameObject grid)
         {
 
         }
 
-        void Update()
+        private void DrawHighlight()
         {
-
-
-            // if (Input.GetMouseButton(0) && selectedUnit != null)
-            // {
-            //     Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            //     selectedUnit.transform.position = new Vector3(mousePosition.x, mousePosition.y, selectedUnit.transform.position.z);
-            //     Vector2Int hoverGrid = GetGridPosition(mousePosition);
-            //     UpdateHighlight(hoverGrid);
-            // }
-
-            // if (Input.GetMouseButtonUp(0) && selectedUnit != null)
-            // {
-            //     Vector2Int gridPosition = GetGridPosition(selectedUnit.transform.position);
-
-            //     if (IsValidGridPosition(gridPosition))
-            //     {
-            //         if (grids[gridPosition.x, gridPosition.y] != null)
-            //         {
-            //             GameObject existingUnit = grids[gridPosition.x, gridPosition.y];
-            //             grids[selectedUnitOriginalPosition.x, selectedUnitOriginalPosition.y] = existingUnit;
-            //             existingUnit.transform.position = GetWorldPosition(selectedUnitOriginalPosition);
-            //             cellInfos[selectedUnitOriginalPosition.x, selectedUnitOriginalPosition.y]?.SetOccupied(true);
-            //         }
-            //         else
-            //         {
-            //             grids[selectedUnitOriginalPosition.x, selectedUnitOriginalPosition.y] = null;
-            //             cellInfos[selectedUnitOriginalPosition.x, selectedUnitOriginalPosition.y]?.SetOccupied(false);
-            //         }
-
-            //         grids[gridPosition.x, gridPosition.y] = selectedUnit;
-            //         selectedUnit.transform.position = GetWorldPosition(gridPosition);
-            //         cellInfos[gridPosition.x, gridPosition.y]?.SetOccupied(true);
-            //     }
-            //     else
-            //     {
-            //         selectedUnit.transform.position = GetWorldPosition(selectedUnitOriginalPosition);
-            //     }
-
-            //     selectedUnit = null;
-            //     ClearHighlight();
-            // }
-        }
-
-        private void UpdateHighlight(Vector2Int gridPosition)
-        {
-            ClearHighlight();
-
-            if (!IsValidGridPosition(gridPosition))
+            for (int x = 0; x < gridWidth; x++)
             {
-                return;
+                for (int y = 0; y < gridHeight; y++)
+                {
+                    if (cellInfos[x, y].Equals(selectedCell))
+                        cellInfos[x, y].SetHighlight(true, selectedColor);
+                    else
+                    {
+                        if (cellInfos[x, y].isOccupied)
+                            cellInfos[x, y].SetHighlight(true, blockedColor);
+                        else
+                            cellInfos[x, y].SetHighlight(true, availableColor);
+                    }
+                }
             }
-
-            var cell = cellInfos[gridPosition.x, gridPosition.y];
-            if (cell == null)
-            {
-                return;
-            }
-
-            bool canPlace = grids[gridPosition.x, gridPosition.y] == null;
-            cell.SetHighlight(true, canPlace);
-            highlightedCell = cell;
         }
 
         private void ClearHighlight()
         {
-            if (highlightedCell != null)
+            for (int x = 0; x < gridWidth; x++)
             {
-                highlightedCell.SetHighlight(false);
-                highlightedCell = null;
+                for (int y = 0; y < gridHeight; y++)
+                {
+                    cellInfos[x, y].SetHighlight(false, availableColor);
+                }
             }
         }
 

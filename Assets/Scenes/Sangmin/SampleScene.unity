@@ -801,7 +801,9 @@ MonoBehaviour:
   gridWidth: 6
   gridHeight: 4
   cellSize: 1
+  scale: {x: 0, y: 0}
   gridParent: {fileID: 644265512}
+  selectedColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   availableColor: {r: 0, g: 1, b: 0, a: 1}
   blockedColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!4 &341594296 stripped
@@ -2445,8 +2447,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.PlayerInput
-  m_Actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
-  m_NotificationBehavior: 0
+  m_Actions: {fileID: -944628639613478452, guid: 3a8ca90c4a82fa54f8abddf553f8822a, type: 3}
+  m_NotificationBehavior: 2
   m_UIInputModule: {fileID: 0}
   m_DeviceLostEvent:
     m_PersistentCalls:
@@ -2457,7 +2459,11 @@ MonoBehaviour:
   m_ControlsChangedEvent:
     m_PersistentCalls:
       m_Calls: []
-  m_ActionEvents: []
+  m_ActionEvents:
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: d18090b6-783d-4ed0-ae3e-ce7735412246
+    m_ActionName: 'Player/Click[/Mouse/leftButton]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: 
@@ -2897,7 +2903,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1120196402}
   - component: {fileID: 1120196401}
-  - component: {fileID: 1120196403}
   m_Layer: 0
   m_Name: Grid
   m_TagString: Untagged
@@ -2935,24 +2940,6 @@ Transform:
   - {fileID: 1332970000}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1120196403
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1120196400}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5271234345800449ba84ae6f3ff438d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GridUnitPlacement
-  gridWidth: 6
-  gridHeight: 4
-  cellSize: 1
-  gridParent: {fileID: 0}
-  availableColor: {r: 0, g: 1, b: 0, a: 1}
-  blockedColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!1001 &1144344814
 PrefabInstance:
   m_ObjectHideFlags: 0

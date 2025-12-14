@@ -2,33 +2,33 @@ using UnityEngine;
 
 namespace Sangmin
 {
-    public class UnitGrid : MonoBehaviour
+    public class UnitCell : MonoBehaviour
     {
         [Header("Runtime state")]
-        [SerializeField] private bool isOccupied;
+        [SerializeField] private Unit unit;
+        [field: SerializeField] public bool isOccupied{get; private set;}
         [SerializeField] private float cellSize = 1f;
 
         [Header("Visuals")]
-        [SerializeField] private Color availableColor = Color.green;
-        [SerializeField] private Color blockedColor = Color.red;
         [SerializeField] private float lineWidth = 0.04f;
 
         private LineRenderer lineRenderer;
 
-        public bool IsOccupied => isOccupied;
-
         private void Awake()
         {
             EnsureLineRenderer();
+            SetHighlight(false, Color.white);
         }
 
         public void Init(float size, Color available, Color blocked)
         {
             cellSize = size;
-            availableColor = available;
-            blockedColor = blocked;
             EnsureLineRenderer();
-            SetHighlight(false);
+            SetHighlight(false, Color.white);
+        }
+
+        public void PlaceUnit(Unit _unit){
+            unit = _unit;
         }
 
         public void SetOccupied(bool occupied)
@@ -36,7 +36,7 @@ namespace Sangmin
             isOccupied = occupied;
         }
 
-        public void SetHighlight(bool show, bool canPlace = true)
+        public void SetHighlight(bool show, Color color)
         {
             if (lineRenderer == null)
             {
@@ -46,7 +46,7 @@ namespace Sangmin
             lineRenderer.enabled = show;
             if (show)
             {
-                lineRenderer.startColor = lineRenderer.endColor = canPlace ? availableColor : blockedColor;
+                lineRenderer.startColor = lineRenderer.endColor = color;
             }
         }
 
