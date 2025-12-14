@@ -4,48 +4,26 @@ using UnityEngine;
 public class InventoryManager : MonoBehaviour
 {
     public static InventoryManager Instance;
-    public List<string> items = new List<string>();
-    private const string SAVE_KEY = "player_inventory";
+    public List<ItemData> items = new List<ItemData>();
 
     private void Awake()
     {
         if (Instance == null) Instance = this;
         else Destroy(gameObject);
-        Load();
     }
 
-    public void AddItem(string itemID)
+    // 아이템 추가
+    public void AddItem(ItemData data)
     {
-        items.Add(itemID);
-        Save();
-        // UI 갱신 호출 (옵션)
+        if (!items.Contains(data))
+            items.Add(data);
+
+        // UI 갱신 호출 가능
     }
 
-    public bool HasItem(string itemID)
+    // 아이템 존재 여부 확인
+    public bool HasItem(ItemData data)
     {
-        return items.Contains(itemID);
-    }
-
-    public void Save()
-    {
-        string json = JsonUtility.ToJson(new SaveWrapper { itemIDs = items.ToArray() });
-        PlayerPrefs.SetString(SAVE_KEY, json);
-        PlayerPrefs.Save();
-    }
-
-    public void Load()
-    {
-        if (PlayerPrefs.HasKey(SAVE_KEY))
-        {
-            string json = PlayerPrefs.GetString(SAVE_KEY);
-            var w = JsonUtility.FromJson<SaveWrapper>(json);
-            items = new List<string>(w.itemIDs);
-        }
-    }
-
-    [System.Serializable]
-    private class SaveWrapper
-    {
-        public string[] itemIDs;
+        return items.Contains(data);
     }
 }

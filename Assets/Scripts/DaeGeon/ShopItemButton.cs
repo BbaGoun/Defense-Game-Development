@@ -32,10 +32,15 @@ public class ShopItemButton : MonoBehaviour
             Debug.Log("골드 부족");
             return;
         }
-
         // 인벤토리에 추가
-        InventoryManager.Instance.AddItem(data.itemID);
+        InventoryManager.Instance.AddItem(data);
+
+        // 인벤토리 UI가 있으면 갱신
+        var invUI = Object.FindObjectOfType<InventoryUI>();
+        if (invUI != null) invUI.Refresh();
 
         Debug.Log($"{data.itemName} 구매 성공!");
+        buyButton.interactable = false;
+        
     }
 }
