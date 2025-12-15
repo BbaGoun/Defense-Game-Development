@@ -53,22 +53,20 @@ namespace Sangmin
         private void OnClick(InputAction.CallbackContext context)
         {
             Debug.Log("Click");
-            if(!context.started) return;
+            // performed 이벤트에 delegate방식으로 구독했으니, performed 때만 작동하도록 함.
+            if(!context.performed) return;
 
             var rayHit = Physics2D.GetRayIntersection(_mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue()));
             if(!rayHit.collider)
             {
-                // if(GridUnitPlacement.Instance.isCellSelected)
-                //     GridUnitPlacement.Instance.UnSelectUnit();
+                if(GridUnitPlacement.Instance.isCellSelected)
+                    GridUnitPlacement.Instance.UnSelectUnit();
                 return;
             }
 
-            // if(rayHit.collider.CompareTag("Cell")){
-            //     if(GridUnitPlacement.Instance.isCellSelected)
-            //         GridUnitPlacement.Instance.MoveUnit(rayHit.collider.gameObject);
-            //     else
-            //         GridUnitPlacement.Instance.SelectCell(rayHit.collider.gameObject);
-            // }
+            if(rayHit.collider.CompareTag("Cell")){
+                GridUnitPlacement.Instance.SelectCell(rayHit.collider.gameObject);
+            }
         }
 
         // 유닛의 이동을 드래그 방식으로 구현해야함

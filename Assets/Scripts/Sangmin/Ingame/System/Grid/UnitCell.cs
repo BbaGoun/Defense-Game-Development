@@ -11,18 +11,23 @@ namespace Sangmin
 
         [Header("Visuals")]
         [SerializeField] private float lineWidth = 0.04f;
+        [SerializeField, Range(0f,1f)] private float lineAlpha;
+        [SerializeField, Range(0f,1f)] private float spriteAlpha;
 
         private LineRenderer lineRenderer;
+        private SpriteRenderer spriteRenderer;
 
         private void Awake()
         {
+            EnsureSpriteRenderer();
             EnsureLineRenderer();
             SetHighlight(false, Color.white);
         }
 
-        public void Init(float size, Color available, Color blocked)
+        public void Init(float size)
         {
             cellSize = size;
+            EnsureSpriteRenderer();
             EnsureLineRenderer();
             SetHighlight(false, Color.white);
         }
@@ -38,16 +43,45 @@ namespace Sangmin
 
         public void SetHighlight(bool show, Color color)
         {
-            if (lineRenderer == null)
+            if (spriteRenderer == null)
             {
                 return;
             }
 
-            lineRenderer.enabled = show;
+            spriteRenderer.enabled = show;
             if (show)
             {
-                lineRenderer.startColor = lineRenderer.endColor = color;
+                var c = new Color(color.r, color.g, color.b, spriteAlpha);
+                spriteRenderer.color = c;
             }
+        }
+
+        private void EnsureSpriteRenderer()
+        {
+            if (spriteRenderer == null)
+            {
+                spriteRenderer = GetComponent<SpriteRenderer>();
+                if (spriteRenderer == null)
+                {
+                    spriteRenderer = gameObject.AddComponent<SpriteRenderer>();
+                }
+            }
+
+            ConfigureSpriteRenderer();
+        }
+
+        private void ConfigureSpriteRenderer()
+        {
+            if (spriteRenderer == null)
+            {
+                return;
+            }
+
+            spriteRenderer.sortingOrder = 8;
+            spriteRenderer.material = spriteRenderer.material ?? new Material(Shader.Find("Sprites/Default"));
+
+            var baseColor = new Color(1f, 1f, 1f, spriteAlpha);
+            spriteRenderer.color = baseColor;
         }
 
         private void EnsureLineRenderer()
@@ -80,6 +114,9 @@ namespace Sangmin
             lineRenderer.material = lineRenderer.material ?? new Material(Shader.Find("Sprites/Default"));
             lineRenderer.sortingOrder = 10;
 
+            var baseColor = new Color(1f, 1f, 1f, lineAlpha);
+            lineRenderer.startColor = lineRenderer.endColor = baseColor;
+            
             var half = cellSize * 0.5f;
             lineRenderer.SetPositions(new[]
             {

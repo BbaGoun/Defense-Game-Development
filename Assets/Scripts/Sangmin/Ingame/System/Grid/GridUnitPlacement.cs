@@ -49,8 +49,10 @@ namespace Sangmin
                 for (int y = 0; y < gridHeight; y++)
                 {
                     int index = x * gridHeight + y;
-                    if (index < unitCells.Length)
+                    if (index < unitCells.Length){
                         cellInfos[x, y] = unitCells[index];
+                        Debug.Log($"cellInfos[{x}, {y}] 대입 : {unitCells[index].name}");
+                    }
                 }
             }
         }
@@ -86,14 +88,17 @@ namespace Sangmin
                 {
                     if (cell.Equals(cellInfos[x, y].gameObject))
                     {
-                        // 셀 안에 유닛 있는지 확인, 확인이 되면 유닛이 있는 유의미한 셀을 선택한 것
-                        if (cellInfos[x, y].isOccupied)
-                            selectedCell = cellInfos[x, y];
-                        else
-                            return;
+                        selectedCell = cellInfos[x, y];
+                        // // 셀 안에 유닛 있는지 확인, 확인이 되면 유닛이 있는 유의미한 셀을 선택한 것
+                        // if (cellInfos[x, y].isOccupied)
+                        //     selectedCell = cellInfos[x, y];
+                        // else
+                        //     return;
                     }
                 }
             }
+
+            Debug.Log("선택 완료");
 
             // 유닛이 이미 놓여져 있는지 색깔로 여부 표시
             DrawHighlight();
@@ -103,6 +108,7 @@ namespace Sangmin
 
         public void UnSelectUnit()
         {
+            Debug.Log("UnSelect");
             selectedCell = null;
             ClearHighlight();
         }
@@ -142,23 +148,6 @@ namespace Sangmin
                     cellInfos[x, y].SetHighlight(false, availableColor);
                 }
             }
-        }
-
-        private Vector2Int GetGridPosition(Vector3 worldPosition)
-        {
-            int x = Mathf.FloorToInt(worldPosition.x / cellSize);
-            int y = Mathf.FloorToInt(worldPosition.y / cellSize);
-            return new Vector2Int(x, y);
-        }
-
-        private Vector3 GetWorldPosition(Vector2Int gridPosition)
-        {
-            return new Vector3(gridPosition.x * cellSize + cellSize / 2, gridPosition.y * cellSize + cellSize / 2, 0);
-        }
-
-        private bool IsValidGridPosition(Vector2Int gridPosition)
-        {
-            return gridPosition.x >= 0 && gridPosition.x < gridWidth && gridPosition.y >= 0 && gridPosition.y < gridHeight;
         }
     }
 }
