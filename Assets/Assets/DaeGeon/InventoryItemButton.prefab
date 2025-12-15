@@ -627,6 +627,7 @@ MonoBehaviour:
   nameText: {fileID: 2377398610617324550}
   attachText: {fileID: 4026099187284818568}
   equipButton: {fileID: 7666333523120281530}
+  equipButtonText: {fileID: 6920327763954803308}
 --- !u!1 &8356232257392776604
 GameObject:
   m_ObjectHideFlags: 0

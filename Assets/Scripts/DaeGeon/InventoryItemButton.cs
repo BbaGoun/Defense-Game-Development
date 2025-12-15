@@ -4,14 +4,17 @@ using TMPro;
 
 public class InventoryItemButton : MonoBehaviour
 {
-    public Image icon;           // 아이템 아이콘
-    public TMP_Text nameText;    // 아이템 이름
-    public TMP_Text attachText;  // 장착 상태 표시 (예: Head, Body)
-    public Button equipButton;   // 장착 버튼
+    public Image icon;
+    public TMP_Text nameText;
+    public TMP_Text attachText;
+    public Button equipButton;
+    public TMP_Text equipButtonText;
 
-    private ItemData data;       // 버튼에 연결된 아이템 데이터
+    private ItemData data;
 
-    // 버튼 UI 세팅
+    // InventoryUI에서 접근용
+    public AttachPoint AttachPoint => data.attachPoint;
+
     public void Setup(ItemData item)
     {
         data = item;
@@ -20,31 +23,77 @@ public class InventoryItemButton : MonoBehaviour
         nameText.text = item.itemName;
         attachText.text = GetAttachPointLabel(item.attachPoint);
 
-        // 기존 이벤트 제거
-        equipButton.onClick.RemoveAllListeners();
-        equipButton.onClick.AddListener(() => OnEquip());
+        RefreshButton();
+
+        // 루트 버튼 클릭으로 미리보기 실행 (프리팹의 부모 버튼에 붙여서 바로 사용 가능)
+        var rootBtn = GetComponent<UnityEngine.UI.Button>();
+        if (rootBtn != null)
+        {
+            rootBtn.onClick.RemoveAllListeners();
+            rootBtn.onClick.AddListener(() => {
+                if (Player.Instance != null) Player.Instance.TogglePreview(data);
+            });
+        }
     }
 
-    // 장착 버튼 클릭 시
+    // 장착 버튼 새로고침
+    public void RefreshButton()
+    {
+        if (equipButton == null || equipButtonText == null)
+        {
+            Debug.LogWarning($"InventoryItemButton missing UI refs on '{gameObject.name}'");
+            return;
+        }
+
+        equipButton.onClick.RemoveAllListeners();
+
+        // 안전하게 Player 인스턴스 체크
+        if (Player.Instance == null)
+        {
+            equipButtonText.text = "장착";
+            equipButton.interactable = false;
+            return;
+        }
+
+        bool isEquipped = Player.Instance.IsEquipped(data);
+
+        if (isEquipped)
+        {
+            equipButtonText.text = "해제";
+            equipButton.onClick.AddListener(OnUnequip);
+            equipButton.interactable = true;
+        }
+        else
+        {
+            equipButtonText.text = "장착";
+            equipButton.onClick.AddListener(OnEquip);
+            equipButton.interactable = true;
+        }
+    }
+
     private void OnEquip()
     {
-        // Player에 장착 (Player 스크립트 필요)
-        Player.Instance.AttachItem(data.icon, data.attachPoint);
+        Player.Instance.Equip(data);
 
-        Debug.Log($"{data.itemName} 장착됨!");
+        // 같은 부위 버튼 전부 갱신
+        InventoryUI.Instance.RefreshByAttachPoint(data.attachPoint);
     }
 
-    // AttachPoint를 한국어 레이블로 반환
+    private void OnUnequip()
+    {
+        Player.Instance.Unequip(data.attachPoint);
+
+        // 같은 부위 버튼 전부 갱신
+        InventoryUI.Instance.RefreshByAttachPoint(data.attachPoint);
+    }
+
     private string GetAttachPointLabel(AttachPoint ap)
     {
         switch (ap)
         {
-            case AttachPoint.Head:
-                return "머리";
-            case AttachPoint.Body:
-                return "몸통";
-            default:
-                return ap.ToString();
+            case AttachPoint.Head: return "머리";
+            case AttachPoint.Body: return "몸통";
+            default: return ap.ToString();
         }
     }
 }

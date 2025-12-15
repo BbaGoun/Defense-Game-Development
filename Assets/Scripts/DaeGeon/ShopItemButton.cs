@@ -4,10 +4,10 @@ using TMPro;
 
 public class ShopItemButton : MonoBehaviour
 {
-    public Image icon;        // Icon
-    public TMP_Text nameText; // NameText
-    public TMP_Text priceText;// PriceText
-    public Button buyButton;  // BuyButton
+    public Image icon;       
+    public TMP_Text nameText; 
+    public TMP_Text priceText;
+    public Button buyButton;  
 
     private ItemData data;
 
@@ -15,13 +15,20 @@ public class ShopItemButton : MonoBehaviour
     {
         data = item;
 
-        // UI 세팅
         icon.sprite = item.icon;
         nameText.text = item.itemName;
         priceText.text = item.price.ToString();
 
         buyButton.onClick.RemoveAllListeners();
         buyButton.onClick.AddListener(() => Buy());
+
+        // 루트 버튼 클릭으로 미리보기 실행
+        var rootBtn = GetComponent<Button>();
+        if (rootBtn != null)
+        {
+            rootBtn.onClick.RemoveAllListeners();
+            rootBtn.onClick.AddListener(() => { if (Player.Instance != null) Player.Instance.TogglePreview(data); });
+        }
     }
 
     void Buy()
@@ -35,11 +42,14 @@ public class ShopItemButton : MonoBehaviour
         // 인벤토리에 추가
         InventoryManager.Instance.AddItem(data);
 
-        // 인벤토리 UI가 있으면 갱신
+        // 인벤토리 갱신
         var invUI = Object.FindObjectOfType<InventoryUI>();
         if (invUI != null) invUI.Refresh();
 
-        Debug.Log($"{data.itemName} 구매 성공!");
+        // 구매로 인해 인벤토리로 이동했으므로 미리보기 초기화
+        if (Player.Instance != null) Player.Instance.ClearPreview();
+
+        Debug.Log($"{data.itemName} 구매 성공");
         buyButton.interactable = false;
         
     }
