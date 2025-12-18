@@ -11,29 +11,39 @@ public class CurrencyUI : MonoBehaviour
 
     private void Awake()
     {
-        Instance = this;
+        if (Instance == null)
+            Instance = this;
+        else
+            Destroy(gameObject);
     }
 
     private void Start()
     {
-        // 시작할 때 UI 싹 업데이트
-        UpdateGold(CurrencyManager.Instance.gold);
-        UpdateCash(CurrencyManager.Instance.cash);
-        UpdateStamina(CurrencyManager.Instance.stamina);
+        RefreshAll();
     }
 
-    public void UpdateGold(int amount)
+    // ================= 전체 갱신 =================
+    public void RefreshAll()
     {
-        goldText.text = amount.ToString();
+        if (CurrencyManager.Instance == null) return;
+
+        UpdateGold();
+        UpdateCash();
+        UpdateStamina();
     }
 
-    public void UpdateCash(int amount)
+    public void UpdateGold()
     {
-        cashText.text = amount.ToString();
+        goldText.text = CurrencyManager.Instance.gold.ToString();
     }
 
-    public void UpdateStamina(int amount)
+    public void UpdateCash()
     {
-        staminaText.text = amount.ToString();
+        cashText.text = CurrencyManager.Instance.cash.ToString();
+    }
+
+    public void UpdateStamina()
+    {
+        staminaText.text = CurrencyManager.Instance.stamina.ToString();
     }
 }
