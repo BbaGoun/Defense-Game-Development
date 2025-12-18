@@ -91,16 +91,29 @@ public class InventoryUI : MonoBehaviour
         {
             case AttachPoint.Head:
                 if (headSlotImage != null && Player.Instance != null && Player.Instance.headSlot != null)
+                {
                     headSlotImage.sprite = Player.Instance.headSlot.icon;
+                    headSlotImage.color = Color.white;
+                }
                 else if (headSlotImage != null)
+                {
                     headSlotImage.sprite = null;
+                    headSlotImage.color = new Color(1f,1f,1f,0f);
+                }
                 break;
+
 
             case AttachPoint.Body:
                 if (bodySlotImage != null && Player.Instance != null && Player.Instance.bodySlot != null)
+                {
                     bodySlotImage.sprite = Player.Instance.bodySlot.icon;
+                    bodySlotImage.color = Color.white; // 알파 복구
+                }
                 else if (bodySlotImage != null)
+                {
                     bodySlotImage.sprite = null;
+                    bodySlotImage.color = new Color(1f, 1f, 1f, 0f); // 완전 투명
+                }
                 break;
         }
     }

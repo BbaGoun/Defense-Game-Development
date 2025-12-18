@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7deed63962ea10f4da06276eb93669fc, type: 3}
-  m_Name: CatHair
+  m_Name: 0_CatHair01
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemID: CatHair01
   itemName: "\uACE0\uC591\uC774 \uBA38\uB9AC\uB760"
