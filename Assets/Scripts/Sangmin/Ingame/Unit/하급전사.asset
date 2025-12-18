@@ -9,8 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d900c142dc6a4dd48b6d688c164df17e, type: 3}
-  m_Name: "\uC624\uD06C"
-  m_EditorClassIdentifier: Assembly-CSharp::NewScriptableObjectScript
-  hp: 10
-  power: 10
+  m_Script: {fileID: 11500000, guid: 2b9b845f816ebe2438419c60a9875f4d, type: 3}
+  m_Name: "\uD558\uAE09\uC804\uC0AC"
+  m_EditorClassIdentifier: Assembly-CSharp::UnitStatData
+  attackDamage: 5
+  attackSpeed: 1
+  attackRange: 1

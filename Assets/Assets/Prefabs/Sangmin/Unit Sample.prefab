@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 9207390338146533856}
   - component: {fileID: 5480839661711331456}
   - component: {fileID: 171049200951708098}
+  - component: {fileID: 1513954799534953106}
   m_Layer: 6
   m_Name: Unit Sample
   m_TagString: Unit
@@ -105,6 +106,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd64689cecacd774d9a83bc08234dccf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Unit
+  unitStatData: {fileID: 11400000, guid: 30b1408eacbd16c46a51d71ab42f9c33, type: 2}
+  baseAttackDamage: 0
+  baseAttackSpeed: 0
+  baseAttackRange: 0
+  finalAttackDamage: 0
+  finalAttackSpeed: 0
+  finalAttackRange: 0
 --- !u!95 &171049200951708098
 Animator:
   serializedVersion: 7
@@ -127,3 +135,15 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1513954799534953106
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7855928322533682679}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ad55699af963d048b3910c56bbf55f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Sangmin.PoolAble

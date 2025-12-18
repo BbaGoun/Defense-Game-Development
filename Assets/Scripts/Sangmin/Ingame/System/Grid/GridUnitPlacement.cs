@@ -6,7 +6,9 @@ namespace Sangmin
 {
     public class GridUnitPlacement : MonoBehaviour
     {
+        // 열(가로, column) 개수
         public int gridWidth = 6;
+        // 행(세로, row) 개수
         public int gridHeight = 4;
         public float cellSize = 1.0f;
         public Vector2 scale;
@@ -15,7 +17,8 @@ namespace Sangmin
         public Color availableColor = Color.green;
         public Color blockedColor = Color.red;
 
-        private UnitCell[,] cellInfos = new UnitCell[6, 4];
+        // cellInfos[row, col] 형식으로 사용 (수학에서처럼 행 먼저, 열 나중)
+        private UnitCell[,] cellInfos;
         private UnitCell selectedCell;
         public bool isCellSelected => selectedCell != null;
 
@@ -42,16 +45,20 @@ namespace Sangmin
 
             scale = new Vector2(transform.localScale.x, transform.localScale.y);
 
-            // 1차원 배열(cellInfos)을 2차원 배열로 변경
+            // [행, 열] 순서로 2차원 배열 생성
+            cellInfos = new UnitCell[gridHeight, gridWidth];
+
+            // 1차원 배열(unitCells)을 (행, 열) 순서의 2차원 배열로 변경
             UnitCell[] unitCells = gridParent.GetComponentsInChildren<UnitCell>();
-            for (int x = 0; x < gridWidth; x++)
+            for (int row = 0; row < gridHeight; row++)
             {
-                for (int y = 0; y < gridHeight; y++)
+                for (int col = 0; col < gridWidth; col++)
                 {
-                    int index = x * gridHeight + y;
-                    if (index < unitCells.Length){
-                        cellInfos[x, y] = unitCells[index];
-                        Debug.Log($"cellInfos[{x}, {y}] 대입 : {unitCells[index].name}");
+                    int index = row * gridWidth + col; // 행 우선(row-major) 인덱싱
+                    if (index < unitCells.Length)
+                    {
+                        cellInfos[row, col] = unitCells[index];
+                        // Debug.Log($"cellInfos[{row}, {col}] 대입 : {unitCells[index].name}");
                     }
                 }
             }
@@ -64,14 +71,15 @@ namespace Sangmin
 
         public void PlaceUnitFromFront(Unit unit)
         {
-            for (int x = 0; x < gridWidth; x++)
+            // 행(row)을 먼저, 그 다음 열(col)을 순회
+            for (int row = 0; row < gridHeight; row++)
             {
-                for (int y = 0; y < gridHeight; y++)
+                for (int col = 0; col < gridWidth; col++)
                 {
-                    if (!cellInfos[x, y].isOccupied)
+                    if (!cellInfos[row, col].isOccupied)
                     {
                         // UnitCell에 유닛을 배정하는 코드
-                        cellInfos[x, y].PlaceUnit(unit);
+                        cellInfos[row, col].PlaceUnit(unit);
                         return;
                     }
                 }
@@ -82,13 +90,14 @@ namespace Sangmin
         {
             Debug.Log($"Selected cell: {cell.name}");
 
-            for (int x = 0; x < gridWidth; x++)
+            // (행, 열) 순서로 탐색
+            for (int row = 0; row < gridHeight; row++)
             {
-                for (int y = 0; y < gridHeight; y++)
+                for (int col = 0; col < gridWidth; col++)
                 {
-                    if (cell.Equals(cellInfos[x, y].gameObject))
+                    if (cell.Equals(cellInfos[row, col].gameObject))
                     {
-                        selectedCell = cellInfos[x, y];
+                        selectedCell = cellInfos[row, col];
                         // // 셀 안에 유닛 있는지 확인, 확인이 되면 유닛이 있는 유의미한 셀을 선택한 것
                         // if (cellInfos[x, y].isOccupied)
                         //     selectedCell = cellInfos[x, y];
@@ -122,18 +131,18 @@ namespace Sangmin
 
         private void DrawHighlight()
         {
-            for (int x = 0; x < gridWidth; x++)
+            for (int row = 0; row < gridHeight; row++)
             {
-                for (int y = 0; y < gridHeight; y++)
+                for (int col = 0; col < gridWidth; col++)
                 {
-                    if (cellInfos[x, y].Equals(selectedCell))
-                        cellInfos[x, y].SetHighlight(true, selectedColor);
+                    if (cellInfos[row, col].Equals(selectedCell))
+                        cellInfos[row, col].SetHighlight(true, selectedColor);
                     else
                     {
-                        if (cellInfos[x, y].isOccupied)
-                            cellInfos[x, y].SetHighlight(true, blockedColor);
+                        if (cellInfos[row, col].isOccupied)
+                            cellInfos[row, col].SetHighlight(true, blockedColor);
                         else
-                            cellInfos[x, y].SetHighlight(true, availableColor);
+                            cellInfos[row, col].SetHighlight(true, availableColor);
                     }
                 }
             }
@@ -141,11 +150,11 @@ namespace Sangmin
 
         private void ClearHighlight()
         {
-            for (int x = 0; x < gridWidth; x++)
+            for (int row = 0; row < gridHeight; row++)
             {
-                for (int y = 0; y < gridHeight; y++)
+                for (int col = 0; col < gridWidth; col++)
                 {
-                    cellInfos[x, y].SetHighlight(false, availableColor);
+                    cellInfos[row, col].SetHighlight(false, availableColor);
                 }
             }
         }
