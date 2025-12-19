@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: a7dbd9cb74d189e40821975720391a63
+guid: 22b8e78d81594cb41934323ed803a241
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -3472665029763724718
-    second: warrior_1_0
+      213: 453222725807172093
+    second: warrior_3_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -24,7 +24,7 @@ TextureImporter:
     heightScale: 0.25
     normalMapFilter: 0
     flipGreenChannel: 0
-  isReadable: 1
+  isReadable: 0
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
@@ -48,7 +48,7 @@ TextureImporter:
   compressionQuality: 50
   spriteMode: 2
   spriteExtrude: 1
-  spriteMeshType: 0
+  spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 100
@@ -113,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: warrior_1_0
+      name: warrior_3_0
       rect:
         serializedVersion: 2
-        x: 213
-        y: 156
-        width: 624
-        height: 688
+        x: 205
+        y: 153
+        width: 623
+        height: 668
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 25a030ded8d9ecfc0800000000000000
-      internalID: -3472665029763724718
+      spriteID: df9eed7faab2a4600800000000000000
+      internalID: 453222725807172093
       vertices: []
       indices: 
       edges: []
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      warrior_1_0: -3472665029763724718
+      warrior_3_0: 453222725807172093
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

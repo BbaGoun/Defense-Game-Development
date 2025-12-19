@@ -1,40 +1,63 @@
 using UnityEngine;
-using System.Collections.Generic;
 
 public class UnitUI : MonoBehaviour
 {
-    [Header("ScrollView")]
-    public Transform content;              // ScrollView → Content
-    public GameObject unitPrefabUI;        // 위 UnitPrefabUI
+    public static UnitUI Instance;
 
-    [Header("표시할 유닛 데이터")]
-    public List<UnitData> unitList;
+    [Header("ScrollView")]
+    public Transform content;
+    public GameObject unitPrefabUI;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     private void Start()
     {
         RefreshUI();
     }
 
-    // UI 새로고침
     public void RefreshUI()
     {
-        // 기존 UI 제거
         for (int i = content.childCount - 1; i >= 0; i--)
             Destroy(content.GetChild(i).gameObject);
 
-        // 새로 생성
-        foreach (var unitData in unitList)
-            CreateUnitUI(unitData);
+        foreach (var data in UnitManager.Instance.allUnits)
+            CreateUnitUI(data);
     }
 
-    private void CreateUnitUI(UnitData data)
+void CreateUnitUI(UnitData data)
+{
+    if (unitPrefabUI == null)
     {
-        GameObject obj = Instantiate(unitPrefabUI, content);
-        UnitPrefabUI ui = obj.GetComponent<UnitPrefabUI>();
-
-        if (ui != null)
-        {
-            ui.Setup(data); // 초기 조각 0
-        }
+        Debug.LogError("unitPrefabUI is NULL");
+        return;
     }
+
+    if (content == null)
+    {
+        Debug.LogError("content is NULL");
+        return;
+    }
+
+    if (UnitManager.Instance == null)
+    {
+        Debug.LogError("UnitManager.Instance is NULL");
+        return;
+    }
+
+    GameObject obj = Instantiate(unitPrefabUI, content);
+    UnitPrefabUI ui = obj.GetComponent<UnitPrefabUI>();
+
+    if (ui == null)
+    {
+        Debug.LogError("UnitPrefabUI component missing on prefab");
+        return;
+    }
+
+    UnitState state = UnitManager.Instance.GetState(data.unitId);
+    ui.Setup(data, state);
+}
+
 }

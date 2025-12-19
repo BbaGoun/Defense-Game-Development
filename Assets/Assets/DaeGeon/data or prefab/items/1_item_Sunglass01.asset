@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7deed63962ea10f4da06276eb93669fc, type: 3}
-  m_Name: 1_Sunglass01
+  m_Name: 1_item_Sunglass01
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemID: Sunglass01
   itemName: "\uC120\uAE00\uB77C\uC2A4"

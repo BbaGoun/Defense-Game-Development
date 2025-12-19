@@ -4,48 +4,56 @@ using TMPro;
 
 public class UnitPrefabUI : MonoBehaviour
 {
-    [Header("UI 요소")]
     public Image icon;
     public TMP_Text nameText;
-    public TMP_Text gradeText;
+    public Image gradeImg;
     public TMP_Text shardText;
+    public TMP_Text levelText;
     public Button upgradeButton;
 
     private UnitData data;
-    private int shardCount = 0;
+    private UnitState state;
 
-    // UI Prefab 초기화
-    public void Setup(UnitData unitData, int initialShards = 0)
+    public void Setup(UnitData data, UnitState state)
     {
-        data = unitData;
-        shardCount = initialShards;
+        this.data = data;
+        this.state = state;
 
-        if (icon != null) icon.sprite = unitData.icon;
-        if (nameText != null) nameText.text = unitData.unitName;
-        if (gradeText != null) gradeText.text = unitData.grade.ToString();
-        if (shardText != null) shardText.text = shardCount.ToString();
+        icon.sprite = this.data.icon;
+        nameText.text = this.data.unitName;
 
-        if (upgradeButton != null)
-        {
-            upgradeButton.onClick.RemoveAllListeners();
-            upgradeButton.onClick.AddListener(OnUpgradeClick);
-        }
+        // 등급 이미지 세팅
+        gradeImg.sprite = GetGradeSprite(this.data.grade);
+
+        Refresh();
+
+        upgradeButton.onClick.RemoveAllListeners();
+        upgradeButton.onClick.AddListener(OnUpgradeClick);
     }
 
-    // 강화 버튼 클릭
-    private void OnUpgradeClick()
+    void Refresh()
     {
-        if (shardCount >= data.shardsRequiredPerUpgrade)
-        {
-            shardCount -= data.shardsRequiredPerUpgrade;
-            shardText.text = shardCount.ToString();
-        }
+        shardText.text = state.shards.ToString();
+        if (state.owned)
+            levelText.text = $"Lv.{state.level}";
+        else
+            levelText.text = $"미보유";
+
+        // 🔑 보유 + 조각 충분할 때만 강화 가능
+        upgradeButton.interactable =
+            state.owned && state.shards >= data.shardsRequiredPerUpgrade;
     }
 
-    // 외부에서 조각 추가 가능
-    public void AddShards(int amount)
+    void OnUpgradeClick()
     {
-        shardCount += amount;
-        if (shardText != null) shardText.text = shardCount.ToString();
+        bool success = UnitManager.Instance.TryUpgrade(data.unitId);
+        if (success)
+            Refresh();
+    }
+
+    // 등급 → 이미지 매핑
+    Sprite GetGradeSprite(UnitGrade grade)
+    {
+        return UnitManager.Instance.GetGradeSprite(grade);
     }
 }
