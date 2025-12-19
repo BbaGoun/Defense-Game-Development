@@ -34,6 +34,25 @@ namespace Sangmin
 
         public void PlaceUnit(Unit _unit){
             unit = _unit;
+            _unit.transform.position = transform.position;
+            isOccupied = true;
+        }
+
+        /// <summary>
+        /// 이 셀에 배치된 유닛을 반환 (없으면 null)
+        /// </summary>
+        public Unit GetUnit()
+        {
+            return unit;
+        }
+
+        /// <summary>
+        /// 이 셀에서 유닛을 제거하고 비어 있는 상태로 만든다.
+        /// </summary>
+        public void ClearUnit()
+        {
+            unit = null;
+            isOccupied = false;
         }
 
         public void SetOccupied(bool occupied)

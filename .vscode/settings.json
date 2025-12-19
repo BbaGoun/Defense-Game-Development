@@ -56,7 +56,7 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "Defense-Game-Development.slnx",
+    "dotnet.defaultSolution": "Defense-Game-Development.sln",
     "files.associations": {
         "*.asset": "yaml",
         "*.meta": "yaml",

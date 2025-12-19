@@ -13,6 +13,18 @@ namespace Sangmin
             this.bonusDamagePercent = bonusDamagePercent;
         }
 
+        public int count { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+
+        public void OnAttack(Unit self)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void OnChangeOnce(Unit self)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public void OnCombatStart(Unit self)
         {
             int demaciaAllies = CountDemaciaAllies(self);
@@ -27,6 +39,21 @@ namespace Sangmin
             {
                 self.finalAttackDamage = self.baseAttackDamage;
             }
+        }
+
+        public void OnCooldownUp(Unit self)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void OnStack(Unit self)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void OnStackFull(Unit self)
+        {
+            throw new System.NotImplementedException();
         }
 
         private int CountDemaciaAllies(Unit self)
