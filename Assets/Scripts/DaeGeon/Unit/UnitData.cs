@@ -27,7 +27,6 @@ public class UnitData : ScriptableObject
 
     [Header("Visual")]
     public Sprite icon;
-    public Sprite gradeBackground;
 
     [Header("Classification")]
     public UnitGrade grade;

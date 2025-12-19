@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53850ee3cb8d63c49b6b0cd6b446eedf, type: 3}
+  m_Name: 1_unit_warrior_1
+  m_EditorClassIdentifier: Assembly-CSharp::UnitData
+  prefab: {fileID: 7515713994356280284, guid: 28a2bf41de598254397b689f4fef7a75, type: 3}
+  unitId: 1
+  unitName: "\uD558\uAE09 \uC804\uC0AC"
+  icon: {fileID: -3472665029763724718, guid: a7dbd9cb74d189e40821975720391a63, type: 3}
+  gradeBackground: {fileID: -1593477784551811952, guid: be46bec3664acf241b434d4c48a952a5, type: 3}
+  grade: 0
+  type: 0
+  race: "\uC778\uAC04"
+  faction: "\uC5BC\uB77C\uC774\uC5B8\uC2A4"
+  description: "\uD558\uAE09 \uC804\uC0AC\uC774\uB2E4."
+  baseAttack: 1
+  baseAttackSpeed: 1
+  baseRange: 3
+  shardsRequiredPerUpgrade: 10
+  upgradeMultiplier: 1.2

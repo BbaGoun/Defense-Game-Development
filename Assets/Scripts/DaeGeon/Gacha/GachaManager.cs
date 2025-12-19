@@ -1,43 +1,85 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class GachaManager : MonoBehaviour
 {
-    public List<UnitData> allUnits;
-    public Transform resultParent;
-    public GameObject unitPrefab; // 여기에 Prefab 할당
+    public static GachaManager Instance;
+
+    [Header("Result UI")]
+    public GameObject resultPanel;
+    public Transform resultRoot;
+    public GameObject resultUnitPrefab;
+
+    private void Awake()
+    {
+        Instance = this;
+        resultPanel.SetActive(false);
+    }
 
     public void Draw(int drawCount)
     {
+        ClearResultUI();
+        resultPanel.SetActive(true);
+
         for (int i = 0; i < drawCount; i++)
         {
-            UnitData randomUnit = GetRandomUnitByProbability();
-            CreateResultUI(randomUnit);
+            UnitData unit = GetRandomUnitByProbability();
+
+            // 🔑 상태 변경은 UnitManager만
+            UnitManager.Instance.AddShards(unit.unitId, 1);
+
+            CreateResultUnitUI(unit);
+
+            Debug.Log($"{unit.unitName} 조각 획득");
         }
+
+        // 가챠 끝 → 유닛 UI 갱신
+        UnitUI.Instance.RefreshUI();
+    }
+
+    void CreateResultUnitUI(UnitData data)
+    {
+        GameObject go = Instantiate(resultUnitPrefab, resultRoot);
+        ResultUnitPrefab ui = go.GetComponent<ResultUnitPrefab>();
+
+        UnitState state = UnitManager.Instance.GetState(data.unitId);
+        ui.Setup(data, state);
+    }
+
+    void ClearResultUI()
+    {
+        for (int i = resultRoot.childCount - 1; i >= 0; i--)
+            Destroy(resultRoot.GetChild(i).gameObject);
     }
 
     UnitData GetRandomUnitByProbability()
     {
+        // 🔑 UnitManager의 allUnits 참조
+        var allUnits = UnitManager.Instance.allUnits;
+
         float roll = Random.value;
-        List<UnitData> pool;
 
-        if (roll < 0.6f)
-            pool = allUnits.Where(u => u.grade == UnitGrade.NORMAL).ToList();
-        else if (roll < 0.9f)
-            pool = allUnits.Where(u => u.grade == UnitGrade.RARE).ToList();
+        var normal = allUnits.Where(u => u.grade == UnitGrade.NORMAL).ToList();
+        var rare   = allUnits.Where(u => u.grade == UnitGrade.RARE).ToList();
+        var unique = allUnits.Where(u => u.grade == UnitGrade.UNIQUE).ToList();
+
+        List<UnitData> pool = null;
+
+        if (roll < 0.6f && normal.Count > 0)
+            pool = normal;
+        else if (roll < 0.9f && rare.Count > 0)
+            pool = rare;
+        else if (unique.Count > 0)
+            pool = unique;
         else
-            pool = allUnits.Where(u => u.grade == UnitGrade.UNIQUE).ToList();
+            pool = normal; // 안전망
 
-        int idx = Random.Range(0, pool.Count);
-        return pool[idx];
+        return pool[Random.Range(0, pool.Count)];
     }
 
-    void CreateResultUI(UnitData data)
+    public void CloseResultPanel()
     {
-        GameObject go = Instantiate(unitPrefab, resultParent);
-        UnitPrefab unitComp = go.GetComponent<UnitPrefab>();
-        unitComp.AddShards(1); // 예시: 1조각 추가
+        resultPanel.SetActive(false);
     }
 }
