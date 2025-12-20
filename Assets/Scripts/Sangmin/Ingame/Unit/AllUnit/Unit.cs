@@ -93,7 +93,7 @@ namespace Sangmin
             grade = unitStatData.grade;
         }
 
-        void Start()
+        void OnEnable()
         {
             // 유닛이 생성될 때 8방향 중 2방향을 랜덤으로 선택하여 체인 부여
             InitializeRandomChains();
@@ -167,7 +167,7 @@ namespace Sangmin
 
             ChainDirection firstDir = _allDirections[firstIndex];
             ChainDirection secondDir = _allDirections[secondIndex];
-
+            
             chain |= firstDir;
             chain |= secondDir;
         }

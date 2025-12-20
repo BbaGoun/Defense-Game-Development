@@ -9,8 +9,17 @@ namespace Sangmin
     /// - 마주 보는(양방향) 간선을 이용해 연결 컴포넌트를 계산한다.
     /// - 유닛 뽑기, 이동, 판매(삭제) 시 어떻게 동작하는지 예시를 보여준다.
     /// </summary>
-    public class GraphConnectionExample : MonoBehaviour
+    public class SynergyCountSystem : MonoBehaviour
     {
+        private static SynergyCountSystem _instance;
+        public static SynergyCountSystem Instance
+        {
+            get
+            {
+                return _instance;
+            }
+        }
+
         /// <summary>
         /// 예시용 유닛 노드
         /// 실제 Unit 컴포넌트 대신, 간단히 id + 좌표 + 체인 비트로만 표현
@@ -18,9 +27,10 @@ namespace Sangmin
         /// </summary>
         private class UnitNode
         {
+
             public int id;
             public Vector2Int gridPos;
-        
+
             /// <summary>
             /// 8방향 비트마스크 (0~7 비트)
             /// 0: 위, 1: 오른위, 2: 오른, 3: 오른아래,
@@ -33,7 +43,7 @@ namespace Sangmin
         private readonly Dictionary<int, UnitNode> _units = new Dictionary<int, UnitNode>();
         // 좌표로 유닛 찾기용 (gridPos(row, col) -> id)
         private readonly Dictionary<Vector2Int, int> _posToUnitId = new Dictionary<Vector2Int, int>();
-        
+
         // 예시용: 자동으로 증가하는 유닛 id
         private int _nextUnitId = 0;
 
@@ -51,47 +61,20 @@ namespace Sangmin
             new Vector2Int(-1, -1),  // 7: 왼위
         };
 
+        void Awake()
+        {
+            if (_instance == null)
+                _instance = this;
+            else
+                Destroy(this.gameObject);
+
+        }
+
         private void Start()
         {
-            // 예시 시나리오 실행
-            ExampleScenario();
+
         }
 
-        /// <summary>
-        /// 질문에서 말한 세 가지 상황을 순서대로 보여주는 예시 시나리오
-        /// 1) 유닛 뽑기(생성)
-        /// 2) 유닛 이동
-        /// 3) 유닛 판매(삭제)
-        /// </summary>
-        private void ExampleScenario()
-        {
-            Debug.Log("===== 예시 시나리오 시작 =====");
-
-            // 1. 유닛 뽑기 예시
-            //   - (0,0)에 체인 방향: 위(0), 오른(2)
-            //   - (0,1)에 체인 방향: 아래(4), 왼(6)
-            //   - (1,0)에 체인 방향: 왼위(7), 위(0)
-            //     gridPos는 (행, 열) 순서이므로,
-            //     (0,0)은 0번째 행 0번째 열, (0,1)은 0번째 행 1번째 열을 의미한다.
-            int u0 = SpawnUnit(new Vector2Int(0, 0), mask: (1 << 0) | (1 << 2));
-            int u1 = SpawnUnit(new Vector2Int(0, 1), mask: (1 << 4) | (1 << 6));
-            int u2 = SpawnUnit(new Vector2Int(1, 0), mask: (1 << 7) | (1 << 0));
-
-            Debug.Log("=== 유닛 3개 뽑은 후 컴포넌트 ===");
-            RebuildAndLogComponents();
-
-            // 2. 유닛 이동 예시 (u2를 (1,1)으로 이동)
-            MoveUnit(u2, new Vector2Int(1, 1));
-            Debug.Log("=== u2를 (1,1)으로 이동 후 컴포넌트 ===");
-            RebuildAndLogComponents();
-
-            // 3. 유닛 판매(삭제) 예시 (u1 판매)
-            SellUnit(u1);
-            Debug.Log("=== u1을 판매(삭제) 후 컴포넌트 ===");
-            RebuildAndLogComponents();
-
-            Debug.Log("===== 예시 시나리오 끝 =====");
-        }
 
         /// <summary>
         /// 1) 유닛 뽑기: 새로운 유닛을 필드에 추가
@@ -113,6 +96,8 @@ namespace Sangmin
             _posToUnitId[gridPos] = id;
 
             Debug.Log($"SpawnUnit: id={id}, pos={gridPos}, mask={System.Convert.ToString(mask, 2).PadLeft(8, '0')}");
+
+            RebuildAndLogComponents();
             return id;
         }
 
@@ -121,8 +106,14 @@ namespace Sangmin
         /// - chainMask(방향 정보)는 그대로 두고, 좌표만 변경
         /// - 이동 후에는 인접 유닛이 달라지므로 그래프를 다시 만들고 컴포넌트를 다시 계산
         /// </summary>
-        public void MoveUnit(int unitId, Vector2Int newPos)
+        public void MoveUnit(Vector2Int pos, Vector2Int newPos)
         {
+            if (!_posToUnitId.ContainsKey(pos))
+            {
+                Debug.LogWarning($"MoveUnit: pos={pos} 위치에 유닛이 존재하지 않습니다.");
+                return;
+            }
+            int unitId = _posToUnitId[pos];
             if (!_units.TryGetValue(unitId, out var node))
             {
                 Debug.LogWarning($"MoveUnit: id={unitId} 유닛이 존재하지 않습니다.");
@@ -130,7 +121,7 @@ namespace Sangmin
             }
 
             // 기존 좌표 매핑 제거
-            if (_posToUnitId.TryGetValue(node.gridPos, out var storedId) && storedId == unitId)
+            if (unitId == node.id)
             {
                 _posToUnitId.Remove(node.gridPos);
             }
@@ -139,6 +130,65 @@ namespace Sangmin
             _posToUnitId[newPos] = unitId;
 
             Debug.Log($"MoveUnit: id={unitId}, newPos={newPos}");
+
+            RebuildAndLogComponents();
+        }
+
+        /// <summary>
+        /// 두 유닛의 위치를 교환한다.
+        /// - aPos와 bPos에 각각 유닛이 있어야 함
+        /// - 두 유닛의 gridPos를 교환하고 _posToUnitId 딕셔너리도 업데이트
+        /// </summary>
+        public void SwapUnit(Vector2Int aPos, Vector2Int bPos)
+        {
+            // 두 위치에 유닛이 있는지 확인
+            if (!_posToUnitId.ContainsKey(aPos))
+            {
+                Debug.LogWarning($"SwapUnit: aPos={aPos} 위치에 유닛이 존재하지 않습니다.");
+                return;
+            }
+            if (!_posToUnitId.ContainsKey(bPos))
+            {
+                Debug.LogWarning($"SwapUnit: bPos={bPos} 위치에 유닛이 존재하지 않습니다.");
+                return;
+            }
+
+            int unitAId = _posToUnitId[aPos];
+            int unitBId = _posToUnitId[bPos];
+
+            // 같은 유닛이면 교환할 필요 없음
+            if (unitAId == unitBId)
+            {
+                Debug.LogWarning($"SwapUnit: 같은 유닛입니다. 교환할 필요가 없습니다.");
+                return;
+            }
+
+            if (!_units.TryGetValue(unitAId, out var nodeA))
+            {
+                Debug.LogWarning($"SwapUnit: id={unitAId} 유닛이 존재하지 않습니다.");
+                return;
+            }
+            if (!_units.TryGetValue(unitBId, out var nodeB))
+            {
+                Debug.LogWarning($"SwapUnit: id={unitBId} 유닛이 존재하지 않습니다.");
+                return;
+            }
+
+            // 기존 좌표 매핑 제거
+            _posToUnitId.Remove(aPos);
+            _posToUnitId.Remove(bPos);
+
+            // 두 유닛의 위치 교환
+            nodeA.gridPos = bPos;
+            nodeB.gridPos = aPos;
+
+            // 새 좌표 매핑 추가
+            _posToUnitId[bPos] = unitAId;
+            _posToUnitId[aPos] = unitBId;
+
+            Debug.Log($"SwapUnit: id={unitAId}({aPos} -> {bPos}), id={unitBId}({bPos} -> {aPos})");
+
+            RebuildAndLogComponents();
         }
 
         /// <summary>
@@ -146,21 +196,30 @@ namespace Sangmin
         /// - 유닛 딕셔너리와 좌표 매핑에서 제거
         /// - 이후 그래프/컴포넌트 재계산 시 이 유닛은 포함되지 않음
         /// </summary>
-        public void SellUnit(int unitId)
+        public void SellUnit(Vector2Int pos)
         {
+            if (!_posToUnitId.ContainsKey(pos))
+            {
+                Debug.LogWarning($"SellUnit: pos={pos} 위치에 유닛이 존재하지 않습니다.");
+                return;
+            }
+            int unitId = _posToUnitId[pos];
             if (!_units.TryGetValue(unitId, out var node))
             {
                 Debug.LogWarning($"SellUnit: id={unitId} 유닛이 존재하지 않습니다.");
                 return;
             }
 
-            _units.Remove(unitId);
-            if (_posToUnitId.TryGetValue(node.gridPos, out var storedId) && storedId == unitId)
+            // 기존 좌표 매핑 제거
+            if (unitId == node.id)
             {
+                _units.Remove(unitId);
                 _posToUnitId.Remove(node.gridPos);
             }
 
             Debug.Log($"SellUnit: id={unitId} 판매(삭제)");
+
+            RebuildAndLogComponents();
         }
 
         /// <summary>

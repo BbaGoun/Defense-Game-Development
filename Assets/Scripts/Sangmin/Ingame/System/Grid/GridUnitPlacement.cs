@@ -6,33 +6,36 @@ namespace Sangmin
 {
     public class GridUnitPlacement : MonoBehaviour
     {
-        // 열(가로, column) 개수
-        public int gridWidth = 6;
-        // 행(세로, row) 개수
-        public int gridHeight = 4;
-        public float cellSize = 1.0f;
-        public Vector2 scale;
-        public GameObject gridParent;
-        public Color selectedColor = Color.yellow;
-        public Color availableColor = Color.green;
-        public Color blockedColor = Color.red;
-
-        // cellInfos[row, col] 형식으로 사용 (수학에서처럼 행 먼저, 열 나중)
-        private UnitCell[,] cellInfos;
-        private UnitCell selectedCell;
-        public bool isCellSelected => selectedCell != null;
-
-        [Header("Drag Move Settings")]
-        public Color dragPathColor = Color.cyan;
-        public Color dragTargetColor = Color.blue;
-        [SerializeField] private LineRenderer dragLine;
-        private UnitCell dragTargetCell;
-
         private static GridUnitPlacement _instance;
         public static GridUnitPlacement Instance
         {
             get { return _instance; }
         }
+
+        [Header("Grid Option")]
+        // 열(가로, column) 개수
+        public int gridWidth = 6;
+        // 행(세로, row) 개수
+        public int gridHeight = 4;
+        public float cellSize = 1.0f;
+
+        private int unitCount;
+
+        public int unitCountMax;
+        public GameObject gridParent;
+
+        public bool isCellSelected => selectedCell != null;
+        private UnitCell[,] cellInfos;
+        private UnitCell selectedCell;
+
+        [Header("Colors")]
+        [SerializeField] private LineRenderer dragLine;
+        public Color selectedColor = Color.yellow;
+        public Color availableColor = Color.green;
+        public Color blockedColor = Color.red;
+        public Color dragPathColor = Color.cyan;
+        public Color dragTargetColor = Color.blue;
+        private UnitCell dragTargetCell;
 
         private void OnDestroy()
         {
@@ -49,7 +52,7 @@ namespace Sangmin
             else
                 Destroy(this.gameObject);
 
-            scale = new Vector2(transform.localScale.x, transform.localScale.y);
+            unitCount = 0;
 
             // [행, 열] 순서로 2차원 배열 생성
             cellInfos = new UnitCell[gridHeight, gridWidth];
@@ -79,6 +82,12 @@ namespace Sangmin
 
         public void PlaceUnitFromFront()
         {
+            if (unitCount >= unitCountMax)
+                return;
+
+            unitCount++;
+            // 돈 감소
+
             var unit = RandomSummon.Instance.SummonRandomUnit();
 
             // 행(row)을 먼저, 그 다음 열(col)을 순회
@@ -88,6 +97,8 @@ namespace Sangmin
                 {
                     if (!cellInfos[row, col].isOccupied)
                     {
+                        // 시너지 계산 시스템에 Unit을 생성하는 코드
+                        SynergyCountSystem.Instance.SpawnUnit(new Vector2Int(row, col), mask: (int)unit.chain);
                         // UnitCell에 유닛을 배정하는 코드
                         cellInfos[row, col].PlaceUnit(unit);
                         return;
@@ -96,9 +107,22 @@ namespace Sangmin
             }
         }
 
+        public void SellUnit()
+        {
+            if (selectedCell == null)
+                return;
+
+            Debug.Log($"Sell Unit: {selectedCell.GetUnit().name}");
+            unitCount--;
+
+            // 가치에 따라 돈 추가
+
+            SynergyCountSystem.Instance.SellUnit(new Vector2Int(selectedCell.row, selectedCell.col));
+        }
+
         public bool SelectCell(GameObject cell)
         {
-            Debug.Log($"Selected cell: {cell.name}");
+            //Debug.Log($"Selected cell: {cell.name}");
 
             // (행, 열) 순서로 탐색
             for (int row = 0; row < gridHeight; row++)
@@ -109,14 +133,14 @@ namespace Sangmin
                     {
                         // 셀 안에 유닛 있는지 확인, 확인이 되면 유닛이 있는 유의미한 셀을 선택한 것
                         if (cellInfos[row, col].isOccupied)
+                        {
                             selectedCell = cellInfos[row, col];
+                        }
                         else
                             return true;
                     }
                 }
             }
-
-            Debug.Log("선택 완료");
 
             // 유닛이 이미 놓여져 있는지 색깔로 여부 표시
             DrawHighlight();
@@ -132,34 +156,54 @@ namespace Sangmin
             ClearHighlight();
         }
 
-        // 드래그 중에 이동할 칸의 표시를 할 필요가 있음
 
         /// <summary>
         /// 선택된 셀의 유닛을 주어진 셀로 이동시킨다.
+        /// 대상 셀에 이미 유닛이 있으면 두 유닛의 위치를 교환한다.
         /// </summary>
-        public void MoveUnit(GameObject grid)
+        public void MoveUnit(GameObject cell)
         {
-            if (selectedCell == null || grid == null)
+            if (selectedCell == null || cell == null)
                 return;
 
-            UnitCell targetCell = FindCellByGameObject(grid);
+            UnitCell targetCell = FindCellByGameObject(cell);
             if (targetCell == null)
-                return;
-
-            // 이미 유닛이 있는 칸으로는 이동하지 않는다.
-            if (targetCell.isOccupied)
                 return;
 
             Unit movingUnit = selectedCell.GetUnit();
             if (movingUnit == null)
                 return;
 
-            // 원래 셀 비우고 새 셀로 이동
-            selectedCell.ClearUnit();
-            targetCell.PlaceUnit(movingUnit);
+            // 이미 유닛이 있는 칸일 경우 위치 교환
+            if (targetCell.isOccupied)
+            {
+                Unit targetUnit = targetCell.GetUnit();
+                if (targetUnit == null)
+                    return;
 
-            // 선택 대상 셀을 새 위치로 갱신
-            selectedCell = targetCell;
+                // 두 유닛의 위치 교환
+                selectedCell.ClearUnit();
+                targetCell.ClearUnit();
+
+                targetCell.PlaceUnit(movingUnit);
+                selectedCell.PlaceUnit(targetUnit);
+
+                SynergyCountSystem.Instance.SwapUnit(new Vector2Int(selectedCell.row, selectedCell.col), new Vector2Int(targetCell.row, targetCell.col));
+
+                // 선택 대상 셀을 새 위치로 갱신
+                selectedCell = targetCell;
+            }
+            else
+            {
+                // 빈 칸으로 이동
+                selectedCell.ClearUnit();
+                targetCell.PlaceUnit(movingUnit);
+
+                SynergyCountSystem.Instance.MoveUnit(new Vector2Int(selectedCell.row, selectedCell.col), new Vector2Int(targetCell.row, targetCell.col));
+
+                // 선택 대상 셀을 새 위치로 갱신
+                selectedCell = targetCell;
+            }
 
             // 하이라이트 갱신
             ClearHighlight();
@@ -271,13 +315,10 @@ namespace Sangmin
         /// </summary>
         private void EnsureDragLine()
         {
+            dragLine = GetComponent<LineRenderer>();
             if (dragLine == null)
             {
-                dragLine = GetComponent<LineRenderer>();
-                if (dragLine == null)
-                {
-                    dragLine = gameObject.AddComponent<LineRenderer>();
-                }
+                return;
             }
 
             dragLine.useWorldSpace = true;

@@ -9,6 +9,7 @@ namespace Sangmin
         private PlayerInput _playerInput;
         private InputAction _clickAction;
 
+        private bool _isPress;
         private bool _isDragging;
 
         void Awake()
@@ -28,7 +29,9 @@ namespace Sangmin
                 _clickAction = _playerInput.actions["Click"];
                 if (_clickAction != null)
                 {
+                    _clickAction.started += OnClick;
                     _clickAction.performed += OnClick;
+                    _clickAction.canceled += OnClick;
                     _clickAction.Enable();
                 }
                 else
@@ -56,7 +59,14 @@ namespace Sangmin
         {
             // Debug.Log("Click");
             // performed 이벤트에 delegate방식으로 구독했으니, performed 때만 작동하도록 함.
-            if (!context.performed) return;
+            if(context.started) {
+                _isPress = true;
+                return;
+            }
+            else if (context.canceled){
+                _isPress = false;
+                return;
+            }
 
             var rayHit = Physics2D.GetRayIntersection(_mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue()));
             if (!rayHit.collider)
@@ -70,6 +80,7 @@ namespace Sangmin
             {
                 if (GridUnitPlacement.Instance.SelectCell(rayHit.collider.gameObject))
                 {
+                    // 유닛이 없는 Cell 클릭 시 선택 해제
                     GridUnitPlacement.Instance.UnSelectUnit();
                 }
             }
@@ -81,7 +92,7 @@ namespace Sangmin
                 return;
 
             // 마우스 왼쪽 버튼이 눌려 있는 동안 드래그 처리
-            if (Mouse.current.leftButton.isPressed)
+            if (_isPress)
             {
                 if (GridUnitPlacement.Instance.isCellSelected)
                 {
@@ -117,7 +128,5 @@ namespace Sangmin
                 }
             }
         }
-
-        // 유닛의 이동을 드래그 방식으로 구현해야함
     }
 }

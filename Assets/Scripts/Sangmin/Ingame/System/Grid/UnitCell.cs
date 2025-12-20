@@ -4,6 +4,9 @@ namespace Sangmin
 {
     public class UnitCell : MonoBehaviour
     {
+        [Header("Grid Position")]
+        public int row;
+        public int col;
         [Header("Runtime state")]
         [SerializeField] private Unit unit;
         [field: SerializeField] public bool isOccupied{get; private set;}
