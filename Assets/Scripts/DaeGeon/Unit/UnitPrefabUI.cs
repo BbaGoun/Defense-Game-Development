@@ -9,7 +9,7 @@ public class UnitPrefabUI : MonoBehaviour
     public Image gradeImg;
     public TMP_Text shardText;
     public TMP_Text levelText;
-    public Button upgradeButton;
+    public Button infoButton;
 
     private UnitData data;
     private UnitState state;
@@ -19,36 +19,38 @@ public class UnitPrefabUI : MonoBehaviour
         this.data = data;
         this.state = state;
 
-        icon.sprite = this.data.icon;
-        nameText.text = this.data.unitName;
+        icon.sprite = data.icon;
+        nameText.text = data.unitName;
 
         // 등급 이미지 세팅
-        gradeImg.sprite = GetGradeSprite(this.data.grade);
+        gradeImg.sprite = GetGradeSprite(data.grade);
 
         Refresh();
 
-        upgradeButton.onClick.RemoveAllListeners();
-        upgradeButton.onClick.AddListener(OnUpgradeClick);
+        infoButton.onClick.RemoveAllListeners();
+        infoButton.onClick.AddListener(() =>
+        {
+            UIManager.Instance.ShowUnitInfoPopup(this.data, this.state);
+        });
     }
 
     void Refresh()
     {
-        shardText.text = state.shards.ToString();
+        int need = data.shardsRequiredPerUpgrade;
+        int current = state.shards;
+
+        shardText.text = $"{current} / {need}";
+
         if (state.owned)
+        {
             levelText.text = $"Lv.{state.level}";
+            icon.color = Color.white;
+        }
         else
-            levelText.text = $"미보유";
-
-        // 🔑 보유 + 조각 충분할 때만 강화 가능
-        upgradeButton.interactable =
-            state.owned && state.shards >= data.shardsRequiredPerUpgrade;
-    }
-
-    void OnUpgradeClick()
-    {
-        bool success = UnitManager.Instance.TryUpgrade(data.unitId);
-        if (success)
-            Refresh();
+        {
+            levelText.text = "미보유";
+            icon.color = Color.black;
+        }
     }
 
     // 등급 → 이미지 매핑
