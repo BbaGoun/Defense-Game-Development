@@ -43,7 +43,7 @@ public class ShopItemButton : MonoBehaviour
         InventoryManager.Instance.AddItem(data);
 
         // 인벤토리 갱신
-        var invUI = Object.FindObjectOfType<InventoryUI>();
+        var invUI = Object.FindAnyObjectByType<InventoryUI>();
         if (invUI != null) invUI.Refresh();
 
         // 구매로 인해 인벤토리로 이동했으므로 미리보기 초기화

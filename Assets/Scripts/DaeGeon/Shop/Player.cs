@@ -31,7 +31,7 @@ public class Player : MonoBehaviour
         if (Instance == null) Instance = this;
         else Destroy(gameObject);
         // Ensure UI reflects player-dependent state after Player is ready
-        var inv = FindObjectOfType<InventoryUI>();
+        var inv = FindAnyObjectByType<InventoryUI>();
         if (inv != null) inv.Refresh();
     }
 

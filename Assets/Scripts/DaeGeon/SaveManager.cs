@@ -164,7 +164,7 @@ public class SaveManager : MonoBehaviour
         }
 
         // ---------- Inventory UI ----------
-        var invUI = FindObjectOfType<InventoryUI>();
+        var invUI = FindAnyObjectByType<InventoryUI>();
         if (invUI != null)
         {
             invUI.Refresh();

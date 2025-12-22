@@ -30,7 +30,7 @@ public class PlayerUnitManager : MonoBehaviour
         // 자동으로 씬에 Player가 있으면 등록 시도
         if (playerObject == null)
         {
-            var p = FindObjectOfType<Player>();
+            var p = FindAnyObjectByType<Player>();
             if (p != null) RegisterPlayer(p.gameObject);
         }
     }

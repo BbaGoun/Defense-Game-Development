@@ -19,7 +19,7 @@ public class InventoryManager : MonoBehaviour
             return;
 
         // 가능한 경우 상점의 정렬 순서를 따름
-        var shop = FindObjectOfType<ShopUI>();
+        var shop = FindAnyObjectByType<ShopUI>();
         if (shop != null && shop.itemList != null && shop.itemList.Contains(data))
         {
             int shopIndex = shop.itemList.IndexOf(data);
