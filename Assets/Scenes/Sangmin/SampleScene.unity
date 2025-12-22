@@ -345,7 +345,7 @@ GameObject:
   m_Component:
   - component: {fileID: 117027057}
   m_Layer: 0
-  m_Name: "==== 2\uBC88\uC9F8 \uC5F4 ===="
+  m_Name: "==== 2\uBC88\uC9F8 \uD589 ===="
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -645,7 +645,7 @@ GameObject:
   m_Component:
   - component: {fileID: 241286152}
   m_Layer: 0
-  m_Name: "==== 4\uBC88\uC9F8 \uC5F4 ===="
+  m_Name: "==== 4\uBC88\uC9F8 \uD589 ===="
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -808,37 +808,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 311394068}
   m_CullTransparentMesh: 1
---- !u!1 &319682755
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 319682756}
-  m_Layer: 0
-  m_Name: "==== 6\uBC88\uC9F8 \uC5F4 ===="
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &319682756
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 319682755}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 644265513}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &326389476
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -949,11 +918,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5271234345800449ba84ae6f3ff438d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Sangmin.GridUnitPlacement
-  gridWidth: 6
   gridHeight: 4
+  gridWidth: 6
   cellSize: 1
   unitCountMax: 24
   gridParent: {fileID: 644265512}
+  selectedCell: {fileID: 0}
   dragLine: {fileID: 335647663}
   selectedColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   availableColor: {r: 0, g: 1, b: 0, a: 1}
@@ -1085,7 +1055,7 @@ GameObject:
   m_Component:
   - component: {fileID: 470898058}
   m_Layer: 0
-  m_Name: "==== 1\uBC88\uC9F8 \uC5F4 ===="
+  m_Name: "==== 1\uBC88\uC9F8 \uD589 ===="
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1781,33 +1751,31 @@ Transform:
   m_Children:
   - {fileID: 470898058}
   - {fileID: 1192513887}
-  - {fileID: 49180394}
-  - {fileID: 1193051430}
-  - {fileID: 679231456}
-  - {fileID: 117027057}
   - {fileID: 341594296}
-  - {fileID: 1162874108}
-  - {fileID: 600410326}
-  - {fileID: 1066430851}
-  - {fileID: 2060358795}
   - {fileID: 1716973936}
-  - {fileID: 1996631993}
-  - {fileID: 1922947855}
-  - {fileID: 1216492469}
-  - {fileID: 241286152}
   - {fileID: 1970050355}
-  - {fileID: 1935595670}
-  - {fileID: 184951935}
-  - {fileID: 1988717377}
-  - {fileID: 1653542818}
   - {fileID: 1338589100}
-  - {fileID: 265219543}
-  - {fileID: 1063801693}
-  - {fileID: 2111345719}
-  - {fileID: 319682756}
   - {fileID: 1491272833}
+  - {fileID: 117027057}
+  - {fileID: 49180394}
+  - {fileID: 1162874108}
+  - {fileID: 1996631993}
+  - {fileID: 1935595670}
+  - {fileID: 265219543}
   - {fileID: 2003365833}
+  - {fileID: 2060358795}
+  - {fileID: 1193051430}
+  - {fileID: 600410326}
+  - {fileID: 1922947855}
+  - {fileID: 184951935}
+  - {fileID: 1063801693}
   - {fileID: 1239511676}
+  - {fileID: 241286152}
+  - {fileID: 679231456}
+  - {fileID: 1066430851}
+  - {fileID: 1216492469}
+  - {fileID: 1988717377}
+  - {fileID: 2111345719}
   - {fileID: 511143232}
   m_Father: {fileID: 1120196402}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3793,6 +3761,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 420ffffb7cd887f4996c142cd296b912, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Sangmin.GraphConnectionExample
+  _units:
+    keys: 
+    values: []
+  _posToUnitId:
+    keys: []
+    values: 
 --- !u!4 &1325739371
 Transform:
   m_ObjectHideFlags: 0
@@ -5178,37 +5152,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RandomSummon
   UnitList:
   - {fileID: 7855928322533682679, guid: 864f738ae9fca6c48bcc0e87cbcb9b55, type: 3}
---- !u!1 &1653542817
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1653542818}
-  m_Layer: 0
-  m_Name: "==== 5\uBC88\uC9F8 \uC5F4 ===="
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1653542818
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1653542817}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 644265513}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1711675707
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5577,7 +5520,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2060358795}
   m_Layer: 0
-  m_Name: "==== 3\uBC88\uC9F8 \uC5F4 ===="
+  m_Name: "==== 3\uBC88\uC9F8 \uD589 ===="
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

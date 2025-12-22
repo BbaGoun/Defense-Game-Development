@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -29,7 +30,7 @@ namespace Sangmin
                 _clickAction = _playerInput.actions["Click"];
                 if (_clickAction != null)
                 {
-                    _clickAction.started += OnClick;
+                    //_clickAction.started += OnClick;
                     _clickAction.performed += OnClick;
                     _clickAction.canceled += OnClick;
                     _clickAction.Enable();
@@ -51,22 +52,24 @@ namespace Sangmin
             if (_clickAction != null)
             {
                 _clickAction.performed -= OnClick;
+                _clickAction.canceled -= OnClick;
                 _clickAction.Disable();
             }
         }
 
         private void OnClick(InputAction.CallbackContext context)
         {
-            // Debug.Log("Click");
-            // performed 이벤트에 delegate방식으로 구독했으니, performed 때만 작동하도록 함.
-            if(context.started) {
-                _isPress = true;
+
+            if (context.started)
+            {
                 return;
             }
-            else if (context.canceled){
+            else if (context.canceled)
+            {
                 _isPress = false;
                 return;
             }
+            //Debug.Log("Click");
 
             var rayHit = Physics2D.GetRayIntersection(_mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue()));
             if (!rayHit.collider)
@@ -78,10 +81,19 @@ namespace Sangmin
 
             if (rayHit.collider.CompareTag("Cell"))
             {
-                if (GridUnitPlacement.Instance.SelectCell(rayHit.collider.gameObject))
+                if (rayHit.collider.gameObject != null)
                 {
-                    // 유닛이 없는 Cell 클릭 시 선택 해제
-                    GridUnitPlacement.Instance.UnSelectUnit();
+                    if (GridUnitPlacement.Instance.GetSelectedCell() != null && rayHit.collider.gameObject == GridUnitPlacement.Instance.GetSelectedCell().gameObject)
+                    {
+                        _isPress = true;
+                        return;
+                    }
+
+                    if (GridUnitPlacement.Instance.SelectCell(rayHit.collider.gameObject))
+                    {
+                        // 유닛이 없는 Cell 클릭 시 선택 해제
+                        GridUnitPlacement.Instance.UnSelectUnit();
+                    }
                 }
             }
         }
