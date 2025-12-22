@@ -13,10 +13,10 @@ namespace Sangmin
         }
 
         [Header("Grid Option")]
-        // 열(가로, column) 개수
-        public int gridWidth = 6;
         // 행(세로, row) 개수
         public int gridHeight = 4;
+        // 열(가로, column) 개수
+        public int gridWidth = 6;
         public float cellSize = 1.0f;
 
         private int unitCount;
@@ -26,6 +26,7 @@ namespace Sangmin
 
         public bool isCellSelected => selectedCell != null;
         private UnitCell[,] cellInfos;
+        [SerializeField]
         private UnitCell selectedCell;
 
         [Header("Colors")]
@@ -149,13 +150,17 @@ namespace Sangmin
             return false;
         }
 
+        public UnitCell GetSelectedCell()
+        {
+            return selectedCell;
+        }
+
         public void UnSelectUnit()
         {
-            Debug.Log("UnSelect");
+            //Debug.Log("UnSelect");
             selectedCell = null;
             ClearHighlight();
         }
-
 
         /// <summary>
         /// 선택된 셀의 유닛을 주어진 셀로 이동시킨다.
@@ -182,24 +187,23 @@ namespace Sangmin
                     return;
 
                 // 두 유닛의 위치 교환
+                SynergyCountSystem.Instance.SwapUnit(new Vector2Int(selectedCell.row, selectedCell.col), new Vector2Int(targetCell.row, targetCell.col));
+
                 selectedCell.ClearUnit();
                 targetCell.ClearUnit();
 
                 targetCell.PlaceUnit(movingUnit);
                 selectedCell.PlaceUnit(targetUnit);
 
-                SynergyCountSystem.Instance.SwapUnit(new Vector2Int(selectedCell.row, selectedCell.col), new Vector2Int(targetCell.row, targetCell.col));
-
                 // 선택 대상 셀을 새 위치로 갱신
                 selectedCell = targetCell;
             }
             else
             {
-                // 빈 칸으로 이동
+                SynergyCountSystem.Instance.MoveUnit(new Vector2Int(selectedCell.row, selectedCell.col), new Vector2Int(targetCell.row, targetCell.col));
+
                 selectedCell.ClearUnit();
                 targetCell.PlaceUnit(movingUnit);
-
-                SynergyCountSystem.Instance.MoveUnit(new Vector2Int(selectedCell.row, selectedCell.col), new Vector2Int(targetCell.row, targetCell.col));
 
                 // 선택 대상 셀을 새 위치로 갱신
                 selectedCell = targetCell;
