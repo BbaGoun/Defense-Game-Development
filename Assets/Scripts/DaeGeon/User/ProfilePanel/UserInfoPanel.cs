@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
 public class UserInfoPanel : BaseUserVisualUI
 {
@@ -9,9 +8,12 @@ public class UserInfoPanel : BaseUserVisualUI
 
     protected override void Refresh()
     {
-        var user = UserManager.Instance.Data;
+        if (UserManager.Instance == null) return;
 
-        icon.sprite = UserManager.Instance.GetCurrentIcon().sprite;
-        frame.sprite = UserManager.Instance.GetCurrentFrame().sprite;
+        var iconEntry = UserManager.Instance.GetCurrentIcon();
+        var frameEntry = UserManager.Instance.GetCurrentFrame();
+
+        if (icon != null && iconEntry != null) icon.sprite = iconEntry.sprite;
+        if (frame != null && frameEntry != null) frame.sprite = frameEntry.sprite;
     }
 }

@@ -1,11 +1,10 @@
+// UserIconSelectButton.cs
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
 public class UserIconSelectButton : MonoBehaviour
 {
     [SerializeField] private Image iconImage;
-    [SerializeField] private TMP_Text nameText;
     [SerializeField] private GameObject selectedMark;
     [SerializeField] private Button button;
 
@@ -15,37 +14,25 @@ public class UserIconSelectButton : MonoBehaviour
     {
         iconId = entry.id;
         iconImage.sprite = entry.sprite;
-        nameText.text = entry.displayName;
-
         button.onClick.RemoveAllListeners();
-        button.onClick.AddListener(OnClick);
-
+        button.onClick.AddListener(() => UserManager.Instance.SetTempIcon(iconId));
         RefreshSelected();
-    }
-
-    void OnClick()
-    {
-        UserManager.Instance.ChangeIcon(iconId);
     }
 
     void OnEnable()
     {
         if (UserManager.Instance != null)
-        {
-            UserManager.Instance.OnUserDataChanged += RefreshSelected;
-            RefreshSelected();
-        }
+            UserManager.Instance.OnSelectionChanged += RefreshSelected;
     }
 
     void OnDisable()
     {
         if (UserManager.Instance != null)
-            UserManager.Instance.OnUserDataChanged -= RefreshSelected;
+            UserManager.Instance.OnSelectionChanged -= RefreshSelected;
     }
 
     void RefreshSelected()
     {
-        bool isSelected = UserManager.Instance.Data.iconId == iconId;
-        selectedMark.SetActive(isSelected);
+        selectedMark.SetActive(UserManager.Instance.SelectedIconId == iconId);
     }
 }

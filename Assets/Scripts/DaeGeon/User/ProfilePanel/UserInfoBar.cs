@@ -8,10 +8,12 @@ public class UserInfoBar : BaseUserVisualUI
 
     protected override void Refresh()
     {
+        if (UserManager.Instance == null) return;
+
         var iconEntry = UserManager.Instance.GetCurrentIcon();
         var frameEntry = UserManager.Instance.GetCurrentFrame();
 
-        icon.sprite = iconEntry.sprite;
-        frame.sprite = frameEntry.sprite;
+        if (icon != null && iconEntry != null) icon.sprite = iconEntry.sprite;
+        if (frame != null && frameEntry != null) frame.sprite = frameEntry.sprite;
     }
 }
