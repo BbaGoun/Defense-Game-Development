@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -41,6 +42,17 @@ namespace Sangmin
             /// </summary>
             public Unit.ChainDirection chainMask;
 
+            // 체인 연결 상태를 3가지(아직 모름, True, False)로 구분.=
+            public enum ChainConnectionState
+            {
+                Unknown = 0,
+                Connected = 1,
+                Disconnected = 2
+            }
+
+            // 각 방향(0~7)에 대한 연결 상태를 담는 배열 (초기값은 Unknown)
+            public ChainConnectionState[] connectionStates = new ChainConnectionState[8];
+
             /// <summary>
             /// 실제 필드 위의 유닛 컴포넌트 참조
             /// 체인 연결 여부에 따라 시각화를 갱신할 때 사용된다.
@@ -50,9 +62,9 @@ namespace Sangmin
 
         #region 직렬화
         [Serializable]
-        private class IdToUnitNodeDictionary : SerializableDictionary<int, UnitNode>{}
+        private class IdToUnitNodeDictionary : SerializableDictionary<int, UnitNode> { }
         [Serializable]
-        private class PosToIdDictionary : SerializableDictionary<Vector2Int, int>{}
+        private class PosToIdDictionary : SerializableDictionary<Vector2Int, int> { }
 
         #endregion
         // 현재 필드에 존재하는 유닛들 (id -> UnitNode)
@@ -62,7 +74,10 @@ namespace Sangmin
         // 좌표로 유닛 찾기용 (gridPos(row, col) -> id)
         [SerializeField]
         private PosToIdDictionary _posToUnitId = new PosToIdDictionary();
-        
+
+        // UnionFind 저장용
+        private Dictionary<int, List<int>> _allComponents;
+
         // 자동으로 증가하는 유닛 id
         private int _nextUnitId = 0;
 
@@ -101,7 +116,7 @@ namespace Sangmin
         /// - 예: mask = (1<<0) | (1<<2) => 위, 오른 두 방향에 간선
         /// - 실제 Unit 참조를 함께 넘기면, 이후 체인 시각화를 자동으로 갱신할 수 있다.
         /// </summary>
-        public int SpawnUnit(Vector2Int gridPos, int mask, Unit unit = null)
+        public int SpawnUnit(Vector2Int gridPos, Unit.ChainDirection mask, Unit unit = null)
         {
             int id = _nextUnitId++;
 
@@ -109,14 +124,14 @@ namespace Sangmin
             {
                 id = id,
                 gridPos = gridPos,
-                chainMask = (Unit.ChainDirection)mask,
+                chainMask = mask,
                 unit = unit
             };
 
             _units.KeyValuePair[id] = node;
             _posToUnitId.KeyValuePair[gridPos] = id;
 
-            Debug.Log($"SpawnUnit: id={id}, pos={gridPos}, mask={System.Convert.ToString(mask, 2).PadLeft(8, '0')}");
+            Debug.Log($"SpawnUnit: id={id}, pos={gridPos}, mask={System.Convert.ToString((int)mask, 2).PadLeft(8, '0')}");
 
             RebuildAndLogComponents();
             return id;
@@ -258,17 +273,20 @@ namespace Sangmin
             uf.BuildComponentsFromDirectedGraph(directedGraph);
 
             // 3) 모든 컴포넌트 로그 출력
-            Dictionary<int, List<int>> allComponents = uf.GetAllComponents();
-            Debug.Log($"현재 연결된 컴포넌트 개수: {allComponents.Count}");
-            int index = 1;
-            foreach (var comp in allComponents.Values)
-            {
-                Debug.Log($"컴포넌트 {index}: [{string.Join(", ", comp)}]");
-                index++;
-            }
+            _allComponents = uf.GetAllComponents();
+            // Debug.Log($"현재 연결된 컴포넌트 개수: {_allComponents.Count}");
+            // int index = 1;
+            // foreach (var comp in _allComponents.Values)
+            // {
+            //     Debug.Log($"컴포넌트 {index}: [{string.Join(", ", comp)}]");
+            //     index++;
+            // }
 
-            // 4) 각 유닛의 체인 연결 여부를 계산하고, Unit/ChainVisual에 반영
+            // 4) 각 유닛의 체인 연결 여부를 계산하고 Unit/ChainVisual에 반영 
             UpdateUnitChainConnections();
+
+            // 5) UnionFind를 순회하며 시너지 카운트
+            UpdateSynergyCount();
         }
 
         /// <summary>
@@ -327,11 +345,13 @@ namespace Sangmin
                 if (unit == null)
                     continue;
 
-                foreach (Unit.ChainDirection dir in Enum.GetValues(typeof(Unit.ChainDirection)))
+                // 연결되었는지 해당 방향에 대한 기록을 초기화
+                for (int dirIndex = 0; dirIndex < 8; dirIndex++)
                 {
-                    // 0 플래그나 정의되지 않은 값은 무시
-                    if (dir == 0)
-                        continue;
+                    int bit = 1 << dirIndex;
+                    Unit.ChainDirection dir = (Unit.ChainDirection)bit;
+
+                    node.connectionStates[dirIndex] = UnitNode.ChainConnectionState.Unknown;
 
                     if (!unit.chain.HasFlag(dir))
                         continue;
@@ -344,7 +364,6 @@ namespace Sangmin
             // 2) 실제로 "마주보는" 체인이 있는 쌍을 찾아 둘 다 연결 상태로 표시
             foreach (var kv in _units.KeyValuePair)
             {
-                int id = kv.Key;
                 UnitNode node = kv.Value;
                 Unit unit = node.unit;
                 if (unit == null)
@@ -356,7 +375,11 @@ namespace Sangmin
                     Unit.ChainDirection dir = (Unit.ChainDirection)bit;
 
                     // 이 유닛이 이 방향으로 체인을 가지고 있지 않으면 패스
-                    if ((node.chainMask & dir) == 0)
+                    if (!unit.chain.HasFlag(dir))
+                        continue;
+
+                    // 이미 파악한 연결 상태
+                    if (node.connectionStates[dirIndex] != UnitNode.ChainConnectionState.Unknown)
                         continue;
 
                     Vector2Int neighborPos = node.gridPos + Dir8[dirIndex];
@@ -375,11 +398,52 @@ namespace Sangmin
 
                     // 이웃 유닛이 그 반대 방향 체인을 가지고 있어야 "마주보는 체인"으로 인정
                     if ((neighborNode.chainMask & oppositeDir) == 0)
+                    {
+                        neighborNode.connectionStates[(dirIndex + 4) % 8] = UnitNode.ChainConnectionState.Disconnected;
                         continue;
+                    }
+
+                    neighborNode.connectionStates[(dirIndex + 4) % 8] = UnitNode.ChainConnectionState.Connected;
 
                     // 양쪽 모두 연결된 상태로 표시
                     unit.SetChainConnectionState(dir, true);
                     neighborUnit.SetChainConnectionState(oppositeDir, true);
+                }
+            }
+        }
+
+        private void UpdateSynergyCount()
+        {
+            int synergyNameLength = System.Enum.GetValues(typeof(Synergy.SynergyName)).Length;
+            foreach (var comp in _allComponents.Values)
+            {
+                List<int> synergyCounts = new List<int>(new int[synergyNameLength]);
+
+                // 현 부분 집합의 시너지 총합을 계산하기 위한 enum 리스트 필요
+                foreach (var id in comp)
+                {
+                    if (!_units.KeyValuePair.TryGetValue(id, out UnitNode unitNode))
+                        continue;
+
+                    foreach (var syn in unitNode.unit.synergies)
+                    {
+                        // enum 리스트에 count++
+                        synergyCounts[(int)syn.synergyName]++;
+                    }
+                }
+
+                // 시너지 총합을 다 계산했으니 다시 순회하며 unit의 synergy/count++
+                foreach (var id in comp)
+                {
+                    if (!_units.KeyValuePair.TryGetValue(id, out UnitNode unitNode))
+                        continue;
+
+                    foreach (var syn in unitNode.unit.synergies)
+                    {
+                        // unit의 synergy/count를 변경
+                        syn.count = synergyCounts[(int)syn.synergyName];
+                        Debug.Log($"unit Id:{unitNode.id}, synergyName: {syn.synergyName}, {syn.count}");
+                    }
                 }
             }
         }

@@ -971,6 +971,8 @@ MonoBehaviour:
   finalAttackRange: 0
   grade: 0
   chain: 0
+  synergies:
+  - {fileID: 11400000, guid: a5e8d4f0c04bfc449a51c413317e6515, type: 2}
   chainVisuals:
   - {fileID: 4471880737166306633}
   - {fileID: 74915202614370135}

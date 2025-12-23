@@ -99,7 +99,7 @@ namespace Sangmin
                     if (!cellInfos[row, col].isOccupied)
                     {
                         // 시너지 계산 시스템에 Unit을 생성하는 코드
-                        SynergyCountSystem.Instance.SpawnUnit(new Vector2Int(row, col), mask: (int)unit.chain);
+                        SynergyCountSystem.Instance.SpawnUnit(new Vector2Int(row, col), mask: unit.chain, unit);
                         // UnitCell에 유닛을 배정하는 코드
                         cellInfos[row, col].PlaceUnit(unit);
                         return;

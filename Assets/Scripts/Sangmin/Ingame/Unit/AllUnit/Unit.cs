@@ -62,7 +62,8 @@ namespace Sangmin
         }
 
         public IAttackBehaviour attackBehaviour;
-        public List<ISynergy> synergies = new List<ISynergy>();
+        
+        public List<Synergy> synergies = new List<Synergy>();
         public List<IStatusEffect> statusEffects = new List<IStatusEffect>();
 
         [Header("Chain Visuals (8 방향, 인덱스 0~7 = 위, 오른위, 오른, 오른아래, 아래, 왼아래, 왼, 왼위)")]

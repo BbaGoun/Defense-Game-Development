@@ -4,7 +4,7 @@ namespace Sangmin
 {
     public interface ISynergy
     {
-        int count {get;set;}
+        int count {get; set;}
         // 필요하면 더 쪼갤 수 있음 (OnRoundStart, OnKill 등)
         void OnCombatStart(Unit self);
 
