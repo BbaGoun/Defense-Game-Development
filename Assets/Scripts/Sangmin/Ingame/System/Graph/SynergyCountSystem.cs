@@ -228,6 +228,33 @@ namespace Sangmin
         }
 
         /// <summary>
+        /// 유닛의 체인 방향을 업데이트한다.
+        /// - 위치에 있는 유닛의 chainMask를 새로운 값으로 변경
+        /// - 체인 변경 후 그래프를 다시 만들고 컴포넌트를 다시 계산
+        /// </summary>
+        public void UpdateUnitChain(Vector2Int pos, Unit.ChainDirection newChainMask)
+        {
+            if (!_posToUnitId.KeyValuePair.ContainsKey(pos))
+            {
+                Debug.LogWarning($"UpdateUnitChain: pos={pos} 위치에 유닛이 존재하지 않습니다.");
+                return;
+            }
+            int unitId = _posToUnitId.KeyValuePair[pos];
+            if (!_units.KeyValuePair.TryGetValue(unitId, out var node))
+            {
+                Debug.LogWarning($"UpdateUnitChain: id={unitId} 유닛이 존재하지 않습니다.");
+                return;
+            }
+
+            Unit.ChainDirection oldChainMask = node.chainMask;
+            node.chainMask = newChainMask;
+
+            Debug.Log($"UpdateUnitChain: id={unitId}, pos={pos}, oldMask={System.Convert.ToString((int)oldChainMask, 2).PadLeft(8, '0')}, newMask={System.Convert.ToString((int)newChainMask, 2).PadLeft(8, '0')}");
+
+            RebuildAndLogComponents();
+        }
+
+        /// <summary>
         /// 3) 유닛 판매(삭제): 유닛을 완전히 제거
         /// - 유닛 딕셔너리와 좌표 매핑에서 제거
         /// - 이후 그래프/컴포넌트 재계산 시 이 유닛은 포함되지 않음

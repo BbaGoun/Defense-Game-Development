@@ -28,6 +28,7 @@ namespace Sangmin
         private UnitCell[,] cellInfos;
         [SerializeField]
         private UnitCell selectedCell;
+        private Unit currentSelectedUnit;
 
         [Header("Colors")]
         [SerializeField] private LineRenderer dragLine;
@@ -113,12 +114,22 @@ namespace Sangmin
             if (selectedCell == null)
                 return;
 
-            Debug.Log($"Sell Unit: {selectedCell.GetUnit().name}");
+            Unit unitToSell = selectedCell.GetUnit();
+            if (unitToSell == null)
+                return;
+
+            Debug.Log($"Sell Unit: {unitToSell.name}");
             unitCount--;
 
             // 가치에 따라 돈 추가
 
             SynergyCountSystem.Instance.SellUnit(new Vector2Int(selectedCell.row, selectedCell.col));
+
+            // 셀에서 유닛 제거
+            selectedCell.ClearUnit();
+
+            // 선택 해제
+            UnSelectUnit();
         }
 
         public bool SelectCell(GameObject cell)
@@ -146,7 +157,13 @@ namespace Sangmin
             // 유닛이 이미 놓여져 있는지 색깔로 여부 표시
             DrawHighlight();
 
-            // 여기서부터 유닛 이동이든, 유닛 선택 시 사거리 표시 및 스테이터스 표시 등이 거능
+            // 유닛 선택 시 사거리 표시 및 UI 패널 표시
+            Unit selectedUnit = selectedCell.GetUnit();
+            if (selectedUnit != null)
+            {
+                SelectUnit(selectedUnit);
+            }
+
             return false;
         }
 
@@ -158,8 +175,48 @@ namespace Sangmin
         public void UnSelectUnit()
         {
             //Debug.Log("UnSelect");
+            
+            // 이전 선택된 유닛의 사거리 표시 숨기기
+            if (currentSelectedUnit != null)
+            {
+                currentSelectedUnit.HideRange();
+            }
+            currentSelectedUnit = null;
+
+            // UI 패널 숨기기
+            if (UnitInfoPanel.Instance != null)
+            {
+                UnitInfoPanel.Instance.HideUnitInfo();
+            }
+
             selectedCell = null;
             ClearHighlight();
+        }
+
+        /// <summary>
+        /// 유닛 선택 시 사거리 표시 및 UI 패널 표시
+        /// </summary>
+        private void SelectUnit(Unit unit)
+        {
+            // 이전 선택된 유닛의 사거리 표시 숨기기
+            if (currentSelectedUnit != null && currentSelectedUnit != unit)
+            {
+                currentSelectedUnit.HideRange();
+            }
+
+            currentSelectedUnit = unit;
+
+            // 사거리 표시
+            if (unit != null)
+            {
+                unit.ShowRange();
+            }
+
+            // UI 패널 표시
+            if (UnitInfoPanel.Instance != null)
+            {
+                UnitInfoPanel.Instance.ShowUnitInfo(unit);
+            }
         }
 
         /// <summary>

@@ -35,18 +35,15 @@ namespace Sangmin
         */
         [Header("Base Stats")]
         public UnitStatData unitStatData;
-        public float baseAttackDamage;
-        public float baseAttackSpeed;
-        public float baseAttackRange;
 
+        // 실시간 스탯 변화를 계산할 필요가 있음
         [Header("Final Stats")]
         public float finalAttackDamage;
         public float finalAttackSpeed;
-        public float finalAttackRange;
-        // 실시간 스탯 변화를 계산할 필요가 있음
-        public UnitStatData.Grade grade;
+        public int finalAttackRange;
 
         // 체인 연결/비연결 시각화 필요
+        [Header("Chain")]
         public ChainDirection chain;
         [Flags]
         public enum ChainDirection
@@ -60,14 +57,17 @@ namespace Sangmin
             LEFT = 1 << 6,
             UPLEFT = 1 << 7
         }
+        [Header("Chain Visuals (8 방향, 인덱스 0~7 = 위, 오른위, 오른, 오른아래, 아래, 왼아래, 왼, 왼위)")]
+        public List<ChainVisual> chainVisuals = new List<ChainVisual>(8);
 
+        [Header("Additive")]
         public IAttackBehaviour attackBehaviour;
         
         public List<Synergy> synergies = new List<Synergy>();
         public List<IStatusEffect> statusEffects = new List<IStatusEffect>();
 
-        [Header("Chain Visuals (8 방향, 인덱스 0~7 = 위, 오른위, 오른, 오른아래, 아래, 왼아래, 왼, 왼위)")]
-        public List<ChainVisual> chainVisuals = new List<ChainVisual>(8);
+        [Header("Else Components")]
+        [SerializeField] private RangeIndicator rangeIndicator;
 
         private static readonly ChainDirection[] _allDirections =
         {
@@ -88,14 +88,25 @@ namespace Sangmin
                 Debug.LogError($"유닛 스탯이 배정되지 않음 : {gameObject.name}");
                 return;
             }
-            baseAttackDamage = unitStatData.attackDamage;
-            baseAttackSpeed = unitStatData.attackSpeed;
-            baseAttackRange = unitStatData.attackSpeed;
-            grade = unitStatData.grade;
+
+            finalAttackDamage = unitStatData.attackDamage;
+            finalAttackSpeed = unitStatData.attackSpeed;
+            finalAttackRange = unitStatData.attackRange;
+
+            // 자식 오브젝트에서 RangeIndicator를 찾는다.
+            rangeIndicator = GetComponentInChildren<RangeIndicator>(false);
+            if(rangeIndicator == null)
+            {
+                Debug.LogError($"RangeIndicator가 배정되지 않음 : {gameObject.name}");
+                return;
+            }
+            rangeIndicator.InitializeSpriteRenderer(finalAttackRange);
         }
 
         void OnEnable()
         {
+            // MemoryPool 방식을 사용하기 때문에 OnEnable이어야 함.
+
             // 유닛이 생성될 때 8방향 중 2방향을 랜덤으로 선택하여 체인 부여
             InitializeRandomChains();
             // 방금 선택된 방향들에 대해 시각적으로 체인 생성 (초기에는 모두 "비연결" 상태)
@@ -275,7 +286,66 @@ namespace Sangmin
             return index;
         }
 
+        /// <summary>
+        /// 체인 방향을 시계방향으로 1칸씩 회전시킨다.
+        /// 예: UP -> UPRIGHT -> RIGHT -> DOWNRIGHT -> DOWN -> DOWNLEFT -> LEFT -> UPLEFT -> UP
+        /// </summary>
+        public void RotateChainClockwise()
+        {
+            ChainDirection oldChain = chain;
+            ChainDirection newChain = 0;
+            int chainValue = (int)chain;
+
+            // 각 비트(0~7)를 확인하여 시계방향으로 1칸 이동
+            for (int i = 0; i < 8; i++)
+            {
+                int currentBit = 1 << i;
+                if ((chainValue & currentBit) != 0)
+                {
+                    // 다음 방향 인덱스 계산 (7에서 0으로 순환)
+                    int nextIndex = (i + 1) % 8;
+                    ChainDirection nextDirection = _allDirections[nextIndex];
+                    newChain |= nextDirection;
+                }
+            }
+
+            chain = newChain;
+            
+            // 체인 시각화 업데이트
+            RefreshAllChainVisualsAsDisconnected();
+
+            // 체인 변경 이벤트 발생 (시너지 시스템 업데이트용)
+            OnChainChanged?.Invoke(this, oldChain, newChain);
+        }
+
+        /// <summary>
+        /// 체인이 변경되었을 때 발생하는 이벤트 (Unit, oldChain, newChain)
+        /// </summary>
+        public System.Action<Unit, ChainDirection, ChainDirection> OnChainChanged;
+
+
         #endregion
 
+        /// <summary>
+        /// 사거리 표시를 활성화
+        /// </summary>
+        public void ShowRange()
+        {
+            if (rangeIndicator != null)
+            {
+                rangeIndicator.ShowRange();
+            }
+        }
+
+        /// <summary>
+        /// 사거리 표시를 비활성화
+        /// </summary>
+        public void HideRange()
+        {
+            if (rangeIndicator != null)
+            {
+                rangeIndicator.HideRange();
+            }
+        }
     }
 }
