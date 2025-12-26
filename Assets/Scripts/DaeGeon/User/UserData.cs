@@ -1,4 +1,4 @@
-using System; // 반드시 파일의 가장 첫 줄(최상단)에 있어야 합니다.
+using System; 
 
 [Serializable]
 public class UserData
