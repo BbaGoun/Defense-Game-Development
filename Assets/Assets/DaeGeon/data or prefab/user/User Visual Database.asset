@@ -20,7 +20,7 @@ MonoBehaviour:
   - id: 2
     sprite: {fileID: 1535906679059638393, guid: 1ddc9afd21fec77489b1248d18f31b68, type: 3}
     displayName: "2\uBC88\uC544\uC774\uCF58"
-    acquireDesc: "2\uC544\uC774\uCF58\uC785\uB2C8"
+    acquireDesc: "2\uC544\uC774\uCF58\uC785\uB2C8\uB2E4 "
   - id: 3
     sprite: {fileID: 7853364175085887869, guid: e3e6b3d6c57dc7b488e7d1e8be902988, type: 3}
     displayName: "3\uBC88 \uC544\uC774\uCF58"

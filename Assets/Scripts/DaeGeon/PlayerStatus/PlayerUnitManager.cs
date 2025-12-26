@@ -1,10 +1,6 @@
 using System;
 using UnityEngine;
 
-/// <summary>
-/// 플레이어 유닛 정보를 중앙에서 노출하는 싱글턴 매니저입니다.
-/// 다른 시스템에서 `PlayerUnitManager.Instance.GetStatus()`처럼 접근하세요.
-/// </summary>
 public class PlayerUnitManager : MonoBehaviour
 {
     public static PlayerUnitManager Instance;
@@ -12,22 +8,19 @@ public class PlayerUnitManager : MonoBehaviour
     [Header("Player References")]
     public GameObject playerObject;
     public Player player;
-    public PlayerStatus status;
+    
+    // 이제 직접 변수를 들고 있지 않고, StatManager의 값을 실시간으로 연결합니다.
+    public PlayerStatus Status => PlayerStatManager.Instance != null ? PlayerStatManager.Instance.TotalStatus : null;
 
     public event Action OnPlayerRegistered;
 
     private void Awake()
     {
         if (Instance == null) Instance = this;
-        else
-        {
-            Destroy(gameObject);
-            return;
-        }
+        else { Destroy(gameObject); return; }
 
         DontDestroyOnLoad(gameObject);
 
-        // 자동으로 씬에 Player가 있으면 등록 시도
         if (playerObject == null)
         {
             var p = FindAnyObjectByType<Player>();
@@ -35,14 +28,14 @@ public class PlayerUnitManager : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// 씬에서 Player 오브젝트가 생성되거나 바뀔 때 호출하세요.
-    /// </summary>
     public void RegisterPlayer(GameObject playerGo)
     {
         playerObject = playerGo;
         player = playerGo != null ? playerGo.GetComponent<Player>() : null;
-        status = playerGo != null ? playerGo.GetComponent<PlayerStatus>() : null;
+        
+        // 기존의 status = GetComponent<PlayerStatus>() 코드는 삭제합니다.
+        // PlayerStatus가 일반 클래스이므로 GetComponent로 찾을 수 없기 때문입니다.
+        
         OnPlayerRegistered?.Invoke();
     }
 
@@ -50,18 +43,19 @@ public class PlayerUnitManager : MonoBehaviour
     {
         playerObject = null;
         player = null;
-        status = null;
     }
 
     public Player GetPlayer() => player;
-    public PlayerStatus GetStatus() => status;
+    
+    // 이제 StatManager에서 계산된 최종 스탯을 반환합니다.
+    public PlayerStatus GetStatus() => Status;
+    
     public GameObject GetPlayerObject() => playerObject;
     public bool HasPlayer() => player != null;
 
-    // 안전한 조회 유틸
     public bool TryGetStatus(out PlayerStatus outStatus)
     {
-        outStatus = status;
-        return status != null;
+        outStatus = Status;
+        return Status != null;
     }
 }

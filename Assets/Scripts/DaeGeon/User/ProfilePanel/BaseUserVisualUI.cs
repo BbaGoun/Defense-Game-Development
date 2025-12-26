@@ -3,43 +3,58 @@ using System.Collections;
 
 public abstract class BaseUserVisualUI : MonoBehaviour
 {
+    // 임시 선택 이벤트를 사용할지 여부 (기본 false)
+    protected virtual bool UseSelectionEvent => false;
+
     protected virtual void OnEnable()
     {
-        // Manager가 있으면 즉시 구독
         if (UserManager.Instance != null)
         {
             Subscribe();
         }
         else
         {
-            // 아직 Manager가 없다면, 준비될 때까지 조금 기다렸다가 구독 시도 (코루틴)
             StartCoroutine(WaitAndSubscribe());
         }
     }
 
     private IEnumerator WaitAndSubscribe()
     {
-        // UserManager.Instance가 생길 때까지 대기
         while (UserManager.Instance == null)
-        {
-            yield return null; 
-        }
-        
+            yield return null;
+
         Subscribe();
         Debug.Log($"[{gameObject.name}] 지연 구독 성공!");
     }
 
     private void Subscribe()
     {
-        UserManager.Instance.OnUserDataChanged -= Refresh; // 중복 방지
-        UserManager.Instance.OnUserDataChanged += Refresh;
+        var um = UserManager.Instance;
+
+        // 실제 데이터 변경
+        um.OnUserDataChanged -= Refresh;
+        um.OnUserDataChanged += Refresh;
+
+        // 임시 선택 변경 (필요한 UI만)
+        if (UseSelectionEvent)
+        {
+            um.OnSelectionChanged -= Refresh;
+            um.OnSelectionChanged += Refresh;
+        }
+
         Refresh();
     }
 
     protected virtual void OnDisable()
     {
-        if (UserManager.Instance != null)
-            UserManager.Instance.OnUserDataChanged -= Refresh;
+        if (UserManager.Instance == null) return;
+
+        var um = UserManager.Instance;
+
+        um.OnUserDataChanged -= Refresh;
+
+        if (UseSelectionEvent)
+            um.OnSelectionChanged -= Refresh;
     }
 
     protected abstract void Refresh();

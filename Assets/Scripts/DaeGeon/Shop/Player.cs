@@ -33,6 +33,12 @@ public class Player : MonoBehaviour
         // Ensure UI reflects player-dependent state after Player is ready
         var inv = FindAnyObjectByType<InventoryUI>();
         if (inv != null) inv.Refresh();
+
+        if (PlayerUnitManager.Instance != null)
+        {
+            Debug.Log("Player 등록 시도 from Player.cs Awake");
+            PlayerUnitManager.Instance.RegisterPlayer(gameObject);
+        }
     }
 
     // ================= 장착 =================
