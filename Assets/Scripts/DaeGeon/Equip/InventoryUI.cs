@@ -12,6 +12,7 @@ public class InventoryUI : MonoBehaviour
     // 장착 슬롯 이미지
     public Image headSlotImage;
     public Image bodySlotImage;
+    
     // 슬롯 미리보기 리셋 버튼 (에디터에 연결)
     public Button previewResetButton;
 
@@ -32,7 +33,10 @@ public class InventoryUI : MonoBehaviour
         {
             previewResetButton.onClick.RemoveAllListeners();
             previewResetButton.onClick.AddListener(() => {
-                if (Player.Instance != null) Player.Instance.ClearPreview();
+                // 직접 호출 대신 방송 송출 (모든 플레이어의 미리보기 초기화)
+                PlayerEvents.OnClearPreviewRequest?.Invoke();
+                
+                // 슬롯 아이콘은 현재 Instance(데이터 기준) 상태에 맞춰 갱신
                 UpdateSlotIcon(AttachPoint.Head);
                 UpdateSlotIcon(AttachPoint.Body);
             });
@@ -77,7 +81,7 @@ public class InventoryUI : MonoBehaviour
     {
         foreach (var btn in buttons)
         {
-            if (btn.AttachPoint == point)
+            if (btn != null && btn.AttachPoint == point)
                 btn.RefreshButton();
         }
 
@@ -87,39 +91,22 @@ public class InventoryUI : MonoBehaviour
     // ================= 슬롯 아이콘 갱신 =================
     public void UpdateSlotIcon(AttachPoint point)
     {
+        // UI 데이터 확인용으로만 Instance 참조
+        if (Player.Instance == null) return;
+
         switch (point)
         {
             case AttachPoint.Head:
-                if (headSlotImage != null && Player.Instance != null && Player.Instance.headSlot != null)
-                {
-                    headSlotImage.sprite = Player.Instance.headSlot.icon;
-                    headSlotImage.color = Color.white;
-                }
-                else if (headSlotImage != null)
-                {
-                    headSlotImage.sprite = null;
-                    headSlotImage.color = new Color(1f,1f,1f,0f);
-                }
+                UpdateSingleSlot(headSlotImage, Player.Instance.headSlot);
                 break;
 
-
             case AttachPoint.Body:
-                if (bodySlotImage != null && Player.Instance != null && Player.Instance.bodySlot != null)
-                {
-                    bodySlotImage.sprite = Player.Instance.bodySlot.icon;
-                    bodySlotImage.color = Color.white; // 알파 복구
-                }
-                else if (bodySlotImage != null)
-                {
-                    bodySlotImage.sprite = null;
-                    bodySlotImage.color = new Color(1f, 1f, 1f, 0f); // 완전 투명
-                }
+                UpdateSingleSlot(bodySlotImage, Player.Instance.bodySlot);
                 break;
         }
     }
 
-
-    // ================= 슬롯 하나 처리 =================
+    // ================= 슬롯 하나 처리 (중복 코드 정리) =================
     void UpdateSingleSlot(Image slotImage, ItemData slotData)
     {
         if (slotImage == null) return;

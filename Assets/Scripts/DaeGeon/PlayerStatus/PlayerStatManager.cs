@@ -14,8 +14,11 @@ public class PlayerStatManager : MonoBehaviour
     [Header("Bonus Status (장비, 버프 등)")]
     [SerializeField] private PlayerStatus bonusStatus;
 
-    [Header("Multipliers (배수)")]
-    [SerializeField] private float strMultiplier = 1.0f; // 기본 1배
+    [Header("Multipliers (배수 설정)")]
+    [SerializeField] private float strMultiplier = 1.0f;
+    [SerializeField] private float agiMultiplier = 1.0f;
+    [SerializeField] private float intMultiplier = 1.0f;
+    [SerializeField] private float manaMultiplier = 1.0f;
 
     public event Action<PlayerStatus> OnStatChanged;
 
@@ -47,40 +50,48 @@ public class PlayerStatManager : MonoBehaviour
         NotifyChanged();
     }
 
-    /// <summary>
-    /// 곱연산이 적용된 최종 스탯을 반환합니다.
-    /// </summary>
+    // 모든 연산이 끝난 최종 스탯 반환
     public PlayerStatus TotalStatus 
     {
         get
         {
-            // 1. 먼저 합연산을 합니다 (Base + Bonus)
             PlayerStatus total = baseStatus + bonusStatus;
 
-            // 2. 합산된 결과에 배수를 곱합니다.
-            // 정수형(int) 스탯이므로 계산 후 반올림(RoundToInt) 처리를 해줍니다.
+            // 각각의 배수 적용 후 반올림
             total.strength = Mathf.RoundToInt(total.strength * strMultiplier);
-            
-            // 다른 스탯도 배수가 필요하다면 여기에 추가하면 됩니다.
-            // total.agility = Mathf.RoundToInt(total.agility * agiMultiplier);
+            total.agility = Mathf.RoundToInt(total.agility * agiMultiplier);
+            total.intelligence = Mathf.RoundToInt(total.intelligence * intMultiplier);
+            total.mana = Mathf.RoundToInt(total.mana * manaMultiplier);
 
             return total;
         }
     }
 
-    /// <summary>
-    /// 외부(특성 매니저 등)에서 배수를 변경할 때 호출합니다.
-    /// </summary>
-    public void UpdateStrMultiplier(float newMultiplier)
-    {
-        strMultiplier = newMultiplier;
-        NotifyChanged(); // 배수가 바뀌었으니 최종 스탯이 변했다고 알림
+    #region 배수 수정 함수
+    public void AddStrMultiplier(float amount) { strMultiplier += amount; NotifyChanged(); }
+    public void AddAgiMultiplier(float amount) { agiMultiplier += amount; NotifyChanged(); }
+    public void AddIntMultiplier(float amount) { intMultiplier += amount; NotifyChanged(); }
+    public void AddManaMultiplier(float amount) { manaMultiplier += amount; NotifyChanged(); }
+    #endregion
+
+    #region 기본 스탯 수정 함수
+    public void AddBaseStrength(int value) { baseStatus.strength += value; NotifyChanged(); }
+    public void AddBaseAgility(int value) { baseStatus.agility += value; NotifyChanged(); }
+    public void AddBaseIntelligence(int value) { baseStatus.intelligence += value; NotifyChanged(); }
+    public void AddBaseMana(int value) { baseStatus.mana += value; NotifyChanged(); }
+
+    public void AddBonus(PlayerStatus bonus) 
+    { 
+        bonusStatus.strength += bonus.strength; 
+        bonusStatus.agility += bonus.agility;
+        bonusStatus.intelligence += bonus.intelligence;
+        bonusStatus.mana += bonus.mana;
+        NotifyChanged(); 
     }
 
-    #region 나머지 관리 함수들 (동일)
-    public void AddBaseStrength(int value) { baseStatus.strength += value; NotifyChanged(); }
-    public void AddBonus(PlayerStatus bonus) { bonusStatus.strength += bonus.strength; /*...*/ NotifyChanged(); }
-    public void RemoveBonus(PlayerStatus bonus) { /*...*/ NotifyChanged(); }
-    private void NotifyChanged() { OnStatChanged?.Invoke(TotalStatus); }
+    private void NotifyChanged()
+    {
+        OnStatChanged?.Invoke(TotalStatus);
+    }
     #endregion
 }

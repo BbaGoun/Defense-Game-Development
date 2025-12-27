@@ -25,7 +25,6 @@ public class InventoryManager : MonoBehaviour
             int shopIndex = shop.itemList.IndexOf(data);
             int insertPos = 0;
 
-            // Count how many existing inventory items appear before this item in the shop list
             foreach (var existing in items)
             {
                 if (existing == null) continue;
@@ -34,7 +33,6 @@ public class InventoryManager : MonoBehaviour
                     insertPos++;
             }
 
-            // Insert at the computed position
             items.Insert(insertPos, data);
         }
         else
@@ -42,25 +40,25 @@ public class InventoryManager : MonoBehaviour
             items.Add(data);
         }
 
-        // UI 갱신 호출 가능
-        // 아이템이 인벤토리에 추가될 때(예: 상점에서 이동) 미리보기 초기화
-        if (Player.Instance != null)
-            Player.Instance.ClearPreview();
+        // [수정된 부분] 
+        // Player.Instance.ClearPreview() 대신 방송 송출!
+        // 아이템이 인벤토리에 추가될 때(구매 등) 모든 플레이어의 미리보기를 초기화합니다.
+        PlayerEvents.OnClearPreviewRequest?.Invoke();
     }
 
-        // 편의: 아이템 ID 목록으로 인벤토리 설정 (SaveManager에서 사용)
-        public void SetItemsByIDs(List<string> ids)
-        {
-            items.Clear();
-            if (ids == null || ids.Count == 0) return;
-            if (ItemDatabase.Instance == null) return;
+    // 편의: 아이템 ID 목록으로 인벤토리 설정 (SaveManager에서 사용)
+    public void SetItemsByIDs(List<string> ids)
+    {
+        items.Clear();
+        if (ids == null || ids.Count == 0) return;
+        if (ItemDatabase.Instance == null) return;
 
-            foreach (var id in ids)
-            {
-                var it = ItemDatabase.Instance.GetByID(id);
-                if (it != null && !items.Contains(it)) items.Add(it);
-            }
+        foreach (var id in ids)
+        {
+            var it = ItemDatabase.Instance.GetByID(id);
+            if (it != null && !items.Contains(it)) items.Add(it);
         }
+    }
 
     // 아이템 존재 여부 확인
     public bool HasItem(ItemData data)

@@ -19,19 +19,21 @@ public class InventoryItemButton : MonoBehaviour
     {
         data = item;
 
-        icon.sprite = item.icon;
-        nameText.text = item.itemName;
-        attachText.text = GetAttachPointLabel(item.attachPoint);
+        if (icon != null) icon.sprite = item.icon;
+        if (nameText != null) nameText.text = item.itemName;
+        if (attachText != null) attachText.text = GetAttachPointLabel(item.attachPoint);
 
         RefreshButton();
 
-        // 루트 버튼 클릭으로 미리보기 실행 (프리팹의 부모 버튼에 붙여서 바로 사용 가능)
+        // 루트 버튼 클릭으로 미리보기 실행
         var rootBtn = GetComponent<UnityEngine.UI.Button>();
         if (rootBtn != null)
         {
             rootBtn.onClick.RemoveAllListeners();
-            rootBtn.onClick.AddListener(() => {
-                if (Player.Instance != null) Player.Instance.TogglePreview(data);
+            rootBtn.onClick.AddListener(() => 
+            {
+                // 직접 호출 대신 방송 송출
+                PlayerEvents.OnTogglePreviewRequest?.Invoke(data);
             });
         }
     }
@@ -47,7 +49,7 @@ public class InventoryItemButton : MonoBehaviour
 
         equipButton.onClick.RemoveAllListeners();
 
-        // 안전하게 Player 인스턴스 체크
+        // 데이터 체크를 위해 Player.Instance(기준점)는 참조하되, 명령은 방송으로 보냅니다.
         if (Player.Instance == null)
         {
             equipButtonText.text = "장착";
@@ -73,18 +75,22 @@ public class InventoryItemButton : MonoBehaviour
 
     private void OnEquip()
     {
-        Player.Instance.Equip(data);
+        // Player.Instance.Equip(data); 대신 방송 송출
+        PlayerEvents.OnEquipRequest?.Invoke(data);
 
-        // 같은 부위 버튼 전부 갱신
-        InventoryUI.Instance.RefreshByAttachPoint(data.attachPoint);
+        // UI 갱신 (기존 방식 유지)
+        if (InventoryUI.Instance != null)
+            InventoryUI.Instance.RefreshByAttachPoint(data.attachPoint);
     }
 
     private void OnUnequip()
     {
-        Player.Instance.Unequip(data.attachPoint);
+        // Player.Instance.Unequip(data.attachPoint); 대신 방송 송출
+        PlayerEvents.OnUnequipRequest?.Invoke(data.attachPoint);
 
-        // 같은 부위 버튼 전부 갱신
-        InventoryUI.Instance.RefreshByAttachPoint(data.attachPoint);
+        // UI 갱신 (기존 방식 유지)
+        if (InventoryUI.Instance != null)
+            InventoryUI.Instance.RefreshByAttachPoint(data.attachPoint);
     }
 
     private string GetAttachPointLabel(AttachPoint ap)

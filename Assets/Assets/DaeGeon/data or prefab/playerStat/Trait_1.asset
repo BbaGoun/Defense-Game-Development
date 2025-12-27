@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a1abbb096807c04cb4d0ba2b1ac88a5, type: 3}
+  m_Name: Trait_1
+  m_EditorClassIdentifier: Assembly-CSharp::TraitData
+  traitName: "\uACF5\uACA9\uB825 \uC99D\uAC001"
+  description: "\uACF5\uACA9\uB825 \uC99D\uAC00 + 5"
+  unlockCost: 1
+  icon: {fileID: 0}
+  addStrength: 5
+  addAgility: 5
+  addIntelligence: 5
+  addMana: 5
+  addStrMultiplier: 2
+  addAgiMultiplier: 2
+  addIntMultiplier: 2
+  addManaMultiplier: 2
