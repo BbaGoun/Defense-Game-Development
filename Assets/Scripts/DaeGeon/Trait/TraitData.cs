@@ -1,21 +1,23 @@
 using UnityEngine;
-using System.Collections;
-using UnityEngine.UI;
-using TMPro;
 
-[CreateAssetMenu(menuName = "Character/TraitData")]
+[CreateAssetMenu(fileName = "NewTrait", menuName = "Traits/TraitData")]
 public class TraitData : ScriptableObject
 {
-    public string traitId;        // 고유 ID
-    public string traitName;      // 특성 이름
-    [TextArea] public string desc; // 설명
-    public Sprite icon;           // 아이콘 이미지
+    [Header("기본 정보")]
+    public string traitName;
+    [TextArea] public string description;
+    public int unlockCost = 1;
+    public Sprite icon;
 
-    // 능력치 설정
-    public StatType targetStat;   // 어떤 스탯을 올릴 것인가? (Enum)
-    public float value;           // 증가 수치
-    
-    public int maxLevel = 5;      // 최대 레벨
+    [Header("고정 수치 추가 (합연산)")]
+    public int addStrength;
+    public int addAgility;
+    public int addIntelligence;
+    public int addMana;
+
+    [Header("배수 추가 (0.05 = 5% 증가)")]
+    public float addStrMultiplier;
+    public float addAgiMultiplier;
+    public float addIntMultiplier;
+    public float addManaMultiplier;
 }
-
-public enum StatType { Health, Attack, Defense, Speed }
