@@ -1,6 +1,7 @@
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.EventSystems;
 
 namespace Sangmin
 {
@@ -70,6 +71,12 @@ namespace Sangmin
                 return;
             }
             //Debug.Log("Click");
+
+            // UI 위에 마우스가 있는지 확인 (UI 버튼 클릭 시 무시)
+            if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
+            {
+                return;
+            }
 
             var rayHit = Physics2D.GetRayIntersection(_mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue()));
             if (!rayHit.collider)

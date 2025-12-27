@@ -30,7 +30,7 @@ namespace Sangmin
             spriteRenderer.color = colorWithAlpha;
 
             currentRange = range;
-            spriteRenderer.size = new Vector2(currentRange*multiplier, currentRange*multiplier);
+            spriteRenderer.size = new Vector2(currentRange * multiplier, currentRange * multiplier);
 
             spriteRenderer.sortingOrder = 3;
             spriteRenderer.enabled = false;
@@ -60,7 +60,7 @@ namespace Sangmin
         public void UpdateRange(float newRange)
         {
             currentRange = newRange;
-            spriteRenderer.size = new Vector2(currentRange*multiplier, currentRange*multiplier);
+            spriteRenderer.size = new Vector2(currentRange * multiplier, currentRange * multiplier);
         }
 
 #if UNITY_EDITOR
@@ -75,7 +75,7 @@ namespace Sangmin
                 colorWithAlpha.a = alpha;
                 spriteRenderer.color = colorWithAlpha;
 
-                spriteRenderer.size = new Vector2(currentRange*multiplier, currentRange*multiplier);
+                spriteRenderer.size = new Vector2(currentRange * multiplier, currentRange * multiplier);
             }
         }
 #endif

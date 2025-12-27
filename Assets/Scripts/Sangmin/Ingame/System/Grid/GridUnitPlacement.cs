@@ -387,7 +387,7 @@ namespace Sangmin
             dragLine.startWidth = dragLine.endWidth = 0.05f;
             dragLine.material = dragLine.material ?? new Material(Shader.Find("Sprites/Default"));
             dragLine.startColor = dragLine.endColor = dragPathColor;
-            dragLine.sortingOrder = 20;
+            dragLine.sortingOrder = 2;
             dragLine.enabled = false;
         }
 

@@ -99,7 +99,7 @@ namespace Sangmin
                 return;
             }
 
-            spriteRenderer.sortingOrder = 8;
+            spriteRenderer.sortingOrder = 1;
             spriteRenderer.material = spriteRenderer.material ?? new Material(Shader.Find("Sprites/Default"));
 
             var baseColor = new Color(1f, 1f, 1f, spriteAlpha);
@@ -134,7 +134,7 @@ namespace Sangmin
             lineRenderer.numCornerVertices = 0;
             lineRenderer.numCapVertices = 0;
             lineRenderer.material = lineRenderer.material ?? new Material(Shader.Find("Sprites/Default"));
-            lineRenderer.sortingOrder = 10;
+            lineRenderer.sortingOrder = 2;
 
             var baseColor = new Color(1f, 1f, 1f, lineAlpha);
             lineRenderer.startColor = lineRenderer.endColor = baseColor;
