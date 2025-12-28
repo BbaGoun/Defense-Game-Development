@@ -15,8 +15,11 @@ MonoBehaviour:
   itemID: CatHair01
   itemName: "\uACE0\uC591\uC774 \uBA38\uB9AC\uB760"
   icon: {fileID: 220507242669131962, guid: 5ad35895e11855b47b8ac1b67aec389f, type: 3}
-  equip: {fileID: 8422155656428866936, guid: 368d3357e5479be44b65b37a03771e5b, type: 3}
-  isEquipped: 0
-  prefab: {fileID: 8014763961426908726, guid: 74ade914e37674a48851a58b1e73a4ee, type: 3}
   price: 500
-  attachPoint: 0
+  isEquipped: 0
+  equip: {fileID: 8422155656428866936, guid: 368d3357e5479be44b65b37a03771e5b, type: 3}
+  prefab: {fileID: 8014763961426908726, guid: 74ade914e37674a48851a58b1e73a4ee, type: 3}
+  attachPoint: 1
+  equipmentType: 0
+  attack: 0
+  defense: 0
