@@ -97,14 +97,15 @@ namespace Sangmin
             {
                 for (int col = 0; col < gridWidth; col++)
                 {
-                    if (!cellInfos[row, col].isOccupied)
-                    {
-                        // 시너지 계산 시스템에 Unit을 생성하는 코드
-                        SynergyCountSystem.Instance.SpawnUnit(new Vector2Int(row, col), mask: unit.chain, unit);
-                        // UnitCell에 유닛을 배정하는 코드
-                        cellInfos[row, col].PlaceUnit(unit);
-                        return;
-                    }
+                    // 비활성화된 셀이거나 이미 점유된 셀은 건너뛰기
+                    if (cellInfos[row, col] == null || !cellInfos[row, col].gameObject.activeSelf || cellInfos[row, col].isOccupied)
+                        continue;
+
+                    // 시너지 계산 시스템에 Unit을 생성하는 코드
+                    SynergyCountSystem.Instance.SpawnUnit(new Vector2Int(row, col), mask: unit.chain, unit);
+                    // UnitCell에 유닛을 배정하는 코드
+                    cellInfos[row, col].PlaceUnit(unit);
+                    return;
                 }
             }
         }
@@ -141,30 +142,61 @@ namespace Sangmin
             {
                 for (int col = 0; col < gridWidth; col++)
                 {
+                    if (cellInfos[row, col] == null || !cellInfos[row, col].gameObject.activeSelf)
+                        continue;
+
                     if (cell.Equals(cellInfos[row, col].gameObject))
                     {
+                        // 비활성화된 셀은 선택 불가
+                        if (!cellInfos[row, col].gameObject.activeSelf)
+                            return true;
+
                         // 셀 안에 유닛 있는지 확인, 확인이 되면 유닛이 있는 유의미한 셀을 선택한 것
                         if (cellInfos[row, col].isOccupied)
                         {
                             selectedCell = cellInfos[row, col];
+
+                            // 시간 느려지기
+                            TimeController.Instance.SetTimeScale(0.2f);
+
+                            // 유닛이 이미 놓여져 있는지 색깔로 여부 표시
+                            DrawHighlight();
+
+                            // 유닛 선택 시 사거리 표시 및 UI 패널 표시
+                            Unit selectedUnit = selectedCell.GetUnit();
+                            if (selectedUnit != null)
+                            {
+                                SelectUnit(selectedUnit);
+                            }
+
+                            return false;
                         }
                         else
-                            return true;
+                        {
+                            Debug.Log($"유닛이 없는 셀을 선택한 경우 CellInfoPanel 표시: {cellInfos[row, col].name}");
+
+                            // 유닛이 없는 셀을 선택한 경우 CellInfoPanel 표시
+                            selectedCell = cellInfos[row, col];
+
+                            // 시간 느려지기
+                            TimeController.Instance.SetTimeScale(0.2f);
+
+                            // 하이라이트 표시
+                            DrawHighlight();
+
+                            // CellInfoPanel 표시
+                            if (CellInfoPanel.Instance != null)
+                            {
+                                CellInfoPanel.Instance.ShowCellInfo(selectedCell);
+                            }
+
+                            return false;
+                        }
                     }
                 }
             }
 
-            // 유닛이 이미 놓여져 있는지 색깔로 여부 표시
-            DrawHighlight();
-
-            // 유닛 선택 시 사거리 표시 및 UI 패널 표시
-            Unit selectedUnit = selectedCell.GetUnit();
-            if (selectedUnit != null)
-            {
-                SelectUnit(selectedUnit);
-            }
-
-            return false;
+            return true;
         }
 
         public UnitCell GetSelectedCell()
@@ -175,7 +207,10 @@ namespace Sangmin
         public void UnSelectUnit()
         {
             //Debug.Log("UnSelect");
-            
+
+            if (selectedCell == null)
+                return;
+
             // 이전 선택된 유닛의 사거리 표시 숨기기
             if (currentSelectedUnit != null)
             {
@@ -189,7 +224,17 @@ namespace Sangmin
                 UnitInfoPanel.Instance.HideUnitInfo();
             }
 
+            // CellInfoPanel 숨기기
+            if (CellInfoPanel.Instance != null)
+            {
+                CellInfoPanel.Instance.HideCellInfo();
+            }
+
             selectedCell = null;
+
+            // 시간 정상화
+            TimeController.Instance.SetTimeScale(1f);
+
             ClearHighlight();
         }
 
@@ -229,7 +274,7 @@ namespace Sangmin
                 return;
 
             UnitCell targetCell = FindCellByGameObject(cell);
-            if (targetCell == null)
+            if (targetCell == null || !targetCell.gameObject.activeSelf)
                 return;
 
             Unit movingUnit = selectedCell.GetUnit();
@@ -279,6 +324,9 @@ namespace Sangmin
             if (selectedCell == null)
                 return;
 
+            if (selectedCell.GetUnit() == null)
+                return;
+
             if (dragLine == null)
                 EnsureDragLine();
 
@@ -292,6 +340,9 @@ namespace Sangmin
         public void UpdateDrag(Vector3 mouseWorldPos, GameObject hoverCellObject)
         {
             if (selectedCell == null || dragLine == null)
+                return;
+
+            if (selectedCell.GetUnit() == null)
                 return;
 
             // 점선/경로: 선택된 셀 중심에서 마우스 위치까지
@@ -341,12 +392,15 @@ namespace Sangmin
             dragTargetCell = null;
         }
 
-        private void DrawHighlight()
+        public void DrawHighlight()
         {
             for (int row = 0; row < gridHeight; row++)
             {
                 for (int col = 0; col < gridWidth; col++)
                 {
+                    if (cellInfos[row, col] == null || !cellInfos[row, col].gameObject.activeSelf)
+                        continue;
+
                     if (cellInfos[row, col].Equals(selectedCell))
                         cellInfos[row, col].SetHighlight(true, selectedColor);
                     else
@@ -366,6 +420,9 @@ namespace Sangmin
             {
                 for (int col = 0; col < gridWidth; col++)
                 {
+                    if (cellInfos[row, col] == null || !cellInfos[row, col].gameObject.activeSelf)
+                        continue;
+
                     cellInfos[row, col].SetHighlight(false, availableColor);
                 }
             }
@@ -413,5 +470,131 @@ namespace Sangmin
 
             return null;
         }
+
+        #region Cell Activation/Deactivation
+
+        /// <summary>
+        /// 특정 위치의 UnitCell을 활성화/비활성화합니다.
+        /// </summary>
+        /// <param name="row">행 인덱스</param>
+        /// <param name="col">열 인덱스</param>
+        /// <param name="active">활성화 여부 (true: 활성화, false: 비활성화)</param>
+        /// <returns>성공 여부</returns>
+        public bool SetCellActive(int row, int col, bool active)
+        {
+            // 범위 체크
+            if (row < 0 || row >= gridHeight || col < 0 || col >= gridWidth)
+            {
+                Debug.LogWarning($"SetCellActive: 범위를 벗어난 인덱스입니다. row={row}, col={col}");
+                return false;
+            }
+
+            if (cellInfos[row, col] == null)
+            {
+                Debug.LogWarning($"SetCellActive: 해당 위치에 UnitCell이 없습니다. row={row}, col={col}");
+                return false;
+            }
+
+            // 비활성화하려는 셀에 유닛이 있는 경우 처리
+            if (!active && cellInfos[row, col].isOccupied)
+            {
+                Debug.LogWarning($"SetCellActive: 유닛이 있는 셀은 비활성화할 수 없습니다. row={row}, col={col}");
+                return false;
+            }
+
+            cellInfos[row, col].gameObject.SetActive(active);
+            return true;
+        }
+
+        /// <summary>
+        /// GameObject로 UnitCell을 활성화/비활성화합니다.
+        /// </summary>
+        /// <param name="cell">UnitCell GameObject</param>
+        /// <param name="active">활성화 여부 (true: 활성화, false: 비활성화)</param>
+        /// <returns>성공 여부</returns>
+        public bool SetCellActive(GameObject cell, bool active)
+        {
+            if (cell == null)
+            {
+                Debug.LogWarning("SetCellActive: cell이 null입니다.");
+                return false;
+            }
+
+            UnitCell unitCell = FindCellByGameObject(cell);
+            if (unitCell == null)
+            {
+                Debug.LogWarning($"SetCellActive: 해당 GameObject에 UnitCell이 없습니다. {cell.name}");
+                return false;
+            }
+
+            // 비활성화하려는 셀에 유닛이 있는 경우 처리
+            if (!active && unitCell.isOccupied)
+            {
+                Debug.LogWarning($"SetCellActive: 유닛이 있는 셀은 비활성화할 수 없습니다. {cell.name}");
+                return false;
+            }
+
+            unitCell.gameObject.SetActive(active);
+            return true;
+        }
+
+        /// <summary>
+        /// 특정 위치의 UnitCell 활성화 상태를 확인합니다.
+        /// </summary>
+        /// <param name="row">행 인덱스</param>
+        /// <param name="col">열 인덱스</param>
+        /// <returns>활성화 여부 (셀이 없으면 false)</returns>
+        public bool IsCellActive(int row, int col)
+        {
+            if (row < 0 || row >= gridHeight || col < 0 || col >= gridWidth)
+                return false;
+
+            if (cellInfos[row, col] == null)
+                return false;
+
+            return cellInfos[row, col].gameObject.activeSelf;
+        }
+
+        /// <summary>
+        /// GameObject로 UnitCell 활성화 상태를 확인합니다.
+        /// </summary>
+        /// <param name="cell">UnitCell GameObject</param>
+        /// <returns>활성화 여부 (셀이 없으면 false)</returns>
+        public bool IsCellActive(GameObject cell)
+        {
+            if (cell == null)
+                return false;
+
+            UnitCell unitCell = FindCellByGameObject(cell);
+            if (unitCell == null)
+                return false;
+
+            return unitCell.gameObject.activeSelf;
+        }
+
+        /// <summary>
+        /// 모든 UnitCell을 활성화/비활성화합니다.
+        /// </summary>
+        /// <param name="active">활성화 여부 (true: 활성화, false: 비활성화)</param>
+        /// <param name="ignoreOccupied">유닛이 있는 셀도 비활성화할지 여부 (기본값: true, 유닛이 있는 셀은 건너뜀)</param>
+        public void SetAllCellsActive(bool active, bool ignoreOccupied = true)
+        {
+            for (int row = 0; row < gridHeight; row++)
+            {
+                for (int col = 0; col < gridWidth; col++)
+                {
+                    if (cellInfos[row, col] == null)
+                        continue;
+
+                    // 비활성화하려는 경우 유닛이 있는 셀은 건너뛰기
+                    if (!active && ignoreOccupied && cellInfos[row, col].isOccupied)
+                        continue;
+
+                    cellInfos[row, col].gameObject.SetActive(active);
+                }
+            }
+        }
+
+        #endregion
     }
 }

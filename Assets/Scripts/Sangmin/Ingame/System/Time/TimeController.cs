@@ -2,25 +2,33 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace ActionPart
+namespace Sangmin
 {
     public class TimeController : MonoBehaviour
     {
-        public static TimeController Instance;
+        private static TimeController _instance;
+        public static TimeController Instance
+        {
+            get { return _instance; }
+        }
 
         [SerializeField, Range(0f, 2f)]
         private float timeScale;
 
+        void Awake()
+        {
+            Initialize();
+        }
 
         public void Initialize()
         {
-            if (Instance != null && Instance != this)
+            if (_instance == null)
             {
-                Destroy(this.gameObject);
+                _instance = this;
             }
             else
             {
-                Instance = this;
+                Destroy(this.gameObject);
             }
         }
 
