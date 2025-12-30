@@ -11,9 +11,9 @@ public enum UnitGrade
 
 public enum UnitType
 {
-    Melee,
-    Ranged,
-    Magic
+    MELEE,
+    RANGED,
+    MAGIC
 }
 
 [CreateAssetMenu(fileName = "UnitData", menuName = "Game/Unit Data")]

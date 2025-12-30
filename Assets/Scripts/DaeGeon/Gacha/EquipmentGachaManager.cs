@@ -63,12 +63,11 @@ public class EquipmentGachaManager : MonoBehaviour
         // 확률 분포 (예시: Common 60%, Uncommon 25%, Rare 10%, Epic 4%, Legendary 1%)
         ItemGrade targetGrade;
 
-        if (roll < 0.60f)      targetGrade = ItemGrade.Common;
-        else if (roll < 0.85f) targetGrade = ItemGrade.Uncommon;
-        else if (roll < 0.95f) targetGrade = ItemGrade.Rare;
-        else if (roll < 0.99f) targetGrade = ItemGrade.Epic;
-        else                   targetGrade = ItemGrade.Legendary;
-
+        if (roll < 0.60f)      targetGrade = ItemGrade.NORMAL;
+        else if (roll < 0.85f) targetGrade = ItemGrade.RARE;
+        else if (roll < 0.95f) targetGrade = ItemGrade.UNIQUE;
+        else if (roll < 0.99f) targetGrade = ItemGrade.LEGENDARY;
+        else                   targetGrade = ItemGrade.MYTHIC;
         // 해당 등급의 아이템들만 필터링
         var filteredPool = pool.Where(it => it.grade == targetGrade).ToList();
 

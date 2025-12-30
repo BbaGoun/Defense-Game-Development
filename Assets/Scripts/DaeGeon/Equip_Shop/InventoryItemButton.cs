@@ -97,8 +97,8 @@ public class InventoryItemButton : MonoBehaviour
     {
         switch (ap)
         {
-            case AttachPoint.Head: return "머리";
-            case AttachPoint.Body: return "몸통";
+            case AttachPoint.HEAD: return "머리";
+            case AttachPoint.BODY: return "몸통";
             default: return ap.ToString();
         }
     }

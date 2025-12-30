@@ -102,9 +102,9 @@ public class GachaManager : MonoBehaviour
     {
         var pool = ItemDatabase.Instance.equipmentItems;
 
-        var common = pool.Where(it => it != null && it.grade == ItemGrade.Common).ToList();
-        var rare = pool.Where(it => it != null && it.grade == ItemGrade.Rare).ToList();
-        var legendary = pool.Where(it => it != null && it.grade == ItemGrade.Legendary).ToList();
+        var normal = pool.Where(it => it != null && it.grade == ItemGrade.NORMAL).ToList();
+        var rare = pool.Where(it => it != null && it.grade == ItemGrade.RARE).ToList();
+        var legendary = pool.Where(it => it != null && it.grade == ItemGrade.LEGENDARY).ToList();
 
         float roll = Random.value;
         ItemData selected = null;
@@ -113,16 +113,16 @@ public class GachaManager : MonoBehaviour
         {
             if (legendary.Count > 0) selected = legendary[Random.Range(0, legendary.Count)];
             else if (rare.Count > 0) selected = rare[Random.Range(0, rare.Count)];
-            else if (common.Count > 0) selected = common[Random.Range(0, common.Count)];
+            else if (normal.Count > 0) selected = normal[Random.Range(0, normal.Count)];
         }
         else if (roll >= 0.70f) // Rare
         {
             if (rare.Count > 0) selected = rare[Random.Range(0, rare.Count)];
-            else if (common.Count > 0) selected = common[Random.Range(0, common.Count)];
+            else if (normal.Count > 0) selected = normal[Random.Range(0, normal.Count)];
         }
-        else // Common
+        else // Normal
         {
-            if (common.Count > 0) selected = common[Random.Range(0, common.Count)];
+            if (normal.Count > 0) selected = normal[Random.Range(0, normal.Count)];
         }
 
         if (selected == null)

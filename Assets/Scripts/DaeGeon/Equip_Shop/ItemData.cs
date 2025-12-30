@@ -3,35 +3,35 @@ using UnityEngine;
 // 1. 장비 종류 정의
 public enum EquipmentType 
 {
-    None,   // 외형 전용 아이템일 경우
-    Helmet, 
-    Chest, 
-    Legs, 
-    Weapon, 
-    Boots, 
-    Gloves
+    None,
+    HELMET, 
+    CHEST, 
+    LEGS, 
+    WEAPON, 
+    BOOTS, 
+    GLOVES
 }
 
 // 2. 외형 장착 위치 정의
 public enum AttachPoint 
 {
-    None,   // 장비 전용 아이템일 경우
-    Head, 
-    Face, 
-    Body
+    None,
+    HEAD, 
+    FACE, 
+    BODY
 }
 
 public enum ItemGrade 
 {
     None,
-    Common,
-    Uncommon,
-    Rare,
-    Epic,
-    Legendary
+    NORMAL,
+    RARE,
+    UNIQUE,
+    LEGENDARY,
+    MYTHIC
 }
 
-[CreateAssetMenu(menuName = "Game/Item")]
+[CreateAssetMenu(fileName = "New Item", menuName = "Game/Item")]
 public class ItemData : ScriptableObject
 {
     [Header("--- 공통 정보 ---")]
@@ -39,11 +39,13 @@ public class ItemData : ScriptableObject
     public string itemName;    
     public Sprite icon;        
     public int price;
-    public bool isEquipped;
+
+    [TextArea(3, 5)] // 인스펙터에서 길게 쓸 수 있도록 추가
+    public string description; // [추가] 상세 정보창 에러 해결 포인트
 
     [Header("--- 외형 설정 (외형 없으면 None) ---")]
     public GameObject equip;   // 실제 캐릭터에 붙는 모델링
-    public GameObject prefab;  // 관련 구조물
+    public GameObject prefab;  // 바닥에 떨어져 있을 때 등의 프리팹
     public AttachPoint attachPoint;
 
     [Header("--- 장비 설정 (장비 아니면 None) ---")]
@@ -55,4 +57,12 @@ public class ItemData : ScriptableObject
 
     [Header("--- 장비 등급 ---")]
     public ItemGrade grade;
+
+    [Header("--- 강화 설정 ---")]
+    public ItemData upgradeMaterial; // 필요한 재료 데이터 (예: 강화석 SO)
+    public int baseMaterialCount;    // 기본 필요 개수
+
+    [Header("--- 분해 설정 ---")]
+    public ItemData dismantleResult; // 분해 시 나올 재료 (강화석 등)
+    public int dismantleAmount;     // 분해 시 획득할 개수
 }

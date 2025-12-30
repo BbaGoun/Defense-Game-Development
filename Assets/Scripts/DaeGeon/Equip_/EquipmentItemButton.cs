@@ -1,13 +1,16 @@
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro; // 텍스트 출력을 위해 사용
+using TMPro;
 
 public class EquipmentItemButton : MonoBehaviour
 {
     public Image iconImage;
     public TextMeshProUGUI nameText;
-    public TextMeshProUGUI statText; // [추가] 공격력/방어력 표시용 텍스트
-    public Image gradeFrame;         // [추가] 등급별 테두리 색상용 (선택)
+    public TextMeshProUGUI statText; 
+    public Image gradeFrame;         
+    
+    [Header("추가 UI 요소")]
+    public TextMeshProUGUI buttonText; // 프리팹 내 "장착/해제" 버튼의 텍스트
 
     private ItemInstance currentInstance;
 
@@ -15,12 +18,11 @@ public class EquipmentItemButton : MonoBehaviour
     {
         currentInstance = instance;
 
-        // 1. 고정 정보 (ItemData에서 가져옴)
+        // 1. 기본 정보 세팅
         iconImage.sprite = instance.data.icon;
         nameText.text = instance.data.itemName;
 
-        // 2. 가변 정보 (ItemInstance에서 가져옴)
-        // 공격력이나 방어력이 있는 경우에만 표시
+        // 2. 스탯 표시
         if (statText != null)
         {
             if (instance.attack > 0) statText.text = $"ATK: {instance.attack}";
@@ -28,26 +30,60 @@ public class EquipmentItemButton : MonoBehaviour
             else statText.text = "";
         }
 
-        // 3. 등급에 따른 시각적 처리 (선택 사항)
+        // 3. 등급 색상
         if (gradeFrame != null)
-        {
             gradeFrame.color = GetGradeColor(instance.data.grade);
+
+        // 4. 장착 여부에 따른 버튼 텍스트 업데이트
+        UpdateBtnText();
+    }
+
+    // [중요] 프리팹의 "장착/해제" 버튼을 눌렀을 때 실행 (인벤토리 리스트에서 즉시 처리)
+    public void OnEquipClick() 
+    {
+        if (currentInstance == null) return;
+
+        // 실제 장착/해제 처리 (에러 났던 selectedItem 대신 currentInstance 사용)
+        if (currentInstance.isEquipped)
+            EquipmentManager.Instance.Unequip(currentInstance.data.equipmentType);
+        else
+            EquipmentManager.Instance.Equip(currentInstance);
+
+        // UI들 새로고침
+        UpdateBtnText(); 
+        EquipmentUI.Instance.RefreshList();
+
+        // 만약 정보창이 열려있다면 정보창도 같이 갱신해줌
+        if (ItemDetailUI.Instance != null && ItemDetailUI.Instance.gameObject.activeSelf)
+        {
+            ItemDetailUI.Instance.Open(currentInstance);
         }
     }
 
+    // [중요] 아이템 슬롯(이미지 등)을 클릭했을 때 정보창 열기
     public void OnClickItem()
     {
-        // 장착 버튼을 눌렀을 때 실행될 로직
-        EquipmentManager.Instance.Equip(currentInstance);
+        if (currentInstance == null) return;
+
+        if (ItemDetailUI.Instance != null)
+        {
+            ItemDetailUI.Instance.Open(currentInstance);
+        }
+    }
+
+    private void UpdateBtnText()
+    {
+        if (buttonText != null)
+            buttonText.text = currentInstance.isEquipped ? "해제" : "장착";
     }
 
     private Color GetGradeColor(ItemGrade grade) => grade switch
     {
-        ItemGrade.Common => Color.white,
-        ItemGrade.Uncommon => Color.green,
-        ItemGrade.Rare => Color.blue,
-        ItemGrade.Epic => new Color(0.5f, 0, 0.5f), // 보라색
-        ItemGrade.Legendary => Color.orange,
+        ItemGrade.NORMAL => Color.white,
+        ItemGrade.UNIQUE => Color.green,
+        ItemGrade.RARE => Color.blue,
+        ItemGrade.LEGENDARY => new Color(0.5f, 0, 0.5f), 
+        ItemGrade.MYTHIC => Color.orange,
         _ => Color.white
     };
 }
