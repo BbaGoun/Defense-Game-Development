@@ -10796,6 +10796,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: 'UnitCell[0,0]'
       objectReference: {fileID: 0}
+    - target: {fileID: 4531179239718999502, guid: badf5d9e320741140a3427eaee9c5b05, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6892057327281402402, guid: badf5d9e320741140a3427eaee9c5b05, type: 3}
       propertyPath: m_LocalPosition.x
       value: -2.5
@@ -10860,6 +10864,10 @@ PrefabInstance:
     - target: {fileID: 5359853559271404880, guid: eebb9c51a28c4504ca4f4618e679d740, type: 3}
       propertyPath: m_Name
       value: Enemy Sample
+      objectReference: {fileID: 0}
+    - target: {fileID: 5359853559271404880, guid: eebb9c51a28c4504ca4f4618e679d740, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5428972365768221390, guid: eebb9c51a28c4504ca4f4618e679d740, type: 3}
       propertyPath: m_LocalPosition.x

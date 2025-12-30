@@ -98,7 +98,7 @@ namespace Sangmin
                 for (int col = 0; col < gridWidth; col++)
                 {
                     // 비활성화된 셀이거나 이미 점유된 셀은 건너뛰기
-                    if (cellInfos[row, col] == null || !cellInfos[row, col].gameObject.activeSelf || cellInfos[row, col].isOccupied)
+                    if (cellInfos[row, col] == null || !cellInfos[row, col].isCellActive || cellInfos[row, col].isOccupied)
                         continue;
 
                     // 시너지 계산 시스템에 Unit을 생성하는 코드
@@ -137,20 +137,19 @@ namespace Sangmin
         {
             //Debug.Log($"Selected cell: {cell.name}");
 
+            // 뭐가 이미 선택되어 있을 지 모르니까 초기화
+            UnSelectUnit();
+
             // (행, 열) 순서로 탐색
             for (int row = 0; row < gridHeight; row++)
             {
                 for (int col = 0; col < gridWidth; col++)
                 {
-                    if (cellInfos[row, col] == null || !cellInfos[row, col].gameObject.activeSelf)
+                    if (cellInfos[row, col] == null)
                         continue;
 
                     if (cell.Equals(cellInfos[row, col].gameObject))
                     {
-                        // 비활성화된 셀은 선택 불가
-                        if (!cellInfos[row, col].gameObject.activeSelf)
-                            return true;
-
                         // 셀 안에 유닛 있는지 확인, 확인이 되면 유닛이 있는 유의미한 셀을 선택한 것
                         if (cellInfos[row, col].isOccupied)
                         {
@@ -274,7 +273,7 @@ namespace Sangmin
                 return;
 
             UnitCell targetCell = FindCellByGameObject(cell);
-            if (targetCell == null || !targetCell.gameObject.activeSelf)
+            if (targetCell == null || !targetCell.isCellActive)
                 return;
 
             Unit movingUnit = selectedCell.GetUnit();
@@ -356,6 +355,7 @@ namespace Sangmin
             // 현재 마우스가 올라가 있는 셀 찾기
             UnitCell newTargetCell = FindCellByGameObject(hoverCellObject);
 
+
             // 이전 타겟 셀의 색을 원래대로 되돌림
             if (dragTargetCell != null && dragTargetCell != selectedCell)
             {
@@ -365,7 +365,10 @@ namespace Sangmin
                     dragTargetCell.SetHighlight(true, availableColor);
             }
 
-            dragTargetCell = newTargetCell;
+            if (!newTargetCell.isCellActive)
+                dragTargetCell = null;
+            else
+                dragTargetCell = newTargetCell;
 
             // 새 타겟 셀을 드래그 목적지 색으로 표시 (자기 자신은 제외)
             if (dragTargetCell != null && dragTargetCell != selectedCell)
@@ -398,18 +401,20 @@ namespace Sangmin
             {
                 for (int col = 0; col < gridWidth; col++)
                 {
-                    if (cellInfos[row, col] == null || !cellInfos[row, col].gameObject.activeSelf)
+                    if (cellInfos[row, col] == null)
                         continue;
 
                     if (cellInfos[row, col].Equals(selectedCell))
                         cellInfos[row, col].SetHighlight(true, selectedColor);
-                    else
+                    else if (cellInfos[row, col].isCellActive)
                     {
                         if (cellInfos[row, col].isOccupied)
                             cellInfos[row, col].SetHighlight(true, blockedColor);
                         else
                             cellInfos[row, col].SetHighlight(true, availableColor);
                     }
+                    else
+                        cellInfos[row, col].SetHighlight(false, availableColor);
                 }
             }
         }
@@ -420,7 +425,7 @@ namespace Sangmin
             {
                 for (int col = 0; col < gridWidth; col++)
                 {
-                    if (cellInfos[row, col] == null || !cellInfos[row, col].gameObject.activeSelf)
+                    if (cellInfos[row, col] == null)
                         continue;
 
                     cellInfos[row, col].SetHighlight(false, availableColor);
@@ -502,7 +507,7 @@ namespace Sangmin
                 return false;
             }
 
-            cellInfos[row, col].gameObject.SetActive(active);
+            cellInfos[row, col].SetIsCellActive(active);
             return true;
         }
 
@@ -534,7 +539,7 @@ namespace Sangmin
                 return false;
             }
 
-            unitCell.gameObject.SetActive(active);
+            unitCell.SetIsCellActive(active);
             return true;
         }
 
@@ -552,7 +557,7 @@ namespace Sangmin
             if (cellInfos[row, col] == null)
                 return false;
 
-            return cellInfos[row, col].gameObject.activeSelf;
+            return cellInfos[row, col].isCellActive;
         }
 
         /// <summary>
@@ -569,7 +574,7 @@ namespace Sangmin
             if (unitCell == null)
                 return false;
 
-            return unitCell.gameObject.activeSelf;
+            return unitCell.isCellActive;
         }
 
         /// <summary>
@@ -590,7 +595,7 @@ namespace Sangmin
                     if (!active && ignoreOccupied && cellInfos[row, col].isOccupied)
                         continue;
 
-                    cellInfos[row, col].gameObject.SetActive(active);
+                    cellInfos[row, col].SetIsCellActive(active);
                 }
             }
         }

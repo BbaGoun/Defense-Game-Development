@@ -9,22 +9,28 @@ namespace Sangmin
         public int col;
         [Header("Runtime state")]
         [SerializeField] private Unit unit;
-        [field: SerializeField] public bool isOccupied{get; private set;}
+        [field: SerializeField] public bool isOccupied { get; private set; }
+        [field: SerializeField] public bool isCellActive { get; private set; }
         [SerializeField] private float cellSize = 1f;
 
         [Header("Visuals")]
         [SerializeField] private float lineWidth = 0.04f;
-        [SerializeField, Range(0f,1f)] private float lineAlpha;
-        [SerializeField, Range(0f,1f)] private float spriteAlpha;
+        [SerializeField, Range(0f, 1f)] private float lineAlpha;
+        [SerializeField, Range(0f, 1f)] private float spriteAlpha;
 
         private LineRenderer lineRenderer;
         private SpriteRenderer spriteRenderer;
+        private BoxCollider2D boxCollider2D;
+        private BoxCollider2D notWalkAble;
 
         private void Awake()
         {
             EnsureSpriteRenderer();
             EnsureLineRenderer();
+            EnsureCollider2D();
             SetHighlight(false, Color.white);
+
+            isCellActive = true;
         }
 
         public void Init(float size)
@@ -32,10 +38,14 @@ namespace Sangmin
             cellSize = size;
             EnsureSpriteRenderer();
             EnsureLineRenderer();
+            EnsureCollider2D();
             SetHighlight(false, Color.white);
+
+            isCellActive = true;
         }
 
-        public void PlaceUnit(Unit _unit){
+        public void PlaceUnit(Unit _unit)
+        {
             unit = _unit;
             _unit.transform.position = transform.position;
             isOccupied = true;
@@ -61,6 +71,14 @@ namespace Sangmin
         public void SetOccupied(bool occupied)
         {
             isOccupied = occupied;
+        }
+
+        public void SetIsCellActive(bool active)
+        {
+            isCellActive = active;
+            notWalkAble.enabled = active;
+
+            UpdateCellVisual();
         }
 
         public void SetHighlight(bool show, Color color)
@@ -138,7 +156,7 @@ namespace Sangmin
 
             var baseColor = new Color(1f, 1f, 1f, lineAlpha);
             lineRenderer.startColor = lineRenderer.endColor = baseColor;
-            
+
             var half = cellSize * 0.5f;
             lineRenderer.SetPositions(new[]
             {
@@ -147,6 +165,45 @@ namespace Sangmin
                 new Vector3(half, -half, 0f),
                 new Vector3(-half, -half, 0f),
             });
+        }
+
+        private void EnsureCollider2D()
+        {
+            if (boxCollider2D == null)
+            {
+                boxCollider2D = GetComponent<BoxCollider2D>();
+                if (boxCollider2D == null)
+                {
+                    boxCollider2D = gameObject.AddComponent<BoxCollider2D>();
+                }
+
+            }
+
+            if (notWalkAble == null)
+            {
+                notWalkAble = transform.GetChild(0).GetComponent<BoxCollider2D>();
+                if (notWalkAble == null)
+                {
+                    notWalkAble = transform.GetChild(0).gameObject.AddComponent<BoxCollider2D>();
+                }
+
+            }
+
+            ConfigureBoxCollider2D();
+        }
+
+        private void ConfigureBoxCollider2D()
+        {
+            boxCollider2D.size = new Vector2(cellSize, cellSize);
+            boxCollider2D.offset = Vector2.zero;
+
+            notWalkAble.size = new Vector2(cellSize, cellSize);
+            notWalkAble.offset = Vector2.zero;
+        }
+
+        private void UpdateCellVisual()
+        {
+            lineRenderer.enabled = isCellActive;
         }
     }
 }

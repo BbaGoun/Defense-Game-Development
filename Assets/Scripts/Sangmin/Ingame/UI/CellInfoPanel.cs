@@ -94,7 +94,7 @@ namespace Sangmin
             // Cell 상태 정보
             if (cellStatusText != null)
             {
-                string status = cell.gameObject.activeSelf ? "활성화" : "비활성화";
+                string status = cell.isCellActive ? "활성화" : "비활성화";
                 string occupied = cell.isOccupied ? " (유닛 배치됨)" : " (빈 셀)";
                 cellStatusText.text = $"상태: {status}{occupied}";
             }
@@ -103,13 +103,13 @@ namespace Sangmin
             if (activateButton != null)
             {
                 // 활성화 버튼은 비활성화된 셀일 때만 활성화
-                activateButton.interactable = !cell.gameObject.activeSelf;
+                activateButton.interactable = !cell.isCellActive;
             }
 
             if (deactivateButton != null)
             {
                 // 비활성화 버튼은 활성화된 셀이고 유닛이 없을 때만 활성화
-                deactivateButton.interactable = cell.gameObject.activeSelf && !cell.isOccupied;
+                deactivateButton.interactable = cell.isCellActive && !cell.isOccupied;
             }
         }
 
