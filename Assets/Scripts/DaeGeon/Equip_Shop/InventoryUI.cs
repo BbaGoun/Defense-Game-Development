@@ -26,8 +26,8 @@ public class InventoryUI : MonoBehaviour
     private void Start()
     {
         Refresh();
-        UpdateSlotIcon(AttachPoint.Head);
-        UpdateSlotIcon(AttachPoint.Body);
+        UpdateSlotIcon(AttachPoint.HEAD);
+        UpdateSlotIcon(AttachPoint.BODY);
 
         if (previewResetButton != null)
         {
@@ -37,8 +37,8 @@ public class InventoryUI : MonoBehaviour
                 PlayerEvents.OnClearPreviewRequest?.Invoke();
                 
                 // 슬롯 아이콘은 현재 Instance(데이터 기준) 상태에 맞춰 갱신
-                UpdateSlotIcon(AttachPoint.Head);
-                UpdateSlotIcon(AttachPoint.Body);
+                UpdateSlotIcon(AttachPoint.HEAD);
+                UpdateSlotIcon(AttachPoint.BODY);
             });
         }
     }
@@ -60,8 +60,8 @@ public class InventoryUI : MonoBehaviour
             CreateInventoryItem(item);
 
         // 슬롯 아이콘도 갱신
-        UpdateSlotIcon(AttachPoint.Head);
-        UpdateSlotIcon(AttachPoint.Body);
+        UpdateSlotIcon(AttachPoint.HEAD);
+        UpdateSlotIcon(AttachPoint.BODY);
     }
 
     void CreateInventoryItem(ItemData data)
@@ -96,11 +96,11 @@ public class InventoryUI : MonoBehaviour
 
         switch (point)
         {
-            case AttachPoint.Head:
+            case AttachPoint.HEAD:
                 UpdateSingleSlot(headSlotImage, Player.Instance.headSlot);
                 break;
 
-            case AttachPoint.Body:
+            case AttachPoint.BODY:
                 UpdateSingleSlot(bodySlotImage, Player.Instance.bodySlot);
                 break;
         }

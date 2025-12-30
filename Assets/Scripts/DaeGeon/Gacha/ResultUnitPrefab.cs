@@ -33,7 +33,7 @@ public class ResultUnitPrefab : MonoBehaviour
         {
             case UnitGrade.NORMAL: return "노말";
             case UnitGrade.RARE:   return "레어";
-            case UnitGrade.UNIQUE:   return "에픽";
+            case UnitGrade.UNIQUE:   return "유니크";
             default: return "알수없음";
         }
     }

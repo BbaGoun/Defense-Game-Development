@@ -19,26 +19,73 @@ public class EquipmentUI : MonoBehaviour
     private EquipmentType? currentFilter = null;
 
     private void Awake() => Instance = this;
-    private void Start() => RefreshList();
 
+    private void Start() 
+    {
+        RefreshList();
+        UpdateAllSlots(); // 시작할 때 모든 슬롯 UI 상태 갱신
+    }
+
+    // 인벤토리 리스트 생성
     public void RefreshList()
     {
         foreach (Transform child in content) Destroy(child.gameObject);
 
         if (InventoryManager.Instance == null) return;
 
-        // [변경] 이제 item은 ItemInstance 타입입니다.
         foreach (var item in InventoryManager.Instance.equipItems) 
         {
-            // 원본 데이터(data)의 타입을 확인하여 필터링합니다.
             if (currentFilter == null || item.data.equipmentType == currentFilter)
             {
                 var obj = Instantiate(equipmentPrefab, content);
                 var btnScript = obj.GetComponent<EquipmentItemButton>();
                 
-                // [변경] Setup 함수에 ItemInstance 전체를 넘겨줍니다.
                 if (btnScript != null) btnScript.Setup(item);
             }
+        }
+    }
+
+    // [추가] 모든 슬롯 UI를 한꺼번에 갱신
+    public void UpdateAllSlots()
+    {
+        foreach (EquipmentType type in System.Enum.GetValues(typeof(EquipmentType)))
+        {
+            if (type != EquipmentType.None) UpdateSlotUI(type);
+        }
+    }
+
+    public void UpdateSlotUI(EquipmentType type)
+    {
+        ItemInstance instance = EquipmentManager.Instance.GetEquippedInstance(type);
+        Image slot = GetSlotImage(type);
+        if (slot == null) return;
+
+        // [추가] 슬롯 오브젝트에 Button 컴포넌트가 있다면 해제 기능을 연결합니다.
+        Button slotBtn = slot.GetComponent<Button>();
+
+        if (instance != null) 
+        { 
+            slot.sprite = instance.data.icon; 
+            slot.color = Color.white;
+            slot.enabled = true; // 이미지 활성화
+
+            // 슬롯 클릭 시 해제 실행
+            if (slotBtn != null)
+            {
+                slotBtn.onClick.RemoveAllListeners();
+                slotBtn.onClick.AddListener(() => {
+                    EquipmentManager.Instance.Unequip(type);
+                    RefreshList(); // 인벤토리 버튼 텍스트 갱신을 위해 리스트 새로고침
+                });
+            }
+        }
+        else 
+        { 
+            slot.sprite = null; 
+            slot.color = new Color(1, 1, 1, 0); 
+            slot.enabled = false; // 이미지 비활성화
+
+            if (slotBtn != null) slotBtn.onClick.RemoveAllListeners();
         }
     }
 
@@ -49,33 +96,13 @@ public class EquipmentUI : MonoBehaviour
         RefreshList();
     }
 
-    public void UpdateSlotUI(EquipmentType type)
-    {
-        // [변경] EquipmentManager에서도 이제 ItemInstance를 가져와야 합니다.
-        ItemInstance instance = EquipmentManager.Instance.GetEquippedInstance(type);
-        Image slot = GetSlotImage(type);
-        if (slot == null) return;
-
-        // [변경] instance 안의 원본 데이터(data)에서 아이콘을 가져옵니다.
-        if (instance != null) 
-        { 
-            slot.sprite = instance.data.icon; 
-            slot.color = Color.white; 
-        }
-        else 
-        { 
-            slot.sprite = null; 
-            slot.color = new Color(1, 1, 1, 0); 
-        }
-    }
-
     private Image GetSlotImage(EquipmentType type) => type switch {
-        EquipmentType.Helmet => helmetSlot, 
-        EquipmentType.Chest => chestSlot,
-        EquipmentType.Legs => legsSlot, 
-        EquipmentType.Weapon => weaponSlot,
-        EquipmentType.Boots => bootsSlot, 
-        EquipmentType.Gloves => glovesSlot, 
+        EquipmentType.HELMET => helmetSlot, 
+        EquipmentType.CHEST => chestSlot,
+        EquipmentType.LEGS => legsSlot, 
+        EquipmentType.WEAPON => weaponSlot,
+        EquipmentType.BOOTS => bootsSlot, 
+        EquipmentType.GLOVES => glovesSlot, 
         _ => null
     };
 }

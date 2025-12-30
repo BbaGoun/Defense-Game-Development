@@ -71,8 +71,8 @@ public class Player : MonoBehaviour
         // 1. 기준 데이터(Instance)를 업데이트 (모든 유닛의 공통 장부 수정)
         if (Instance != null)
         {
-            if (data.attachPoint == AttachPoint.Head) Instance.headSlot = data;
-            else if (data.attachPoint == AttachPoint.Body) Instance.bodySlot = data;
+            if (data.attachPoint == AttachPoint.HEAD) Instance.headSlot = data;
+            else if (data.attachPoint == AttachPoint.BODY) Instance.bodySlot = data;
         }
 
         // 2. 실제 내 몸에 프리팹 생성
@@ -84,12 +84,12 @@ public class Player : MonoBehaviour
     {
         ClearPreviewForPoint(data.attachPoint);
 
-        if (data.attachPoint == AttachPoint.Head)
+        if (data.attachPoint == AttachPoint.HEAD)
         {
             if (currentHeadItem != null) Destroy(currentHeadItem);
             currentHeadItem = AttachPrefab(data.equip, headAttachPoint);
         }
-        else if (data.attachPoint == AttachPoint.Body)
+        else if (data.attachPoint == AttachPoint.BODY)
         {
             if (currentBodyItem != null) Destroy(currentBodyItem);
             currentBodyItem = AttachPrefab(data.equip, bodyAttachPoint);
@@ -102,8 +102,8 @@ public class Player : MonoBehaviour
         // 1. 기준 데이터 삭제
         if (Instance != null)
         {
-            if (point == AttachPoint.Head) Instance.headSlot = null;
-            else if (point == AttachPoint.Body) Instance.bodySlot = null;
+            if (point == AttachPoint.HEAD) Instance.headSlot = null;
+            else if (point == AttachPoint.BODY) Instance.bodySlot = null;
         }
 
         // 2. 내 몸에서 오브젝트 제거
@@ -114,12 +114,12 @@ public class Player : MonoBehaviour
     {
         ClearPreviewForPoint(point);
 
-        if (point == AttachPoint.Head && currentHeadItem != null)
+        if (point == AttachPoint.HEAD && currentHeadItem != null)
         {
             Destroy(currentHeadItem);
             currentHeadItem = null;
         }
-        else if (point == AttachPoint.Body && currentBodyItem != null)
+        else if (point == AttachPoint.BODY && currentBodyItem != null)
         {
             Destroy(currentBodyItem);
             currentBodyItem = null;
@@ -152,7 +152,7 @@ public class Player : MonoBehaviour
     {
         if (data == null) return;
         
-        ItemData currentCompare = (data.attachPoint == AttachPoint.Head) ? previewHeadData : previewBodyData;
+        ItemData currentCompare = (data.attachPoint == AttachPoint.HEAD) ? previewHeadData : previewBodyData;
 
         if (currentCompare == data) ClearPreviewForPoint(data.attachPoint);
         else Preview(data);
@@ -162,7 +162,7 @@ public class Player : MonoBehaviour
     {
         if (data == null || data.equip == null) return;
 
-        if (data.attachPoint == AttachPoint.Head)
+        if (data.attachPoint == AttachPoint.HEAD)
         {
             if (previewHeadItem != null) Destroy(previewHeadItem);
             if (currentHeadItem != null && currentHeadItem.activeSelf)
@@ -190,13 +190,13 @@ public class Player : MonoBehaviour
 
     public void ClearPreview()
     {
-        ClearPreviewForPoint(AttachPoint.Head);
-        ClearPreviewForPoint(AttachPoint.Body);
+        ClearPreviewForPoint(AttachPoint.HEAD);
+        ClearPreviewForPoint(AttachPoint.BODY);
     }
 
     private void ClearPreviewForPoint(AttachPoint point)
     {
-        if (point == AttachPoint.Head)
+        if (point == AttachPoint.HEAD)
         {
             if (previewHeadItem != null) { Destroy(previewHeadItem); previewHeadItem = null; }
             if (hiddenHeadEquipped && currentHeadItem != null) { currentHeadItem.SetActive(true); hiddenHeadEquipped = false; }
@@ -226,7 +226,7 @@ public class Player : MonoBehaviour
     public bool IsEquipped(ItemData data)
     {
         if (Instance == null || data == null) return false;
-        ItemData slot = (data.attachPoint == AttachPoint.Head) ? Instance.headSlot : Instance.bodySlot;
+        ItemData slot = (data.attachPoint == AttachPoint.HEAD) ? Instance.headSlot : Instance.bodySlot;
         if (slot == null) return false;
         return slot.itemID == data.itemID;
     }

@@ -140,12 +140,12 @@ public class SaveManager : MonoBehaviour
             }
 
             if (string.IsNullOrEmpty(data.headSlotID))
-                Player.Instance.Unequip(AttachPoint.Head);
+                Player.Instance.Unequip(AttachPoint.HEAD);
             else if (head != null)
                 Player.Instance.Equip(head);
 
             if (string.IsNullOrEmpty(data.bodySlotID))
-                Player.Instance.Unequip(AttachPoint.Body);
+                Player.Instance.Unequip(AttachPoint.BODY);
             else if (body != null)
                 Player.Instance.Equip(body);
         }
@@ -172,8 +172,8 @@ public class SaveManager : MonoBehaviour
             foreach (var btn in invUI.GetComponentsInChildren<InventoryItemButton>())
                 btn.RefreshButton();
 
-            invUI.UpdateSlotIcon(AttachPoint.Head);
-            invUI.UpdateSlotIcon(AttachPoint.Body);
+            invUI.UpdateSlotIcon(AttachPoint.HEAD);
+            invUI.UpdateSlotIcon(AttachPoint.BODY);
         }
 
         Debug.Log("Loaded save: " + savePath);
