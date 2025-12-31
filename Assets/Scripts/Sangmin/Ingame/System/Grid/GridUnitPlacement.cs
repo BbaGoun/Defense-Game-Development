@@ -25,7 +25,7 @@ namespace Sangmin
         public GameObject gridParent;
 
         public bool isCellSelected => selectedCell != null;
-        private UnitCell[,] cellInfos;
+        public UnitCell[,] cellInfos { get; private set; }
         [SerializeField]
         private UnitCell selectedCell;
         private Unit currentSelectedUnit;
@@ -172,7 +172,7 @@ namespace Sangmin
                         }
                         else
                         {
-                            Debug.Log($"유닛이 없는 셀을 선택한 경우 CellInfoPanel 표시: {cellInfos[row, col].name}");
+                            // Debug.Log($"유닛이 없는 셀을 선택한 경우 CellInfoPanel 표시: {cellInfos[row, col].name}");
 
                             // 유닛이 없는 셀을 선택한 경우 CellInfoPanel 표시
                             selectedCell = cellInfos[row, col];

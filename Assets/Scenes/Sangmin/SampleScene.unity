@@ -7482,6 +7482,7 @@ GameObject:
   - component: {fileID: 1981892726}
   - component: {fileID: 1981892725}
   - component: {fileID: 1981892727}
+  - component: {fileID: 1981892728}
   m_Layer: 0
   m_Name: NavMesh 2D
   m_TagString: Untagged
@@ -7564,6 +7565,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NavMesh2D
   surface: {fileID: 1981892726}
+--- !u!114 &1981892728
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1981892723}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 488a1716515e65b499337ba77af7c6e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Sangmin.EnemyMoveRoute
+  _posVertex:
+    keys: []
+    values: []
 --- !u!4 &1988717377 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6892057327281402402, guid: badf5d9e320741140a3427eaee9c5b05, type: 3}

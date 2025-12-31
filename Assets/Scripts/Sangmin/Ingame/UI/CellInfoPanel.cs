@@ -129,6 +129,9 @@ namespace Sangmin
                     // 네비게이션 재생성
                     NavMesh2D.Instance.RebuildNavigation();
 
+                    // 몬스터 경로 재생성
+                    EnemyMoveRoute.Instance.GenerateBoundaryRoute();
+
                     // UI 업데이트
                     UpdateCellInfoDisplay(currentSelectedCell);
                 }
@@ -150,6 +153,9 @@ namespace Sangmin
 
                     // 네비게이션 재생성
                     NavMesh2D.Instance.RebuildNavigation();
+
+                    // 몬스터 경로 재생성
+                    EnemyMoveRoute.Instance.GenerateBoundaryRoute();
 
                     // UI 업데이트
                     UpdateCellInfoDisplay(currentSelectedCell);
