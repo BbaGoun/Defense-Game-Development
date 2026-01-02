@@ -1,4 +1,5 @@
 using UnityEngine;
+using System; // DateTime을 사용하기 위해 추가
 
 [System.Serializable]
 public class ItemInstance
@@ -11,53 +12,56 @@ public class ItemInstance
     public int upgradeLevel = 0; 
     public bool isEquipped;
     
-    // 재료 아이템의 수량을 저장할 변수
     public int stackCount = 1; 
 
-    // 생성자 1: 일반 생성 (장비, 외형 등)
+    // [추가] 정렬을 위한 획득 시간 기록
+    public long acquiredTicks; 
+
+    // 생성자 1: 일반 생성 (장비 등)
     public ItemInstance(ItemData sourceData)
     {
         data = sourceData;
         instanceID = System.Guid.NewGuid().ToString();
         stackCount = 1;
+        
+        // 생성되는 순간의 시간을 기록 (정렬용)
+        acquiredTicks = DateTime.Now.Ticks;
 
-        // 장비 데이터일 경우 랜덤 스탯 부여
         attack = UnityEngine.Random.Range(data.minAttack, data.maxAttack + 1);
         defense = UnityEngine.Random.Range(data.minDefense, data.maxDefense + 1);
     }
 
-    // 생성자 2: 수량 지정 생성 (재료 아이템 전용)
+    // 생성자 2: 수량 지정 생성 (재료 전용)
     public ItemInstance(ItemData sourceData, int amount)
     {
         data = sourceData;
         instanceID = System.Guid.NewGuid().ToString();
         stackCount = amount;
         
+        acquiredTicks = DateTime.Now.Ticks; // 재료도 일단 기록
+        
         attack = 0;
         defense = 0;
     }
 
-    /// <summary>
-    /// 강화를 시도합니다. 재료가 충분하면 소모하고 스탯을 올립니다.
-    /// </summary>
-    /// <returns>강화 성공 여부</returns>
+    public int GetNextUpgradeCost()
+    {
+        if (data == null) return 0;
+        return data.baseMaterialCount + (upgradeLevel * 2);
+    }
+
     public bool TryUpgrade()
     {
-        // 1. 강화 가능한 아이템인지 확인 (외형템 등은 upgradeMaterial이 None일 것)
         if (data.upgradeMaterial == null)
         {
             Debug.Log($"{data.itemName}은(는) 강화할 수 없는 아이템입니다.");
             return false;
         }
 
-        // 2. 필요 재료 개수 계산 (기본 개수 + 강화당 추가 개수 로직 예시)
-        // 예: 0강 -> 1강 시 기본 개수만큼, 이후 단계당 2개씩 증가
-        int requiredAmount = data.baseMaterialCount + (upgradeLevel * 2);
+        int requiredAmount = GetNextUpgradeCost();
 
-        // 3. MaterialManager를 통해 재료 소모 시도
         if (MaterialManager.Instance.ConsumeMaterial(data.upgradeMaterial, requiredAmount))
         {
-            // 4. 재료 소모에 성공했다면 능력치 상승
             PerformUpgrade();
             return true;
         }
@@ -68,12 +72,12 @@ public class ItemInstance
         }
     }
 
-    // 실제 수치 상승 로직 (TryUpgrade 내부에서 호출)
     private void PerformUpgrade()
     {
         upgradeLevel++;
 
-        // 공격력/방어력이 있는 아이템인 경우 수치 상승
+        acquiredTicks = System.DateTime.Now.Ticks;
+
         if (attack > 0) attack += 5; 
         if (defense > 0) defense += 3;
 

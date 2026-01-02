@@ -71,6 +71,17 @@ public class MaterialManager : MonoBehaviour
         return false; // 재료 부족 또는 해당 재료 없음
     }
 
+    public int GetMaterialCount(ItemData targetData)
+    {
+        if (targetData == null) return 0;
+
+        // 리스트에서 해당 데이터를 가진 아이템을 찾음
+        ItemInstance found = materialItems.Find(x => x.data == targetData);
+
+        // 찾았다면 그 아이템의 stackCount를, 못 찾았다면 0을 반환
+        return found != null ? found.stackCount : 0;
+    }
+
     // UI 갱신을 안전하게 호출하기 위한 헬퍼 함수
     private void UpdateUI()
     {

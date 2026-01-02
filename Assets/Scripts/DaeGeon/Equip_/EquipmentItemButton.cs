@@ -38,25 +38,21 @@ public class EquipmentItemButton : MonoBehaviour
         UpdateBtnText();
     }
 
-    // [중요] 프리팹의 "장착/해제" 버튼을 눌렀을 때 실행 (인벤토리 리스트에서 즉시 처리)
     public void OnEquipClick() 
     {
         if (currentInstance == null) return;
 
-        // 실제 장착/해제 처리 (에러 났던 selectedItem 대신 currentInstance 사용)
         if (currentInstance.isEquipped)
             EquipmentManager.Instance.Unequip(currentInstance.data.equipmentType);
         else
             EquipmentManager.Instance.Equip(currentInstance);
 
-        // UI들 새로고침
         UpdateBtnText(); 
         EquipmentUI.Instance.RefreshList();
 
-        // 만약 정보창이 열려있다면 정보창도 같이 갱신해줌
-        if (ItemDetailUI.Instance != null && ItemDetailUI.Instance.gameObject.activeSelf)
+        if (ItemDetailUI.Instance != null && ItemDetailUI.Instance.panelContent.activeSelf)
         {
-            ItemDetailUI.Instance.Open(currentInstance);
+            ItemDetailUI.Instance.Close(); 
         }
     }
 

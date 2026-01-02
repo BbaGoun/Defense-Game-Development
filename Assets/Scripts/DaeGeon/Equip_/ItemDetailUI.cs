@@ -17,6 +17,10 @@ public class ItemDetailUI : MonoBehaviour
     public Button upgradeButton;
     public Button dismantleButton;
 
+    [Header("Upgrade Material UI (Static)")]
+    public Image materialIcon;          
+    public TextMeshProUGUI materialText; 
+
     private ItemInstance selectedItem; // 선택된 아이템 저장용
 
     private void Awake()
@@ -68,17 +72,71 @@ public class ItemDetailUI : MonoBehaviour
         // 4. 아이콘 이미지
         if (iconImage != null)
             iconImage.sprite = selectedItem.data.icon;
+
+        // 5. 강화 재료 UI 갱신
+        UpdateUpgradeUI(selectedItem);
     }
 
     private void OnEquipClick()
     {
+        if (selectedItem == null) return;
+
+        Close(); 
+
         if (selectedItem.isEquipped)
             EquipmentManager.Instance.Unequip(selectedItem.data.equipmentType);
         else
             EquipmentManager.Instance.Equip(selectedItem);
 
-        RefreshUI(); 
-        EquipmentUI.Instance.RefreshList();
+        if (EquipmentUI.Instance != null) EquipmentUI.Instance.RefreshList();
+    }
+
+    public void UpdateUpgradeUI(ItemInstance item)
+    {
+        // 1. 데이터 가져오기 (재료 종류만 가져옵니다)
+        ItemData reqMaterial = item.data.upgradeMaterial;
+        
+        // [수정] ItemInstance에 만든 공식을 사용하여 현재 필요한 개수를 가져옵니다.
+        int reqAmount = item.GetNextUpgradeCost();
+
+        // 2. 강화 재료 정보가 있는지 확인 (강화 불가 아이템은 reqMaterial이 null임)
+        if (reqMaterial != null)
+        {
+            // 3. 보유량 확인 (MaterialManager에서 현재 내 인벤토리 확인)
+            int ownedAmount = MaterialManager.Instance.GetMaterialCount(reqMaterial);
+
+            // 4. UI 업데이트
+            if (materialIcon != null)
+            {
+                materialIcon.sprite = reqMaterial.icon;
+                materialIcon.color = Color.white; 
+            }
+            
+            if (materialText != null)
+            {
+                // [표시] 필요개수 / 보유개수 (예: 7 / 15)
+                materialText.text = $"{reqAmount} / {ownedAmount}";
+                
+                // 부족하면 빨간색, 충분하면 흰색
+                materialText.color = (ownedAmount < reqAmount) ? Color.red : Color.white;
+            }
+
+            // 5. 강화 버튼 활성화 (재료가 충분해야만 클릭 가능)
+            upgradeButton.interactable = (ownedAmount >= reqAmount);
+        }
+        else
+        {
+            // 강화 재료가 설정되지 않은 아이템 처리
+            if (materialIcon != null) materialIcon.color = new Color(1, 1, 1, 0); 
+            
+            if (materialText != null)
+            {
+                materialText.text = "강화 불가 아이템";
+                materialText.color = Color.gray;
+            }
+            
+            upgradeButton.interactable = false;
+        }
     }
 
     private void OnUpgradeClick()
@@ -111,7 +169,7 @@ public class ItemDetailUI : MonoBehaviour
 
         // 2. 보상 재료 및 개수 설정 (ItemData 에셋에 설정된 값)
         ItemData rewardMaterial = selectedItem.data.upgradeMaterial;
-        int rewardAmount = selectedItem.data.baseMaterialCount;
+        int rewardAmount = selectedItem.data.dismantleAmount;
 
         // 3. 재료 지급 (MaterialManager를 통해 재료 가방에 추가)
         if (rewardMaterial != null && rewardAmount > 0)
@@ -135,8 +193,7 @@ public class ItemDetailUI : MonoBehaviour
             EquipmentManager.Instance.Unequip(selectedItem.data.equipmentType);
         }
 
-        // 5. 핵심: 장비 인벤토리 리스트에서 이 인스턴스를 제거
-        // 만약 InventoryManager가 아니라 EquipmentManager에 리스트가 있다면 그쪽을 참조하세요.
+        // 5. 인벤토리에서 아이템 제거
         if (InventoryManager.Instance.equipItems.Contains(selectedItem))
         {
             InventoryManager.Instance.equipItems.Remove(selectedItem);
