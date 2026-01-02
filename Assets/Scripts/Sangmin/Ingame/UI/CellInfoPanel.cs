@@ -126,9 +126,6 @@ namespace Sangmin
                     // 하이라이트 갱신
                     GridUnitPlacement.Instance.DrawHighlight();
 
-                    // 네비게이션 재생성
-                    NavMesh2D.Instance.RebuildNavigation();
-
                     // 몬스터 경로 재생성
                     EnemyMoveRoute.Instance.GenerateBoundaryRoute();
 
@@ -150,9 +147,6 @@ namespace Sangmin
                 {
                     // 하이라이트 갱신
                     GridUnitPlacement.Instance.DrawHighlight();
-
-                    // 네비게이션 재생성
-                    NavMesh2D.Instance.RebuildNavigation();
 
                     // 몬스터 경로 재생성
                     EnemyMoveRoute.Instance.GenerateBoundaryRoute();

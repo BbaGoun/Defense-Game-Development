@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
@@ -6,8 +7,7 @@ using UnityEngine;
 namespace Sangmin
 {
     /// <summary>
-    /// Grid의 활성 셀들(isCellActive)을 기반으로 테두리 경로를 자동 생성하는 유틸리티.
-    /// 왼쪽 위에서 시작해서 반시계 방향으로 활성 셀들의 바깥 경계를 따라 이동하는 경로를 만듭니다.
+    /// 최대한 왼쪽 위에서 시작해서 반시계 방향으로 활성 셀들의 바깥 경계를 따라 이동하는 경로를 생성
     /// </summary>
     public class EnemyMoveRoute : MonoBehaviour
     {
@@ -40,14 +40,29 @@ namespace Sangmin
         private static readonly Vector2Int[] Dir8 =
         {
             new Vector2Int(-1, 0),   // 0: 위 (row-1, col)
-            new Vector2Int(-1, -1),  // 1: 왼위
+            //new Vector2Int(-1, -1),  // 1: 왼위
             new Vector2Int(0, -1),   // 2: 왼
-            new Vector2Int(1, -1),   // 3: 왼아래
+            //new Vector2Int(1, -1),   // 3: 왼아래
             new Vector2Int(1, 0),    // 4: 아래 (row+1, col)
-            new Vector2Int(1, 1),    // 5: 오른아래
+            //new Vector2Int(1, 1),    // 5: 오른아래
             new Vector2Int(0, 1),    // 6: 오른
-            new Vector2Int(-1, 1),   // 7: 오른위
+            //new Vector2Int(-1, 1),   // 7: 오른위
         };
+
+        public Vector3[] WorldRoute { get; private set; }
+        public Vector3 startPosition { get; private set; }
+
+        private Vector3[,] cellWorldPositions;
+
+        [SerializeField]
+        private TrailRenderer trailRenderer;
+
+        [SerializeField]
+        private float visualizationSpeed = 5f; // 경로 시각화 이동 속도
+
+        private Coroutine visualizationCoroutine;
+
+        public Action<Vector3[]> OnGenerateRoute;
 
         void Awake()
         {
@@ -59,6 +74,14 @@ namespace Sangmin
             {
                 Destroy(this.gameObject);
             }
+
+            ConfigureTrailRenderer();
+        }
+
+        private void Start()
+        {
+            GenerateCellWorldPositions(GridUnitPlacement.Instance);
+            GenerateBoundaryRoute();
         }
 
         /// <summary>
@@ -82,15 +105,26 @@ namespace Sangmin
             // 활성 셀들의 경계 경로를 찾기
             List<Vector2Int> boundaryPath = FindBoundaryPath(cellInfos, grid.gridHeight, grid.gridWidth);
 
+            if (boundaryPath.Count == 0)
+            {
+                Debug.LogWarning("boundaryPath가 없습니다.");
+                return new Vector3[0];
+            }
+
             Debug.Log("boundaryPath: " + string.Join(", ", boundaryPath));
 
-            if (boundaryPath.Count == 0)
-                return new Vector3[0];
-
             // 그리드 좌표를 월드 좌표로 변환
-            //return ConvertToWorldPositions(boundaryPath, grid);
+            Vector3[] worldPath = ConvertToWorldPositions(boundaryPath);
+
             // 루트 시각화 필요
-            return new Vector3[0];
+            VisualizeWorldPath(worldPath);
+
+            WorldRoute = worldPath;
+            startPosition = worldPath[0];
+
+            OnGenerateRoute?.Invoke(worldPath);
+
+            return worldPath;
         }
 
         /// <summary>
@@ -129,9 +163,9 @@ namespace Sangmin
                         // grid에서 [0,0]은 이동 가능 범위에서는 [1,1]임
                         var realPos = new Vector2Int(row + 1, col + 1);
 
-                        // 상하좌우의 빈 공간을 체크
+                        // 주변 8방향향의 빈 공간을 체크
 
-                        // 제일 윗 행은 윗 공간이 무조건 비어있음
+                        // 위
                         if (row == 0)
                         {
                             var _pos = new Vector2Int(realPos.x - 1, realPos.y);
@@ -143,7 +177,7 @@ namespace Sangmin
                             _posVertex.KeyValuePair[_pos] = new VertexNode { pos = _pos };
                         }
 
-                        // 제일 아래 행은 아랫 공간이 무조건 비어있음
+                        // 아래
                         if (row == height - 1)
                         {
                             var _pos = new Vector2Int(realPos.x + 1, realPos.y);
@@ -155,7 +189,7 @@ namespace Sangmin
                             _posVertex.KeyValuePair[_pos] = new VertexNode { pos = _pos };
                         }
 
-                        // 제일 왼쪽 열은 왼쪽 공간이 무조건 비어있음
+                        // 왼쪽
                         if (col == 0)
                         {
                             var _pos = new Vector2Int(realPos.x, realPos.y - 1);
@@ -167,7 +201,7 @@ namespace Sangmin
                             _posVertex.KeyValuePair[_pos] = new VertexNode { pos = _pos };
                         }
 
-                        // 제일 오른쪽 열은 오른쪽 공간이 무조건 비어있음
+                        // 오른쪽
                         if (col == width - 1)
                         {
                             var _pos = new Vector2Int(realPos.x, realPos.y + 1);
@@ -178,6 +212,55 @@ namespace Sangmin
                             var _pos = new Vector2Int(realPos.x, realPos.y + 1);
                             _posVertex.KeyValuePair[_pos] = new VertexNode { pos = _pos };
                         }
+
+                        // 왼쪽 위 대각선
+                        if (row == 0 || col == 0)
+                        {
+                            var _pos = new Vector2Int(realPos.x - 1, realPos.y - 1);
+                            _posVertex.KeyValuePair[_pos] = new VertexNode { pos = _pos };
+                        }
+                        else if (!cellInfos[row - 1, col - 1])
+                        {
+                            var _pos = new Vector2Int(realPos.x - 1, realPos.y - 1);
+                            _posVertex.KeyValuePair[_pos] = new VertexNode { pos = _pos };
+                        }
+
+                        // 오른쪽 위 대각선
+                        if (row == 0 || col == width - 1)
+                        {
+                            var _pos = new Vector2Int(realPos.x - 1, realPos.y + 1);
+                            _posVertex.KeyValuePair[_pos] = new VertexNode { pos = _pos };
+                        }
+                        else if (!cellInfos[row - 1, col + 1])
+                        {
+                            var _pos = new Vector2Int(realPos.x - 1, realPos.y + 1);
+                            _posVertex.KeyValuePair[_pos] = new VertexNode { pos = _pos };
+                        }
+
+                        // 왼쪽 아래 대각선
+                        if (row == height - 1 || col == 0)
+                        {
+                            var _pos = new Vector2Int(realPos.x + 1, realPos.y - 1);
+                            _posVertex.KeyValuePair[_pos] = new VertexNode { pos = _pos };
+                        }
+                        else if (!cellInfos[row + 1, col - 1])
+                        {
+                            var _pos = new Vector2Int(realPos.x + 1, realPos.y - 1);
+                            _posVertex.KeyValuePair[_pos] = new VertexNode { pos = _pos };
+                        }
+
+                        // 오른쪽 아래 대각선
+                        if (row == height - 1 || col == width - 1)
+                        {
+                            var _pos = new Vector2Int(realPos.x + 1, realPos.y + 1);
+                            _posVertex.KeyValuePair[_pos] = new VertexNode { pos = _pos };
+                        }
+                        else if (!cellInfos[row + 1, col + 1])
+                        {
+                            var _pos = new Vector2Int(realPos.x + 1, realPos.y + 1);
+                            _posVertex.KeyValuePair[_pos] = new VertexNode { pos = _pos };
+                        }
+
                     }
                 }
             }
@@ -266,73 +349,122 @@ namespace Sangmin
         }
 
         /// <summary>
-        /// 그리드 좌표 경로를 월드 좌표로 변환합니다.
-        /// UnitCell의 실제 transform.position을 사용합니다.
+        /// 그리드 좌표 -> 월드 좌표로 변환하는 표를 미리 생성
         /// </summary>
-        private Vector3[] ConvertToWorldPositions(List<Vector2Int> gridPath, GridUnitPlacement grid)
+        private void GenerateCellWorldPositions(GridUnitPlacement grid)
         {
-            var cellInfos = GridUnitPlacement.Instance.cellInfos;
+            cellWorldPositions = new Vector3[grid.gridHeight + 2, grid.gridWidth + 2];
 
-            if (cellInfos == null)
-                return new Vector3[0];
+            Vector3 basePosition = grid.cellInfos[0, 0].transform.position;
 
-            Vector3[] worldPath = new Vector3[gridPath.Count];
+            // 이동 가능 범위는 왼쪽 상단으로 1칸 더 이동한 후 계산
+            basePosition.x -= grid.cellSize;
+            basePosition.y += grid.cellSize;
 
-            for (int i = 0; i < gridPath.Count; i++)
+            for (int row = 0; row < grid.gridHeight + 2; row++)
             {
-                Vector2Int gridPos = gridPath[i];
-                int row = gridPos.y;
-                int col = gridPos.x;
-
-                // 범위 체크
-                if (row >= 0 && row < grid.gridHeight && col >= 0 && col < grid.gridWidth)
+                for (int col = 0; col < grid.gridWidth + 2; col++)
                 {
-                    if (cellInfos[row, col] != null)
-                    {
-                        // UnitCell의 실제 위치 사용
-                        worldPath[i] = cellInfos[row, col].transform.position;
-                    }
-                    else
-                    {
-                        // 셀이 없으면 계산된 위치 사용
-                        worldPath[i] = CalculateWorldPosition(row, col, grid);
-                    }
-                }
-                else
-                {
-                    // 맵 밖이면 계산된 위치 사용
-                    worldPath[i] = CalculateWorldPosition(row, col, grid);
+                    cellWorldPositions[row, col] = basePosition + new Vector3(col * grid.cellSize, -row * grid.cellSize, 0f);
                 }
             }
-
-            return worldPath;
         }
 
         /// <summary>
-        /// row, col을 월드 좌표로 변환합니다 (셀이 없을 때 사용).
+        /// 미리 생성한 표를 통해 그리드 좌표 -> 월드 좌표 변환합니다.
         /// </summary>
-        private Vector3 CalculateWorldPosition(int row, int col, GridUnitPlacement grid)
+        private Vector3[] ConvertToWorldPositions(List<Vector2Int> gridPath)
         {
-            // 첫 번째 셀의 위치를 기준으로 계산
-            var field = typeof(GridUnitPlacement).GetField("cellInfos",
-                System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            List<Vector3> worldPath = new List<Vector3>();
 
-            if (field != null)
+            foreach (var gridPos in gridPath)
             {
-                var cellInfos = field.GetValue(grid) as UnitCell[,];
-                if (cellInfos != null && cellInfos[0, 0] != null)
-                {
-                    Vector3 firstCellPos = cellInfos[0, 0].transform.position;
-                    float offsetX = (col - 0) * grid.cellSize;
-                    float offsetY = (0 - row) * grid.cellSize; // row가 증가하면 y는 감소
-                    return firstCellPos + new Vector3(offsetX, offsetY, 0f);
-                }
+                worldPath.Add(cellWorldPositions[gridPos.x, gridPos.y]);
             }
 
-            // 기본 계산 (중심 기준)
-            float worldX = (col - grid.gridWidth * 0.5f + 0.5f) * grid.cellSize;
-            float worldY = (grid.gridHeight * 0.5f - row - 0.5f) * grid.cellSize;
-            return new Vector3(worldX, worldY, 0f);
+            Debug.Log("worldPath: " + string.Join(", ", worldPath));
+            return worldPath.ToArray();
+        }
+
+        private void ConfigureTrailRenderer()
+        {
+            trailRenderer = GetComponentInChildren<TrailRenderer>();
+
+            if (trailRenderer == null)
+            {
+                Debug.LogWarning("trailRenderer is null");
+                return;
+            }
+
+            trailRenderer.time = 0.75f;
+            trailRenderer.startWidth = 0.2f;
+            trailRenderer.endWidth = 0.1f;
+            trailRenderer.material = new Material(Shader.Find("Sprites/Default"));
+            trailRenderer.startColor = Color.red;
+            trailRenderer.endColor = new Color(1f, 0f, 0f, 0f);
+        }
+
+        private void VisualizeWorldPath(Vector3[] worldPath)
+        {
+            // worldPath의 좌표 요소들을 순서대로 보여주는 시각화
+
+            if (worldPath == null || worldPath.Length == 0)
+            {
+                Debug.LogWarning("시각화할 경로가 없습니다.");
+                return;
+            }
+
+            // 이전 시각화 코루틴이 실행 중이면 중지
+            if (visualizationCoroutine != null)
+            {
+                StopCoroutine(visualizationCoroutine);
+            }
+
+            // Trail Renderer가 없으면 생성
+            if (trailRenderer == null)
+            {
+                Debug.LogWarning("trailRenderer is null");
+                return;
+            }
+
+            // 경로를 따라 이동하는 코루틴 시작
+            visualizationCoroutine = StartCoroutine(FollowPathCoroutine(worldPath));
+        }
+
+        private IEnumerator FollowPathCoroutine(Vector3[] worldPath)
+        {
+            if (trailRenderer == null || worldPath.Length == 0)
+                yield break;
+
+            // 첫 번째 위치로 이동
+            trailRenderer.transform.position = worldPath[0];
+
+            // 트레일 초기화를 위해 잠시 대기
+            yield return new WaitForSeconds(0.1f);
+
+            // 경로를 따라 순차적으로 이동
+            for (int i = 1; i < worldPath.Length; i++)
+            {
+                Vector3 startPos = worldPath[i - 1];
+                Vector3 endPos = worldPath[i];
+                float distance = Vector3.Distance(startPos, endPos);
+                float travelTime = distance / visualizationSpeed;
+
+                float elapsedTime = 0f;
+                while (elapsedTime < travelTime)
+                {
+                    elapsedTime += Time.deltaTime;
+                    float t = elapsedTime / travelTime;
+                    trailRenderer.transform.position = Vector3.Lerp(startPos, endPos, t);
+                    yield return null;
+                }
+
+                // 정확한 위치로 설정
+                trailRenderer.transform.position = endPos;
+            }
+
+            // 마지막 위치에서 트레일이 사라질 때까지 대기
+            yield return new WaitForSeconds(trailRenderer.time);
         }
     }
 }

@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 1850467408964534052}
   - component: {fileID: 6001961513056251239}
   - component: {fileID: 2005140264416564835}
-  - component: {fileID: 1662280628751674947}
   m_Layer: 0
   m_Name: Enemy Sample
   m_TagString: Untagged
@@ -129,11 +128,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1381c05f0039d6740bf65e0af59265c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Sangmin.Enemy
-  waypoints:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  moveSpeed: 3
 --- !u!114 &2005140264416564835
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -146,25 +141,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ad55699af963d048b3910c56bbf55f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Sangmin.PoolAble
---- !u!195 &1662280628751674947
-NavMeshAgent:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5359853559271404880}
-  m_Enabled: 1
-  m_AgentTypeID: 0
-  m_Radius: 0.2
-  m_Speed: 3.5
-  m_Acceleration: 8
-  avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 0
-  m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
-  m_AutoRepath: 1
-  m_Height: 1
-  m_BaseOffset: 0
-  m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4

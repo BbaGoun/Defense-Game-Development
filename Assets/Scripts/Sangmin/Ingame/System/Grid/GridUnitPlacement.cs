@@ -17,6 +17,7 @@ namespace Sangmin
         public int gridHeight = 4;
         // 열(가로, column) 개수
         public int gridWidth = 6;
+        public GameObject gridRoot;
         public float cellSize = 1.0f;
 
         private int unitCount;
@@ -53,6 +54,8 @@ namespace Sangmin
                 _instance = this;
             else
                 Destroy(this.gameObject);
+
+            cellSize = gridRoot.transform.localScale.x;
 
             unitCount = 0;
 
