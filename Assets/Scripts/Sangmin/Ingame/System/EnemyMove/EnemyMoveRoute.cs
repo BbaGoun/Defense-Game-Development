@@ -289,6 +289,10 @@ namespace Sangmin
             return startPoint;
         }
 
+        /// <summary>
+        /// BFS 방식으로 가장 긴 사이클을 찾습니다.
+        /// 갈 곳이 방금 전 노드 밖에 없을 때는 역주행을 허용합니다.
+        /// </summary>
         private void ConnectVertex(Vector2Int startPoint, List<Vector2Int> path)
         {
             if (!_posVertex.KeyValuePair.ContainsKey(startPoint))
@@ -296,30 +300,110 @@ namespace Sangmin
                 Debug.LogWarning($"ConnectVertex: startPoint={startPoint}이 이동 가능하지 않습니다.");
                 return;
             }
+
             VertexNode startNode = _posVertex.KeyValuePair[startPoint];
-            VertexNode currentNode = startNode;
-            path.Add(startPoint);
+            List<Vector2Int> longestCycle = new List<Vector2Int>();
 
-            int count = 0;
+            // BFS 상태: (현재 노드, 경로, 이전 노드)
+            Queue<(VertexNode current, List<Vector2Int> currentPath, VertexNode previous)> queue =
+                new Queue<(VertexNode, List<Vector2Int>, VertexNode)>();
 
-            do
+            // 시작 상태
+            List<Vector2Int> initialPath = new List<Vector2Int> { startPoint };
+            queue.Enqueue((startNode, initialPath, null));
+
+            int maxIterations = 10000; // 무한 루프 방지
+            int iteration = 0;
+
+            while (queue.Count > 0 && iteration < maxIterations)
             {
+                iteration++;
+                var (currentNode, currentPath, previousNode) = queue.Dequeue();
+
+                // 가능한 다음 노드들을 수집 (역주행 여부에 따라 분류)
+                List<VertexNode> forwardNodes = new List<VertexNode>();
+                List<VertexNode> backwardNodes = new List<VertexNode>();
+
                 foreach (var dir in Dir8)
                 {
                     if (!_posVertex.KeyValuePair.TryGetValue(currentNode.pos + dir, out var nextNode))
                         continue;
-                    if (nextNode.outNode == currentNode) // 역주행 방지
-                        continue;
-                    currentNode.outNode = nextNode;
-                    nextNode.inNode = currentNode;
-                    path.Add(nextNode.pos);
-                    currentNode = nextNode;
-                    break;
-                }
-                count += 1;
-            } while (currentNode != startNode && count < 1000);
 
-            Debug.Log($"Count = {count}");
+                    // 시작 노드로 돌아오는 경우는 사이클 완성
+                    if (nextNode == startNode && currentPath.Count > 1)
+                    {
+                        List<Vector2Int> cyclePath = new List<Vector2Int>(currentPath) { startPoint };
+                        if (cyclePath.Count > longestCycle.Count)
+                        {
+                            longestCycle = cyclePath;
+                        }
+                        continue;
+                    }
+
+                    // 이미 경로에 포함된 노드는 건너뛰기 (사이클 중복 방지)
+                    if (currentPath.Contains(nextNode.pos))
+                        continue;
+
+                    // 역주행 여부 확인 (previousNode가 있고, nextNode의 outNode가 previousNode인 경우)
+                    bool isBackward = previousNode != null && nextNode == previousNode;
+
+                    if (isBackward)
+                    {
+                        backwardNodes.Add(nextNode);
+                    }
+                    else
+                    {
+                        forwardNodes.Add(nextNode);
+                    }
+                }
+
+                // 역주행이 아닌 노드가 있으면 그것만 큐에 추가
+                if (forwardNodes.Count > 0)
+                {
+                    foreach (var nextNode in forwardNodes)
+                    {
+                        List<Vector2Int> newPath = new List<Vector2Int>(currentPath) { nextNode.pos };
+                        queue.Enqueue((nextNode, newPath, currentNode));
+                    }
+                }
+                // 역주행이 아닌 노드가 없고, 역주행 노드만 있으면 역주행 허용
+                else if (backwardNodes.Count > 0)
+                {
+                    foreach (var nextNode in backwardNodes)
+                    {
+                        List<Vector2Int> newPath = new List<Vector2Int>(currentPath) { nextNode.pos };
+                        queue.Enqueue((nextNode, newPath, currentNode));
+                    }
+                }
+            }
+
+            // 가장 긴 사이클을 찾았으면 path에 추가하고 노드 연결
+            if (longestCycle.Count > 0)
+            {
+                path.Clear();
+                path.AddRange(longestCycle);
+
+                // 사이클의 노드들을 연결
+                for (int i = 0; i < longestCycle.Count - 1; i++)
+                {
+                    Vector2Int currentPos = longestCycle[i];
+                    Vector2Int nextPos = longestCycle[i + 1];
+
+                    if (_posVertex.KeyValuePair.TryGetValue(currentPos, out var currentNode) &&
+                        _posVertex.KeyValuePair.TryGetValue(nextPos, out var nextNode))
+                    {
+                        // 여기서 덮어쓰니까 안쪽으로 안 들어가게 됨
+                        currentNode.outNode = nextNode;
+                        nextNode.inNode = currentNode;
+                    }
+                }
+
+                Debug.Log($"BFS로 찾은 가장 긴 사이클 길이: {longestCycle.Count}");
+            }
+            else
+            {
+                Debug.LogWarning("사이클을 찾을 수 없습니다.");
+            }
         }
 
         /// <summary>
