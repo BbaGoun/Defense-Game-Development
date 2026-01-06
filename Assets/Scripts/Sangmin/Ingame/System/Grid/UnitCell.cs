@@ -21,7 +21,6 @@ namespace Sangmin
         private LineRenderer lineRenderer;
         private SpriteRenderer spriteRenderer;
         private BoxCollider2D boxCollider2D;
-        private BoxCollider2D notWalkAble;
 
         private void Awake()
         {
@@ -76,7 +75,6 @@ namespace Sangmin
         public void SetIsCellActive(bool active)
         {
             isCellActive = active;
-            notWalkAble.enabled = active;
 
             UpdateCellVisual();
         }
@@ -179,16 +177,6 @@ namespace Sangmin
 
             }
 
-            if (notWalkAble == null)
-            {
-                notWalkAble = transform.GetChild(0).GetComponent<BoxCollider2D>();
-                if (notWalkAble == null)
-                {
-                    notWalkAble = transform.GetChild(0).gameObject.AddComponent<BoxCollider2D>();
-                }
-
-            }
-
             ConfigureBoxCollider2D();
         }
 
@@ -196,9 +184,6 @@ namespace Sangmin
         {
             boxCollider2D.size = new Vector2(cellSize, cellSize);
             boxCollider2D.offset = Vector2.zero;
-
-            notWalkAble.size = new Vector2(cellSize, cellSize);
-            notWalkAble.offset = Vector2.zero;
         }
 
         private void UpdateCellVisual()

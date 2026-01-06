@@ -75,6 +75,8 @@ namespace Sangmin
 
         // UnionFind 저장용
         private Dictionary<int, List<int>> _allComponents;
+        // 각 노드 id가 어느 컴포넌트(List<int>)에 속하는지 바로 찾기 위한 역 인덱스
+        private Dictionary<int, List<int>> _nodeIdToComponent;
 
         // 자동으로 증가하는 유닛 id
         private int _nextUnitId = 0;
@@ -299,6 +301,15 @@ namespace Sangmin
 
             // 3) 모든 컴포넌트 로그 출력
             _allComponents = uf.GetAllComponents();
+            // 각 노드 id -> 그 노드가 속한 컴포넌트(List<int>)를 바로 찾기 위한 역 인덱스 생성
+            _nodeIdToComponent = new Dictionary<int, List<int>>();
+            foreach (var comp in _allComponents.Values)
+            {
+                foreach (var id in comp)
+                {
+                    _nodeIdToComponent[id] = comp;
+                }
+            }
             // Debug.Log($"현재 연결된 컴포넌트 개수: {_allComponents.Count}");
             // int index = 1;
             // foreach (var comp in _allComponents.Values)
@@ -468,6 +479,39 @@ namespace Sangmin
                         // unit의 synergy/count를 변경
                         syn.count = synergyCounts[(int)syn.synergyName];
                         Debug.Log($"unit Id:{unitNode.id}, synergyName: {syn.synergyName}, {syn.count}");
+                    }
+                }
+            }
+        }
+
+        public void HighlightConnectedNode(Vector2Int pos)
+        {
+            if (!_posToUnitId.KeyValuePair.TryGetValue(pos, out int nodeId))
+                return;
+
+            // Union-Find 전체를 다시 순회하지 않고,
+            // 역 인덱스(_nodeIdToComponent)를 통해 O(1)에 이 노드가 속한 컴포넌트를 찾는다.
+            if (_nodeIdToComponent == null)
+                return;
+
+            if (!_nodeIdToComponent.TryGetValue(nodeId, out List<int> component))
+                return;
+
+            // component 안에 포함된 모든 유닛이 "같은 시너지 부분 집합"에 속한 유닛들이다.
+            foreach (var id in component)
+            {
+                if (!_units.KeyValuePair.TryGetValue(id, out var unitNode))
+                    continue;
+
+                // 유닛 하이라이트
+
+
+                // 유닛 체인 하이라이트
+                foreach (var connectionState in unitNode.connectionStates)
+                {
+                    if (connectionState == UnitNode.ChainConnectionState.Connected)
+                    {
+                        // 연결된 유닛은 하이라이트
                     }
                 }
             }
