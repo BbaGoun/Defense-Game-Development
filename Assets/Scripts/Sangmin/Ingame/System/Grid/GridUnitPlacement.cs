@@ -171,6 +171,8 @@ namespace Sangmin
                                 SelectUnit(selectedUnit);
                             }
 
+                            SynergyCountSystem.Instance.OutlineConnectedNode(new Vector2Int(row, col));
+
                             return false;
                         }
                         else
@@ -231,6 +233,8 @@ namespace Sangmin
             {
                 CellInfoPanel.Instance.HideCellInfo();
             }
+
+            SynergyCountSystem.Instance.OutlineClear();
 
             selectedCell = null;
 

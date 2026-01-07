@@ -117,10 +117,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Outliner
   _spriteRenderer: {fileID: 9207390338146533856}
-  _material: {fileID: 2100000, guid: 7ceab5bac4d8ddb47b81a4357d2c9501, type: 2}
   thickness: 0.005
-  outlineColor: {r: 1, g: 0, b: 0, a: 0}
+  outlineColor: {r: 1, g: 0, b: 0, a: 1}
   yOffsetMultiplier: 10
+  isOutline: 0
   awakeDone: 0
 --- !u!114 &5480839661711331456
 MonoBehaviour:
@@ -151,6 +151,7 @@ MonoBehaviour:
   synergies:
   - {fileID: 11400000, guid: a5e8d4f0c04bfc449a51c413317e6515, type: 2}
   rangeIndicator: {fileID: 1288710351338662157}
+  outliner: {fileID: 0}
 --- !u!114 &1513954799534953106
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -648,26 +649,6 @@ PrefabInstance:
     - target: {fileID: 1404083814607092276, guid: 16b73416913482b4596a3ca1e4936cbc, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 90
-      objectReference: {fileID: 0}
-    - target: {fileID: 5445884349282574498, guid: 16b73416913482b4596a3ca1e4936cbc, type: 3}
-      propertyPath: thickness
-      value: 0.002
-      objectReference: {fileID: 0}
-    - target: {fileID: 5445884349282574498, guid: 16b73416913482b4596a3ca1e4936cbc, type: 3}
-      propertyPath: outlineColor.b
-      value: 0.9163537
-      objectReference: {fileID: 0}
-    - target: {fileID: 5445884349282574498, guid: 16b73416913482b4596a3ca1e4936cbc, type: 3}
-      propertyPath: outlineColor.g
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5445884349282574498, guid: 16b73416913482b4596a3ca1e4936cbc, type: 3}
-      propertyPath: outlineColor.r
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5445884349282574498, guid: 16b73416913482b4596a3ca1e4936cbc, type: 3}
-      propertyPath: yOffsetMultiplier
-      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 8974541146571888858, guid: 16b73416913482b4596a3ca1e4936cbc, type: 3}
       propertyPath: m_Name

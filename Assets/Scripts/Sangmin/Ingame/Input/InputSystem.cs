@@ -12,6 +12,7 @@ namespace Sangmin
         private Camera _mainCamera;
         private PlayerInput _playerInput;
         private InputAction _clickAction;
+        private InputAction _doubleTapAction;
 
         private bool _isPress;
         private bool _isDragging;
@@ -30,7 +31,7 @@ namespace Sangmin
                 _playerInput = gameObject.AddComponent<PlayerInput>();
             }
 
-            // Click 액션 찾기 및 구독
+            // 액션 찾기 및 구독
             if (_playerInput.actions != null)
             {
                 _clickAction = _playerInput.actions["Click"];
@@ -41,9 +42,14 @@ namespace Sangmin
                     _clickAction.canceled += OnClick;
                     _clickAction.Enable();
                 }
-                else
+
+                _doubleTapAction = _playerInput.actions["DoubleTap"];
+                if (_doubleTapAction != null)
                 {
-                    Debug.LogError("Click 액션을 찾을 수 없습니다. Input Action Asset에 'Click' 액션이 있는지 확인하세요.");
+                    //_clickAction.started += OnClick;
+                    _doubleTapAction.performed += OnDoubleTap;
+                    _doubleTapAction.canceled += OnDoubleTap;
+                    _doubleTapAction.Enable();
                 }
             }
             else
@@ -82,6 +88,12 @@ namespace Sangmin
                 _clickAction.performed -= OnClick;
                 _clickAction.canceled -= OnClick;
                 _clickAction.Disable();
+            }
+            if (_doubleTapAction != null)
+            {
+                _doubleTapAction.performed -= OnDoubleTap;
+                _doubleTapAction.canceled -= OnDoubleTap;
+                _doubleTapAction.Disable();
             }
         }
 
@@ -179,6 +191,16 @@ namespace Sangmin
             }
 
             return false;
+        }
+
+        private void OnDoubleTap(InputAction.CallbackContext context)
+        {
+            if (context.started)
+                Debug.Log("Double Tap Start!!!");
+            else if (context.performed)
+                Debug.Log("Double Tap Perform!!!");
+            else
+                Debug.Log("Double Tap Cancel!!!");
         }
 
         private void Update()

@@ -484,8 +484,11 @@ namespace Sangmin
             }
         }
 
-        public void HighlightConnectedNode(Vector2Int pos)
+        public void OutlineConnectedNode(Vector2Int pos)
         {
+            // 초기화
+            OutlineClear();
+
             if (!_posToUnitId.KeyValuePair.TryGetValue(pos, out int nodeId))
                 return;
 
@@ -503,16 +506,30 @@ namespace Sangmin
                 if (!_units.KeyValuePair.TryGetValue(id, out var unitNode))
                     continue;
 
-                // 유닛 하이라이트
-
+                unitNode.unit.ShowOutline();
 
                 // 유닛 체인 하이라이트
-                foreach (var connectionState in unitNode.connectionStates)
+                for (int i = 0; i < unitNode.connectionStates.Length; i++)
                 {
+                    var connectionState = unitNode.connectionStates[i];
+                    // 연결된 체인은 하이라이트
                     if (connectionState == UnitNode.ChainConnectionState.Connected)
                     {
-                        // 연결된 유닛은 하이라이트
+                        unitNode.unit.ShowChainOutline(i);
                     }
+                }
+            }
+        }
+
+        public void OutlineClear()
+        {
+            foreach (var keyValue in _units.KeyValuePair)
+            {
+                var unitNode = keyValue.Value;
+                unitNode.unit.HideOutline();
+                for (int i = 0; i < unitNode.connectionStates.Length; i++)
+                {
+                    unitNode.unit.HideChainOutline(i);
                 }
             }
         }

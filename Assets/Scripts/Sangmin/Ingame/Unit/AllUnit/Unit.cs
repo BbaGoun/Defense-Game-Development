@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Sangmin
 {
-    [RequireComponent(typeof(PoolAble))]
+    [RequireComponent(typeof(PoolAble), typeof(Outliner))]
     public class Unit : MonoBehaviour
     {
         /*
@@ -62,12 +62,13 @@ namespace Sangmin
 
         [Header("Additive")]
         public IAttackBehaviour attackBehaviour;
-        
+
         public List<Synergy> synergies = new List<Synergy>();
         public List<IStatusEffect> statusEffects = new List<IStatusEffect>();
 
         [Header("Else Components")]
         [SerializeField] private RangeIndicator rangeIndicator;
+        [SerializeField] private Outliner outliner;
 
         private static readonly ChainDirection[] _allDirections =
         {
@@ -95,7 +96,8 @@ namespace Sangmin
 
             // 자식 오브젝트에서 RangeIndicator를 찾는다.
             rangeIndicator = GetComponentInChildren<RangeIndicator>(false);
-            if(rangeIndicator == null)
+            outliner = GetComponent<Outliner>();
+            if (rangeIndicator == null)
             {
                 Debug.LogError($"RangeIndicator가 배정되지 않음 : {gameObject.name}");
                 return;
@@ -179,7 +181,7 @@ namespace Sangmin
 
             ChainDirection firstDir = _allDirections[firstIndex];
             ChainDirection secondDir = _allDirections[secondIndex];
-            
+
             chain |= firstDir;
             chain |= secondDir;
         }
@@ -310,7 +312,7 @@ namespace Sangmin
             }
 
             chain = newChain;
-            
+
             // 체인 시각화 업데이트
             RefreshAllChainVisualsAsDisconnected();
 
@@ -346,6 +348,32 @@ namespace Sangmin
             {
                 rangeIndicator.HideRange();
             }
+        }
+
+        public void ShowOutline()
+        {
+            if (outliner != null)
+            {
+                outliner.OnOutline();
+            }
+        }
+
+        public void HideOutline()
+        {
+            if (outliner != null)
+            {
+                outliner.OffOutline();
+            }
+        }
+
+        public void ShowChainOutline(int index)
+        {
+            chainVisuals[index].ShowOutline();
+        }
+
+        public void HideChainOutline(int index)
+        {
+            chainVisuals[index].HideOutline();
         }
     }
 }

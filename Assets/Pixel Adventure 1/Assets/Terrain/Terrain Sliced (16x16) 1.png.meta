@@ -854,9 +854,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 272
-        y: 171
+        y: 153
         width: 48
-        height: 5
+        height: 13
       alignment: 9
       pivot: {x: 0, y: 0.5}
       border: {x: 8, y: 0, z: 7, w: 0}
@@ -1183,8 +1183,8 @@ TextureImporter:
       name: Terrain (16x16)_31
       rect:
         serializedVersion: 2
-        x: 272
-        y: 144
+        x: 313
+        y: 116
         width: 16
         height: 16
       alignment: 0
@@ -1205,8 +1205,8 @@ TextureImporter:
       name: Terrain (16x16)_32
       rect:
         serializedVersion: 2
-        x: 288
-        y: 144
+        x: 333
+        y: 115
         width: 16
         height: 16
       alignment: 0
@@ -1227,8 +1227,8 @@ TextureImporter:
       name: Terrain (16x16)_33
       rect:
         serializedVersion: 2
-        x: 304
-        y: 144
+        x: 292
+        y: 116
         width: 16
         height: 16
       alignment: 0
@@ -1448,9 +1448,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 272
-        y: 139
+        y: 135
         width: 48
-        height: 5
+        height: 13
       alignment: 9
       pivot: {x: 0, y: 0.5}
       border: {x: 6, y: 0, z: 5, w: 0}

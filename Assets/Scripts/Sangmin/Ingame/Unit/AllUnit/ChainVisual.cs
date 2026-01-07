@@ -6,7 +6,7 @@ namespace Sangmin
     /// 단일 방향 체인(예: 위, 오른위 등)을 시각화하는 컴포넌트
     /// - SpriteRenderer를 이용해 연결 / 비연결 상태에 따라 다른 이미지를 보여준다.
     /// </summary>
-    [RequireComponent(typeof(SpriteRenderer))]
+    [RequireComponent(typeof(SpriteRenderer), typeof(Outliner))]
     public class ChainVisual : MonoBehaviour
     {
         [Header("Sprites")]
@@ -17,10 +17,12 @@ namespace Sangmin
         public Sprite connectedSprite;
 
         private SpriteRenderer _renderer;
+        [SerializeField] private Outliner outliner;
 
         void Awake()
         {
             _renderer = GetComponent<SpriteRenderer>();
+            outliner = GetComponent<Outliner>();
         }
 
         /// <summary>
@@ -51,6 +53,22 @@ namespace Sangmin
             else if (!isConnected && disconnectedSprite != null)
             {
                 _renderer.sprite = disconnectedSprite;
+            }
+        }
+
+        public void ShowOutline()
+        {
+            if (outliner != null)
+            {
+                outliner.OnOutline();
+            }
+        }
+
+        public void HideOutline()
+        {
+            if (outliner != null)
+            {
+                outliner.OffOutline();
             }
         }
     }

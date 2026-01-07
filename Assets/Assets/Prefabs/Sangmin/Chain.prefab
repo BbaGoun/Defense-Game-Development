@@ -105,9 +105,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a68a354459727aa44b121f5e319b03d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Outliner
-  thickness: 0
-  outlineColor: {r: 0, g: 0, b: 0, a: 0}
-  yOffsetMultiplier: 0
+  _spriteRenderer: {fileID: 4403207154709036045}
+  thickness: 0.002
+  outlineColor: {r: 0.776752, g: 0, b: 1, a: 1}
+  yOffsetMultiplier: 5
+  isOutline: 0
+  awakeDone: 0
 --- !u!114 &8327731759945555523
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -122,3 +125,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Sangmin.ChainVisual
   disconnectedSprite: {fileID: 4373040517201769238, guid: 7e2bb316384db3b42a5d44e676ca8629, type: 3}
   connectedSprite: {fileID: 8102182086558406705, guid: 7e2bb316384db3b42a5d44e676ca8629, type: 3}
+  outliner: {fileID: 5445884349282574498}

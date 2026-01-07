@@ -67,6 +67,7 @@ Material:
     m_Ints: []
     m_Floats:
     - _EnableExternalAlpha: 0
+    - _IsOutline: 0
     - _OffsetMultiplier: 10
     - _OffsetY: 0
     - _Outline: 1
@@ -75,6 +76,7 @@ Material:
     - _Use8Directions: 1
     - _YOffsetMultiplier: 10
     - _ZWrite: 0
+    - _isOutline: 0
     m_Colors:
     - White: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}

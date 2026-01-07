@@ -64,7 +64,7 @@ namespace Sangmin
             }
 
             currentSelectedUnit = unit;
-            
+
             if (panelRoot != null)
                 panelRoot.SetActive(true);
 
@@ -77,7 +77,7 @@ namespace Sangmin
         public void HideUnitInfo()
         {
             currentSelectedUnit = null;
-            
+
             if (panelRoot != null)
                 panelRoot.SetActive(false);
         }
@@ -95,22 +95,25 @@ namespace Sangmin
                 unitNameText.text = unit.gameObject.name;
 
             // 공격력
-            if (attackDamageText != null){
-                float diffAtkDmg = unit.finalAttackDamage-unit.unitStatData.attackDamage;
+            if (attackDamageText != null)
+            {
+                float diffAtkDmg = unit.finalAttackDamage - unit.unitStatData.attackDamage;
                 char oper = diffAtkDmg >= 0 ? '+' : '-';
                 attackDamageText.text = $"공격력: {unit.unitStatData.attackDamage}{oper}{diffAtkDmg:F1}";
-            
+
             }
             // 공격 속도
-            if (attackSpeedText != null){
-                float diffAtkSpd = unit.finalAttackSpeed-unit.unitStatData.attackSpeed;
+            if (attackSpeedText != null)
+            {
+                float diffAtkSpd = unit.finalAttackSpeed - unit.unitStatData.attackSpeed;
                 char oper = diffAtkSpd >= 0 ? '+' : '-';
                 attackSpeedText.text = $"공격 속도: {unit.unitStatData.attackSpeed}{oper}{diffAtkSpd:F2}";
             }
 
             // 사거리
-            if (attackRangeText != null){
-                int diffAtkRange = unit.finalAttackRange-unit.unitStatData.attackRange;
+            if (attackRangeText != null)
+            {
+                int diffAtkRange = unit.finalAttackRange - unit.unitStatData.attackRange;
                 char oper = diffAtkRange >= 0 ? '+' : '-';
                 attackRangeText.text = $"사거리: {unit.unitStatData.attackRange}{oper}{diffAtkRange}";
             }
@@ -169,15 +172,16 @@ namespace Sangmin
                 {
                     Vector2Int gridPos = new Vector2Int(selectedCell.row, selectedCell.col);
                     Unit.ChainDirection oldChain = currentSelectedUnit.chain;
-                    
+
                     // 체인 회전
                     currentSelectedUnit.RotateChainClockwise();
-                    
+
                     // 시너지 시스템에 체인 변경 알림
                     if (SynergyCountSystem.Instance != null)
                     {
                         // 체인 변경 후 시너지 시스템 업데이트
                         SynergyCountSystem.Instance.UpdateUnitChain(gridPos, currentSelectedUnit.chain);
+                        SynergyCountSystem.Instance.OutlineConnectedNode(gridPos);
                     }
                 }
             }
