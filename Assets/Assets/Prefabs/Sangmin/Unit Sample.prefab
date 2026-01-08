@@ -152,6 +152,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: a5e8d4f0c04bfc449a51c413317e6515, type: 2}
   rangeIndicator: {fileID: 1288710351338662157}
   outliner: {fileID: 0}
+  poolAble: {fileID: 0}
 --- !u!114 &1513954799534953106
 MonoBehaviour:
   m_ObjectHideFlags: 0

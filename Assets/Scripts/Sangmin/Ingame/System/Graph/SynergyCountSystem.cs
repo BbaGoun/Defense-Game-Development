@@ -168,6 +168,7 @@ namespace Sangmin
             Debug.Log($"MoveUnit: id={unitId}, newPos={newPos}");
 
             RebuildAndLogComponents();
+            OutlineConnectedNode(pos);
         }
 
         /// <summary>
@@ -225,6 +226,7 @@ namespace Sangmin
             Debug.Log($"SwapUnit: id={unitAId}({aPos} -> {bPos}), id={unitBId}({bPos} -> {aPos})");
 
             RebuildAndLogComponents();
+            OutlineConnectedNode(bPos);
         }
 
         /// <summary>
@@ -252,6 +254,7 @@ namespace Sangmin
             Debug.Log($"UpdateUnitChain: id={unitId}, pos={pos}, oldMask={System.Convert.ToString((int)oldChainMask, 2).PadLeft(8, '0')}, newMask={System.Convert.ToString((int)newChainMask, 2).PadLeft(8, '0')}");
 
             RebuildAndLogComponents();
+            OutlineConnectedNode(pos);
         }
 
         /// <summary>
@@ -273,12 +276,12 @@ namespace Sangmin
                 return;
             }
 
+            // 강조 효과 제거
+            OutlineClear();
+
             // 기존 좌표 매핑 제거
-            if (unitId == node.id)
-            {
-                _units.KeyValuePair.Remove(unitId);
-                _posToUnitId.KeyValuePair.Remove(node.gridPos);
-            }
+            _units.KeyValuePair.Remove(unitId);
+            _posToUnitId.KeyValuePair.Remove(node.gridPos);
 
             Debug.Log($"SellUnit: id={unitId} 판매(삭제)");
 

@@ -1,5 +1,6 @@
 using Unity.Collections;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.EventSystems;
 
 namespace Sangmin
@@ -94,7 +95,6 @@ namespace Sangmin
             // 돈 감소
 
             var unit = RandomSummon.Instance.SummonRandomUnit();
-
             // 행(row)을 먼저, 그 다음 열(col)을 순회
             for (int row = 0; row < gridHeight; row++)
             {
@@ -108,6 +108,11 @@ namespace Sangmin
                     SynergyCountSystem.Instance.SpawnUnit(new Vector2Int(row, col), mask: unit.chain, unit);
                     // UnitCell에 유닛을 배정하는 코드
                     cellInfos[row, col].PlaceUnit(unit);
+
+                    if (selectedCell != null && currentSelectedUnit != null)
+                    {
+                        SynergyCountSystem.Instance.OutlineConnectedNode(new Vector2Int(selectedCell.row, selectedCell.col));
+                    }
                     return;
                 }
             }
@@ -127,9 +132,11 @@ namespace Sangmin
 
             // 가치에 따라 돈 추가
 
+            // 셀에서 유닛 제거
+            unitToSell.OnSell();
+
             SynergyCountSystem.Instance.SellUnit(new Vector2Int(selectedCell.row, selectedCell.col));
 
-            // 셀에서 유닛 제거
             selectedCell.ClearUnit();
 
             // 선택 해제
@@ -362,7 +369,6 @@ namespace Sangmin
             // 현재 마우스가 올라가 있는 셀 찾기
             UnitCell newTargetCell = FindCellByGameObject(hoverCellObject);
 
-
             // 이전 타겟 셀의 색을 원래대로 되돌림
             if (dragTargetCell != null && dragTargetCell != selectedCell)
             {
@@ -370,6 +376,12 @@ namespace Sangmin
                     dragTargetCell.SetHighlight(true, blockedColor);
                 else
                     dragTargetCell.SetHighlight(true, availableColor);
+            }
+
+            if (newTargetCell == null)
+            {
+                dragTargetCell = null;
+                return;
             }
 
             if (!newTargetCell.isCellActive)

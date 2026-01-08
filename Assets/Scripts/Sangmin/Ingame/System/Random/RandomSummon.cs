@@ -33,7 +33,7 @@ public class RandomSummon : MonoBehaviour
             return null;
 
         int randomIndex = UnityEngine.Random.Range(0, UnitList.Count);
-        Unit selectedUnit = Instantiate(UnitList[randomIndex]).GetComponent<Unit>();
+        Unit selectedUnit = ObjectPoolManager.Instance.GetObject(UnitList[randomIndex]).GetComponent<Unit>();
         return selectedUnit;
     }
 }

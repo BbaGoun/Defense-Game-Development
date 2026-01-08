@@ -181,7 +181,6 @@ namespace Sangmin
                     {
                         // 체인 변경 후 시너지 시스템 업데이트
                         SynergyCountSystem.Instance.UpdateUnitChain(gridPos, currentSelectedUnit.chain);
-                        SynergyCountSystem.Instance.OutlineConnectedNode(gridPos);
                     }
                 }
             }

@@ -99,12 +99,7 @@ namespace Sangmin
 
         private void OnClick(InputAction.CallbackContext context)
         {
-
-            if (context.started)
-            {
-                return;
-            }
-            else if (context.canceled)
+            if (context.canceled)
             {
                 _isPress = false;
                 return;
@@ -145,11 +140,11 @@ namespace Sangmin
             // Cell을 찾았으면 선택 처리
             if (cellHit.collider.gameObject != null)
             {
-                if (GridUnitPlacement.Instance.GetSelectedCell() != null && cellHit.collider.gameObject == GridUnitPlacement.Instance.GetSelectedCell().gameObject)
-                {
-                    _isPress = true;
-                    return;
-                }
+                // if (GridUnitPlacement.Instance.GetSelectedCell() != null && cellHit.collider.gameObject == GridUnitPlacement.Instance.GetSelectedCell().gameObject)
+                // {
+                //     return;
+                // }
+                _isPress = true;
 
                 if (GridUnitPlacement.Instance.SelectCell(cellHit.collider.gameObject))
                 {
@@ -195,12 +190,67 @@ namespace Sangmin
 
         private void OnDoubleTap(InputAction.CallbackContext context)
         {
-            if (context.started)
-                Debug.Log("Double Tap Start!!!");
-            else if (context.performed)
+            if (context.performed)
                 Debug.Log("Double Tap Perform!!!");
             else
+            {
                 Debug.Log("Double Tap Cancel!!!");
+                return;
+            }
+
+            // UI 위에 마우스가 있는지 확인 (UI 버튼 클릭 시 무시)
+            if (IsPointerOverUI())
+            {
+                return;
+            }
+
+            // 모든 충돌체를 확인하여 Cell 태그를 우선적으로 선택
+            RaycastHit2D[] hits = Physics2D.GetRayIntersectionAll(_mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue()));
+
+            // Cell 태그를 가진 충돌체를 우선적으로 찾기
+            RaycastHit2D cellHit = default;
+            bool foundCell = false;
+
+            foreach (RaycastHit2D hit in hits)
+            {
+                if (hit.collider != null && hit.collider.CompareTag("Cell"))
+                {
+                    cellHit = hit;
+                    foundCell = true;
+                    break; // Cell을 찾으면 즉시 중단
+                }
+            }
+
+            // Cell을 찾지 못했으면 아무것도 선택하지 않음
+            if (!foundCell)
+            {
+                return;
+            }
+
+            // Cell을 찾았으면 선택 처리
+            if (cellHit.collider.gameObject != null)
+            {
+                if (GridUnitPlacement.Instance.GetSelectedCell() != null && cellHit.collider.gameObject == GridUnitPlacement.Instance.GetSelectedCell().gameObject)
+                {
+                    UnitCell selectedCell = GridUnitPlacement.Instance.GetSelectedCell();
+                    Unit unit = selectedCell.GetUnit();
+                    if (selectedCell != null && unit != null)
+                    {
+                        Vector2Int gridPos = new Vector2Int(selectedCell.row, selectedCell.col);
+                        Unit.ChainDirection oldChain = unit.chain;
+
+                        // 체인 회전
+                        unit.RotateChainClockwise();
+
+                        // 시너지 시스템에 체인 변경 알림
+                        if (SynergyCountSystem.Instance != null)
+                        {
+                            // 체인 변경 후 시너지 시스템 업데이트
+                            SynergyCountSystem.Instance.UpdateUnitChain(gridPos, unit.chain);
+                        }
+                    }
+                }
+            }
         }
 
         private void Update()

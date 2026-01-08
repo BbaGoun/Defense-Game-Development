@@ -69,6 +69,7 @@ namespace Sangmin
         [Header("Else Components")]
         [SerializeField] private RangeIndicator rangeIndicator;
         [SerializeField] private Outliner outliner;
+        [SerializeField] private PoolAble poolAble;
 
         private static readonly ChainDirection[] _allDirections =
         {
@@ -97,6 +98,7 @@ namespace Sangmin
             // 자식 오브젝트에서 RangeIndicator를 찾는다.
             rangeIndicator = GetComponentInChildren<RangeIndicator>(false);
             outliner = GetComponent<Outliner>();
+            poolAble = GetComponent<PoolAble>();
             if (rangeIndicator == null)
             {
                 Debug.LogError($"RangeIndicator가 배정되지 않음 : {gameObject.name}");
@@ -159,6 +161,11 @@ namespace Sangmin
         {
             foreach (var s in synergies)
                 s.OnCombatStart(this);
+        }
+
+        public void OnSell()
+        {
+            poolAble.ReleaseObject();
         }
 
         #region Chain Logic
