@@ -1,0 +1,9 @@
+{
+    "stages": [
+        {
+        "stageName": "1-1",
+        "normalEnemyName": "SampleNormalEnemy",
+        "bossEnemyName": "SampleBossEnemy"
+        }
+    ]
+}

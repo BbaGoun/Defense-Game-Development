@@ -111,7 +111,7 @@ namespace Sangmin
                 return new Vector3[0];
             }
 
-            Debug.Log("boundaryPath: " + string.Join(", ", boundaryPath));
+            //Debug.Log("boundaryPath: " + string.Join(", ", boundaryPath));
 
             // 그리드 좌표를 월드 좌표로 변환
             Vector3[] worldPath = ConvertToWorldPositions(boundaryPath);
@@ -139,7 +139,7 @@ namespace Sangmin
 
             // 2. 왼쪽 위에서 시작하는 시작점 찾기
             Vector2Int? startPoint = FindStartPoint();
-            Debug.Log($"StartPoint: {startPoint}");
+            //Debug.Log($"StartPoint: {startPoint}");
 
             // 3. startPoint를 시작으로 인접한 정점들을 서로 연결
             if (startPoint.HasValue)
@@ -398,7 +398,7 @@ namespace Sangmin
                     }
                 }
 
-                Debug.Log($"BFS로 찾은 가장 긴 사이클 길이: {longestCycle.Count}");
+                //Debug.Log($"BFS로 찾은 가장 긴 사이클 길이: {longestCycle.Count}");
             }
             else
             {
@@ -466,7 +466,7 @@ namespace Sangmin
                 worldPath.Add(cellWorldPositions[gridPos.x, gridPos.y]);
             }
 
-            Debug.Log("worldPath: " + string.Join(", ", worldPath));
+            //Debug.Log("worldPath: " + string.Join(", ", worldPath));
             return worldPath.ToArray();
         }
 

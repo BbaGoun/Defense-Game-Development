@@ -29,6 +29,16 @@ namespace Sangmin
             moveCoroutine = StartCoroutine(MoveAlongRoute(EnemyMoveRoute.Instance.WorldRoute));
         }
 
+        void OnDisable()
+        {
+            // 오브젝트 풀링 시 OnDisable이 호출되므로 여기서도 처리
+            // StageSystem에 적 제거 알림
+            if (StageSystem.Instance != null)
+            {
+                StageSystem.Instance.OnEnemyDestroyed(this);
+            }
+        }
+
         void OnDestroy()
         {
             // 이벤트 구독 해제
@@ -41,6 +51,12 @@ namespace Sangmin
             if (moveCoroutine != null)
             {
                 StopCoroutine(moveCoroutine);
+            }
+
+            // StageSystem에 적 제거 알림 (OnDisable에서 처리되지 않은 경우)
+            if (StageSystem.Instance != null)
+            {
+                StageSystem.Instance.OnEnemyDestroyed(this);
             }
         }
 

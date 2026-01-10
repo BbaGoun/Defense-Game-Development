@@ -94,7 +94,7 @@ namespace Sangmin
                 }
             }
 
-            Debug.Log("오브젝트풀링 준비 완료");
+            //Debug.Log("오브젝트풀링 준비 완료");
             IsReady = true;
         }
 

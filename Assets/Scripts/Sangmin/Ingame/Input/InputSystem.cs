@@ -191,10 +191,12 @@ namespace Sangmin
         private void OnDoubleTap(InputAction.CallbackContext context)
         {
             if (context.performed)
-                Debug.Log("Double Tap Perform!!!");
+            {
+                //Debug.Log("Double Tap Perform!!!");
+            }
             else
             {
-                Debug.Log("Double Tap Cancel!!!");
+                //Debug.Log("Double Tap Cancel!!!");
                 return;
             }
 
