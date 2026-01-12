@@ -4,17 +4,32 @@ using UnityEngine.AI;
 
 namespace Sangmin
 {
+    [RequireComponent(typeof(PoolAble))]
     public class Enemy : MonoBehaviour
     {
         [SerializeField]
         private float moveSpeed = 3f; // 이동 속도
 
+        [Header("Combat Stats")]
+        [SerializeField]
+        private float maxHealth = 100f; // 최대 체력
+        private float currentHealth; // 현재 체력
+
+        private PoolAble poolAble;
         private Coroutine moveCoroutine;
 
 
         void Awake()
         {
+            // 체력 초기화
+            currentHealth = maxHealth;
+            poolAble = GetComponent<PoolAble>();
+        }
 
+        void OnEnable()
+        {
+            // 오브젝트 풀링 사용 시 OnEnable에서도 체력 초기화
+            currentHealth = maxHealth;
         }
 
         void Start()
@@ -28,6 +43,54 @@ namespace Sangmin
 
             moveCoroutine = StartCoroutine(MoveAlongRoute(EnemyMoveRoute.Instance.WorldRoute));
         }
+
+        /// <summary>
+        /// 데미지를 받습니다.
+        /// </summary>
+        /// <param name="damage">받을 데미지</param>
+        public void TakeDamage(float damage)
+        {
+            if (damage <= 0) return;
+
+            currentHealth -= damage;
+            currentHealth = Mathf.Max(0f, currentHealth);
+
+            // 체력이 0 이하가 되면 처치
+            if (currentHealth <= 0f)
+            {
+                Die();
+            }
+        }
+
+        /// <summary>
+        /// 적을 처치합니다.
+        /// </summary>
+        private void Die()
+        {
+            if (poolAble != null)
+            {
+                poolAble.ReleaseObject();
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
+        }
+
+        /// <summary>
+        /// 현재 체력을 반환합니다.
+        /// </summary>
+        public float CurrentHealth => currentHealth;
+
+        /// <summary>
+        /// 최대 체력을 반환합니다.
+        /// </summary>
+        public float MaxHealth => maxHealth;
+
+        /// <summary>
+        /// 체력 비율을 반환합니다 (0~1).
+        /// </summary>
+        public float HealthRatio => maxHealth > 0 ? currentHealth / maxHealth : 0f;
 
         void OnDisable()
         {

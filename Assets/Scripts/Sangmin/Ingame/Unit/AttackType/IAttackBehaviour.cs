@@ -4,6 +4,6 @@ namespace Sangmin
 {
     public interface IAttackBehaviour
     {
-        void Attack(Unit self, Unit target);
+        void Attack(Unit self, Enemy target);
     }
 }

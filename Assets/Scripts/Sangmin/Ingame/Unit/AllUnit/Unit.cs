@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Unity.Collections;
 using UnityEngine;
 
 namespace Sangmin
@@ -41,6 +42,18 @@ namespace Sangmin
         public float finalAttackDamage;
         public float finalAttackSpeed;
         public int finalAttackRange;
+        private float attackCooldown
+        {
+            get
+            {
+                if (finalAttackSpeed > 0)
+                {
+                    return 1 / finalAttackSpeed;
+                }
+                else return 1f;
+            }
+        } // 공격 쿨다운
+        private float attackTimer;
 
         // 체인 연결/비연결 시각화 필요
         [Header("Chain")]
@@ -61,7 +74,7 @@ namespace Sangmin
         public List<ChainVisual> chainVisuals = new List<ChainVisual>(8);
 
         [Header("Additive")]
-        public IAttackBehaviour attackBehaviour;
+        public List<AttackBehaviour> attackBehaviours = new List<AttackBehaviour>();
 
         public List<Synergy> synergies = new List<Synergy>();
         public List<IStatusEffect> statusEffects = new List<IStatusEffect>();
@@ -70,6 +83,12 @@ namespace Sangmin
         [SerializeField] private RangeIndicator rangeIndicator;
         [SerializeField] private Outliner outliner;
         [SerializeField] private PoolAble poolAble;
+
+        [SerializeField]
+        private List<Enemy> enemiesInRange = new List<Enemy>();
+
+        // 전투 관련
+        [SerializeField] private Enemy currentTarget; // 현재 타겟
 
         private static readonly ChainDirection[] _allDirections =
         {
@@ -115,11 +134,36 @@ namespace Sangmin
             InitializeRandomChains();
             // 방금 선택된 방향들에 대해 시각적으로 체인 생성 (초기에는 모두 "비연결" 상태)
             RefreshAllChainVisualsAsDisconnected();
+
+            // 전투 관련 초기화
+            attackTimer = attackCooldown;
+            currentTarget = null;
         }
 
-        public void PerformAttack(Unit target)
+        void Update()
         {
-            attackBehaviour?.Attack(this, target);
+            // 공격 쿨다운 감소
+            if (attackTimer > 0f)
+            {
+                attackTimer -= Time.deltaTime;
+            }
+
+            // 사정거리 내 적 찾기 및 공격
+            FindAndAttackEnemy();
+        }
+
+        /// <summary>
+        /// Enemy를 타겟으로 공격합니다.
+        /// </summary>
+        public void PerformAttack(Enemy target)
+        {
+            if (target == null || attackBehaviours.Count == 0) return;
+            foreach (var attackBehaviour in attackBehaviours)
+            {
+                attackBehaviour.Attack(this, target);
+                Debug.Log("ㅁㅁㅁㅁ");
+            }
+            OnAttack(); // 시너지 시스템용
         }
 
         /*
@@ -382,5 +426,95 @@ namespace Sangmin
         {
             chainVisuals[index].HideOutline();
         }
+
+        #region Combat Logic
+
+        /// <summary>
+        /// 사정거리 내 적을 찾아서 공격합니다.
+        /// </summary>
+        private void FindAndAttackEnemy()
+        {
+            // StageSystem이 없으면 공격 불가
+            if (StageSystem.Instance == null) return;
+
+            // 공격 쿨다운이 남아있으면 공격 불가
+            if (attackTimer > 0f) return;
+
+            // 현재 타겟이 유효하고 사정거리 내에 있으면 계속 공격
+            if (currentTarget != null && enemiesInRange.Contains(currentTarget))
+            {
+                AttackEnemy(currentTarget);
+                return;
+            }
+
+            // 새로운 타겟 찾기
+            currentTarget = FindNearestEnemyInRange();
+
+            // 타겟을 찾았으면 공격
+            if (currentTarget != null)
+            {
+                AttackEnemy(currentTarget);
+            }
+        }
+
+        /// <summary>
+        /// 사정거리 내 가장 가까운 적을 찾습니다.
+        /// </summary>
+        private Enemy FindNearestEnemyInRange()
+        {
+            if (enemiesInRange == null || enemiesInRange.Count == 0) return null;
+
+            enemiesInRange.RemoveAll(e => e == null);
+
+            Enemy nearestEnemy = null;
+            float nearestDistance = float.MaxValue;
+            Vector3 unitPosition = transform.position;
+
+            foreach (Enemy enemy in enemiesInRange)
+            {
+                if (enemy == null) continue;
+
+                float distance = Vector2.Distance(unitPosition, enemy.transform.position);
+
+                // 사정거리 내에 있고 가장 가까운 적 선택
+                if (distance <= rangeIndicator.GetRealRange(finalAttackRange) && distance < nearestDistance)
+                {
+                    nearestEnemy = enemy;
+                    nearestDistance = distance;
+                }
+            }
+
+            return nearestEnemy;
+        }
+
+        void OnTriggerEnter2D(Collider2D collision)
+        {
+            if (collision.CompareTag("Enemy"))
+            {
+                enemiesInRange.Add(collision.gameObject.GetComponent<Enemy>());
+            }
+        }
+
+        void OnTriggerExit2D(Collider2D collision)
+        {
+            if (collision.CompareTag("Enemy"))
+            {
+                enemiesInRange.Remove(collision.gameObject.GetComponent<Enemy>());
+            }
+        }
+
+        /// <summary>
+        /// 적을 공격합니다.
+        /// </summary>
+        private void AttackEnemy(Enemy enemy)
+        {
+            if (enemy == null) return;
+
+            PerformAttack(enemy);
+
+            attackTimer = attackCooldown;
+        }
+
+        #endregion
     }
 }

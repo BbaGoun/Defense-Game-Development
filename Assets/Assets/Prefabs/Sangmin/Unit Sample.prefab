@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 5480839661711331456}
   - component: {fileID: 1513954799534953106}
   - component: {fileID: 171049200951708098}
+  - component: {fileID: 3678427680446897709}
   m_Layer: 6
   m_Name: Unit Sample
   m_TagString: Unit
@@ -148,11 +149,15 @@ MonoBehaviour:
   - {fileID: 2512446899541559654}
   - {fileID: 5910673557381159749}
   - {fileID: 2975613201175442439}
+  attackBehaviours:
+  - {fileID: 11400000, guid: 1c303cfe63b4c6e4c94864308c9deb7d, type: 2}
   synergies:
   - {fileID: 11400000, guid: a5e8d4f0c04bfc449a51c413317e6515, type: 2}
   rangeIndicator: {fileID: 1288710351338662157}
-  outliner: {fileID: 0}
-  poolAble: {fileID: 0}
+  outliner: {fileID: 989504559730659838}
+  poolAble: {fileID: 1513954799534953106}
+  enemiesInRange: []
+  currentTarget: {fileID: 0}
 --- !u!114 &1513954799534953106
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -187,6 +192,33 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!50 &3678427680446897709
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7855928322533682679}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &8129087285992229516
 GameObject:
   m_ObjectHideFlags: 0
@@ -198,6 +230,7 @@ GameObject:
   - component: {fileID: 1187159802285283761}
   - component: {fileID: 1187475735153297418}
   - component: {fileID: 1288710351338662157}
+  - component: {fileID: 1468464163666729205}
   m_Layer: 6
   m_Name: RangeArea
   m_TagString: Untagged
@@ -267,14 +300,14 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 5
+  m_SortingOrder: 3
   m_MaskInteraction: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
   m_Color: {r: 0, g: 1, b: 0.12542295, a: 0.3}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 1
-  m_Size: {x: 0, y: 0}
+  m_Size: {x: 4.5, y: 4.5}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -291,10 +324,56 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 82e1a739217e3b44bb7c7008fd045d03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Sangmin.RangeIndicator
-  currentRange: 0
+  currentRange: 1
   multiplier: 4.5
   rangeColor: {r: 0, g: 1, b: 0.12542295, a: 1}
   alpha: 0.3
+--- !u!61 &1468464163666729205
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8129087285992229516}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1, y: 1}
+    newSize: {x: 4.5, y: 4.5}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 1
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Size: {x: 4.5, y: 4.5}
+  m_EdgeRadius: 0
 --- !u!1001 &834350656374161066
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -107,10 +107,10 @@ namespace Sangmin
             //Debug.Log("Click");
 
             // UI 위에 마우스가 있는지 확인 (UI 버튼 클릭 시 무시)
-            if (IsPointerOverUI())
-            {
-                return;
-            }
+            // if (IsPointerOverUI())
+            // {
+            //     return;
+            // }
 
             // 모든 충돌체를 확인하여 Cell 태그를 우선적으로 선택
             RaycastHit2D[] hits = Physics2D.GetRayIntersectionAll(_mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue()));
@@ -132,6 +132,8 @@ namespace Sangmin
             // Cell을 찾지 못했으면 아무것도 선택하지 않음
             if (!foundCell)
             {
+                if (IsPointerOverUI())
+                    return;
                 if (GridUnitPlacement.Instance.isCellSelected)
                     GridUnitPlacement.Instance.UnSelectUnit();
                 return;

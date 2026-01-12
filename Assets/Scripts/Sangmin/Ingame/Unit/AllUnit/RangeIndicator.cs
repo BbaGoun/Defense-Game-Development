@@ -9,7 +9,7 @@ namespace Sangmin
     public class RangeIndicator : MonoBehaviour
     {
         private SpriteRenderer spriteRenderer;
-        private bool isActive;
+        private BoxCollider2D boxCollider;
 
         [Header("Range Visual Settings")]
         [SerializeField] private float currentRange;
@@ -20,10 +20,8 @@ namespace Sangmin
         public void InitializeSpriteRenderer(float range)
         {
             spriteRenderer = GetComponent<SpriteRenderer>();
-            if (spriteRenderer == null)
-            {
-                spriteRenderer = gameObject.AddComponent<SpriteRenderer>();
-            }
+            boxCollider = GetComponent<BoxCollider2D>();
+
 
             Color colorWithAlpha = rangeColor;
             colorWithAlpha.a = alpha;
@@ -31,6 +29,7 @@ namespace Sangmin
 
             currentRange = range;
             spriteRenderer.size = new Vector2(currentRange * multiplier, currentRange * multiplier);
+            boxCollider.size = new(currentRange * multiplier, currentRange * multiplier);
 
             spriteRenderer.sortingOrder = 3;
             spriteRenderer.enabled = false;
@@ -41,7 +40,6 @@ namespace Sangmin
         /// </summary>
         public void ShowRange()
         {
-            isActive = true;
             spriteRenderer.enabled = true;
         }
 
@@ -50,7 +48,6 @@ namespace Sangmin
         /// </summary>
         public void HideRange()
         {
-            isActive = false;
             spriteRenderer.enabled = false;
         }
 
@@ -61,6 +58,11 @@ namespace Sangmin
         {
             currentRange = newRange;
             spriteRenderer.size = new Vector2(currentRange * multiplier, currentRange * multiplier);
+        }
+
+        public float GetRealRange(float range)
+        {
+            return range * multiplier;
         }
 
 #if UNITY_EDITOR

@@ -14,10 +14,10 @@ namespace Sangmin
     public class StageData
     {
         public string stageName;
-        public float bossWaveDuration = 300f; // 보스 웨이브 지속 시간 (300초)
-        public float normalWaveDuration = 120f; // 일반 웨이브 지속 시간 (120초)
-        public float spawnDuration = 60f; // 스폰 지속 시간 (60초)
-        public float spawnInterval = 0.5f; // 스폰 간격 (0.5초)
+        public float bossWaveDuration = 60f; // 보스 웨이브 지속 시간 (60초)
+        public float normalWaveDuration = 20f; // 일반 웨이브 지속 시간 (20초)
+        public float spawnDuration = 15f; // 스폰 지속 시간 (60초)
+        public float spawnInterval = 5f; // 스폰 간격 (0.5초)
         public int enemiesPerSpawn = 1; // 한 번에 스폰되는 적 수
         public int maxEnemyCount = 60; // 최대 적 수 (한계)
 
@@ -73,6 +73,12 @@ namespace Sangmin
 
         public int CurrentEnemyCount => activeEnemies.Count;
         public bool IsGameOver { get; private set; }
+
+        public List<Enemy> GetActiveEnemies()
+        {
+            activeEnemies.RemoveAll(x => x == null);
+            return activeEnemies;
+        }
 
         /// <summary>
         /// 현재 웨이브의 남은 시간을 반환합니다 (초 단위)
@@ -222,7 +228,7 @@ namespace Sangmin
             if (!IsGameOver)
             {
                 Debug.Log($"일반 웨이브 {currentWave} 종료. 다음 웨이브 준비...");
-                // 다음 웨이브는 외부에서 StartNextWave()를 호출하여 시작
+                StartNextWave();
             }
         }
 
@@ -266,14 +272,7 @@ namespace Sangmin
             // 스폰 위치 설정
             enemyObject.transform.position = EnemyMoveRoute.Instance.startPosition;
 
-            // Enemy 컴포넌트 가져오기
-            Enemy enemy = enemyObject.GetComponent<Enemy>();
-            if (enemy == null)
-            {
-                Debug.LogWarning("스폰된 오브젝트에 Enemy 컴포넌트가 없습니다!");
-                Destroy(enemyObject);
-                return;
-            }
+            var enemy = enemyObject.GetComponent<Enemy>();
 
             // 활성 적 리스트에 추가
             activeEnemies.Add(enemy);
