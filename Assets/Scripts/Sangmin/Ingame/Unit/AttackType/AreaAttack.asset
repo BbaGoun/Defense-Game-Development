@@ -12,3 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f4c19f350a3c054eaa64e83c09e5573, type: 3}
   m_Name: AreaAttack
   m_EditorClassIdentifier: Assembly-CSharp::Sangmin.AreaAttackBehaviour
+  radius: 0.5
+  attackEffect: {fileID: 7777117128670843503, guid: 09dc011a4ebba9a4cba2911314309034, type: 3}

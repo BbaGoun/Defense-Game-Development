@@ -126,7 +126,21 @@ namespace Sangmin
         // 생성
         private GameObject CreatePooledItem()
         {
+            // 현재 프리팹의 이름에 "(Pooled)" 과 인덱스를 붙여서 GameObject 이름 지정
+            int count = 0;
+            foreach (Transform child in memoryPoolsParent)
+            {
+                // child.gameObject와 currentPrefab이 같은 prefab을 갖는지 확인
+                if (goToObjectInfo.TryGetValue(child.gameObject, out var info))
+                {
+                    if (info.prefab == currentPrefab)
+                    {
+                        count++;
+                    }
+                }
+            }
             GameObject pooledObject = Instantiate(currentPrefab, memoryPoolsParent);
+            pooledObject.name = $"{currentPrefab.name} (Pooled) {count + 1}";
             pooledObject.GetComponent<PoolAble>().pool = objectPoolDic[currentPrefab];
             foreach (var objInfo in objectInfos)
             {

@@ -1,19 +1,23 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.AI;
+using UnityEngine.UI;
 
 namespace Sangmin
 {
     [RequireComponent(typeof(PoolAble))]
     public class Enemy : MonoBehaviour
     {
-        [SerializeField]
-        private float moveSpeed = 3f; // 이동 속도
 
-        [Header("Combat Stats")]
-        [SerializeField]
-        private float maxHealth = 100f; // 최대 체력
+        [Header("Stats")]
+        [SerializeField] private float moveSpeed = 3f; // 이동 속도
+        [SerializeField] private float maxHealth = 100f; // 최대 체력
         private float currentHealth; // 현재 체력
+
+        [Header("UI")]
+        [SerializeField] private RectTransform healthBarRect;
+        [SerializeField] private RectTransform healthBarFill;
+
+        private float canvasWidth;
 
         private PoolAble poolAble;
         private Coroutine moveCoroutine;
@@ -21,8 +25,11 @@ namespace Sangmin
 
         void Awake()
         {
+            canvasWidth = healthBarRect.rect.width;
+
             // 체력 초기화
             currentHealth = maxHealth;
+            UpdateHealthBar();
             poolAble = GetComponent<PoolAble>();
         }
 
@@ -54,6 +61,8 @@ namespace Sangmin
 
             currentHealth -= damage;
             currentHealth = Mathf.Max(0f, currentHealth);
+
+            UpdateHealthBar();
 
             // 체력이 0 이하가 되면 처치
             if (currentHealth <= 0f)
@@ -213,6 +222,12 @@ namespace Sangmin
                 // 무한 루프로 경로를 계속 따라가기
                 moveCoroutine = StartCoroutine(MoveAlongRoute(route));
             }
+        }
+
+        private void UpdateHealthBar()
+        {
+            float hpRatio = currentHealth / maxHealth;
+            healthBarFill.offsetMax = new Vector2(-canvasWidth * (1 - hpRatio), healthBarFill.offsetMax.y);
         }
     }
 }

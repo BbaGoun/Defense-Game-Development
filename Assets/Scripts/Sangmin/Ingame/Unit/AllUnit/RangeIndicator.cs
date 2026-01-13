@@ -65,6 +65,11 @@ namespace Sangmin
             return range * multiplier;
         }
 
+        public float GetRangeMultiplier()
+        {
+            return multiplier;
+        }
+
 #if UNITY_EDITOR
         private void OnValidate()
         {

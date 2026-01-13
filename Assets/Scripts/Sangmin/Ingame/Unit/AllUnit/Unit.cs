@@ -74,13 +74,20 @@ namespace Sangmin
         public List<ChainVisual> chainVisuals = new List<ChainVisual>(8);
 
         [Header("Additive")]
-        public List<AttackBehaviour> attackBehaviours = new List<AttackBehaviour>();
+        public AttackBehaviour attackBehaviour;
 
         public List<Synergy> synergies = new List<Synergy>();
         public List<IStatusEffect> statusEffects = new List<IStatusEffect>();
 
         [Header("Else Components")]
         [SerializeField] private RangeIndicator rangeIndicator;
+        public float rangeMultiplier
+        {
+            get
+            {
+                return rangeIndicator.GetRangeMultiplier();
+            }
+        }
         [SerializeField] private Outliner outliner;
         [SerializeField] private PoolAble poolAble;
 
@@ -124,6 +131,8 @@ namespace Sangmin
                 return;
             }
             rangeIndicator.InitializeSpriteRenderer(finalAttackRange);
+
+            attackBehaviour.Initialize(this);
         }
 
         void OnEnable()
@@ -157,12 +166,9 @@ namespace Sangmin
         /// </summary>
         public void PerformAttack(Enemy target)
         {
-            if (target == null || attackBehaviours.Count == 0) return;
-            foreach (var attackBehaviour in attackBehaviours)
-            {
-                attackBehaviour.Attack(this, target);
-                Debug.Log("ㅁㅁㅁㅁ");
-            }
+            if (target == null || attackBehaviour == null) return;
+
+            attackBehaviour.Attack(this, target);
             OnAttack(); // 시너지 시스템용
         }
 

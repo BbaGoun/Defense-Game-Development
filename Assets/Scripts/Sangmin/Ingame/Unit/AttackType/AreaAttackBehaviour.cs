@@ -6,11 +6,13 @@ namespace Sangmin
     [CreateAssetMenu(fileName = "AreaAttack", menuName = "Scriptable Objects/AreaAttack")]
     public class AreaAttackBehaviour : AttackBehaviour
     {
-        private float radius;
+        public float radius;
+        public GameObject attackEffect;
+        private float realRadius;
 
-        public AreaAttackBehaviour(float radius)
+        override public void Initialize(Unit self)
         {
-            this.radius = radius;
+            this.realRadius = self.rangeMultiplier * self.transform.localScale.x * radius;
         }
 
         override public void Attack(Unit self, Enemy mainTarget)
@@ -20,8 +22,16 @@ namespace Sangmin
             // 메인 타겟에게 데미지
             DealDamage(self, mainTarget);
 
+            GameObject attackEffect = ObjectPoolManager.Instance.GetObject(this.attackEffect);
+            attackEffect.transform.position = mainTarget.transform.position;
+            var spriteRenderer = attackEffect.GetComponent<SpriteRenderer>();
+            spriteRenderer.size = new Vector2(realRadius * 2, realRadius * 2);
+            var poolAble = attackEffect.GetComponent<PoolAble>();
+            poolAble.ReleaseObjectWithDelay(0.25f);
+
             // 메인 타겟 주변 적 찾기
-            List<Enemy> nearbyEnemies = FindEnemiesAround(mainTarget.transform.position, radius);
+            // enemy의 sprite 크기까지 고려하고 싶음 (0.4 scale * 1.3 size / 2)
+            List<Enemy> nearbyEnemies = FindEnemiesAround(mainTarget.transform.position, realRadius + 0.26f);
 
             // 주변 적들에게도 데미지
             foreach (Enemy enemy in nearbyEnemies)
@@ -53,7 +63,8 @@ namespace Sangmin
             {
                 if (enemy == null) continue;
 
-                float distance = Vector3.Distance(pos, enemy.transform.position);
+                float distance = Vector2.Distance(pos, enemy.transform.position);
+                Debug.Log($"{enemy.name}과의 거리 : {distance}");
                 if (distance <= radius)
                 {
                     enemies.Add(enemy);

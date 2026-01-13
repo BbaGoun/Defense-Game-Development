@@ -5,6 +5,11 @@ namespace Sangmin
     [CreateAssetMenu(fileName = "SingleAttack", menuName = "Scriptable Objects/SingleAttack")]
     public class SingleAttackBehaviour : AttackBehaviour
     {
+        public override void Initialize(Unit self)
+        {
+            base.Initialize(self);
+        }
+
         override public void Attack(Unit self, Enemy mainTarget)
         {
             // 1) 메인 타깃에게 데미지

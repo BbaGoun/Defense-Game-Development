@@ -9,5 +9,10 @@ namespace Sangmin
         {
             throw new System.NotImplementedException();
         }
+
+        virtual public void Initialize(Unit self)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

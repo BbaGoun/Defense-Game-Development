@@ -16,8 +16,8 @@ namespace Sangmin
         public string stageName;
         public float bossWaveDuration = 60f; // 보스 웨이브 지속 시간 (60초)
         public float normalWaveDuration = 20f; // 일반 웨이브 지속 시간 (20초)
-        public float spawnDuration = 15f; // 스폰 지속 시간 (60초)
-        public float spawnInterval = 5f; // 스폰 간격 (0.5초)
+        public float spawnDuration = 1f; // 스폰 지속 시간 (60초)
+        public float spawnInterval = 0.25f; // 스폰 간격 (0.5초)
         public int enemiesPerSpawn = 1; // 한 번에 스폰되는 적 수
         public int maxEnemyCount = 60; // 최대 적 수 (한계)
 
@@ -83,13 +83,16 @@ namespace Sangmin
         /// <summary>
         /// 현재 웨이브의 남은 시간을 반환합니다 (초 단위)
         /// </summary>
-        public float GetRemainingWaveTime()
+        public float remainingWaveTime
         {
-            if (waveStartTime < 0 || currentWaveDuration <= 0) return 0f;
+            get
+            {
+                if (waveStartTime < 0 || currentWaveDuration <= 0) return 0f;
 
-            float elapsed = Time.time - waveStartTime;
-            float remaining = currentWaveDuration - elapsed;
-            return Mathf.Max(0f, remaining);
+                float elapsed = Time.time - waveStartTime;
+                float remaining = currentWaveDuration - elapsed;
+                return Mathf.Max(0f, remaining);
+            }
         }
 
         private void Awake()
@@ -191,14 +194,14 @@ namespace Sangmin
             Debug.Log($"일반 웨이브 {currentWave} 시작");
 
             // 웨이브 전체 시간 동안 반복
-            while (elapsedTime < currentStage.normalWaveDuration && !IsGameOver)
+            while (elapsedTime <= currentStage.normalWaveDuration && !IsGameOver)
             {
                 OnFrameUpdate?.Invoke();
 
                 elapsedTime += Time.deltaTime;
 
                 // 처음 지정한 시간 동안만 스폰
-                if (elapsedTime < currentStage.spawnDuration)
+                if (elapsedTime <= currentStage.spawnDuration)
                 {
                     spawnElapsedTime += Time.deltaTime;
 

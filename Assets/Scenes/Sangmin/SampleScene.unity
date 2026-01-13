@@ -7657,6 +7657,8 @@ MonoBehaviour:
     count: 3
   - prefab: {fileID: 5359853559271404880, guid: eebb9c51a28c4504ca4f4618e679d740, type: 3}
     count: 10
+  - prefab: {fileID: 7777117128670843503, guid: 09dc011a4ebba9a4cba2911314309034, type: 3}
+    count: 2
 --- !u!1001 &1853041734
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -91,7 +91,7 @@ namespace Sangmin
         {
             if (timerText == null || stageSystem == null) return;
 
-            float remainingTime = stageSystem.GetRemainingWaveTime();
+            float remainingTime = stageSystem.remainingWaveTime;
 
             // 시간을 분:초 형식으로 표시
             int minutes = Mathf.FloorToInt(remainingTime / 60f);

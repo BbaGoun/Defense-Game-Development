@@ -149,8 +149,7 @@ MonoBehaviour:
   - {fileID: 2512446899541559654}
   - {fileID: 5910673557381159749}
   - {fileID: 2975613201175442439}
-  attackBehaviours:
-  - {fileID: 11400000, guid: 1c303cfe63b4c6e4c94864308c9deb7d, type: 2}
+  attackBehaviour: {fileID: 11400000, guid: 1c303cfe63b4c6e4c94864308c9deb7d, type: 2}
   synergies:
   - {fileID: 11400000, guid: a5e8d4f0c04bfc449a51c413317e6515, type: 2}
   rangeIndicator: {fileID: 1288710351338662157}
