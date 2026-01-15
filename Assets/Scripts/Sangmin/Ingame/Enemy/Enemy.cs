@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace Sangmin
 {
-    [RequireComponent(typeof(PoolAble))]
+    [RequireComponent(typeof(PoolAble), typeof(Rigidbody2D), typeof(BoxCollider2D))]
     public class Enemy : MonoBehaviour
     {
 

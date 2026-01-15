@@ -14,9 +14,10 @@ namespace Sangmin
     public class StageData
     {
         public string stageName;
+        public float breakTime = 4f;
         public float bossWaveDuration = 60f; // 보스 웨이브 지속 시간 (60초)
         public float normalWaveDuration = 20f; // 일반 웨이브 지속 시간 (20초)
-        public float spawnDuration = 1f; // 스폰 지속 시간 (60초)
+        public float spawnDuration = 15f; // 스폰 지속 시간 (60초)
         public float spawnInterval = 0.25f; // 스폰 간격 (0.5초)
         public int enemiesPerSpawn = 1; // 한 번에 스폰되는 적 수
         public int maxEnemyCount = 60; // 최대 적 수 (한계)
@@ -25,7 +26,7 @@ namespace Sangmin
         public GameObject normalEnemyPrefab;
 
         public string bossEnemyName;
-        public GameObject bossPrefab;
+        public GameObject bossEnemyPrefab;
     }
 
     [Serializable]
@@ -52,8 +53,10 @@ namespace Sangmin
         public TextAsset stageConfigJson;
         public StageData currentStage;
         public List<GameObject> normalEnemyList = new List<GameObject>();
+        public List<GameObject> bossEnemyList = new List<GameObject>();
         [SerializeField]
         private NameToEnemyPrefabDictionary normalEnemyDic = new NameToEnemyPrefabDictionary();
+        private NameToEnemyPrefabDictionary bossEnemyDic = new NameToEnemyPrefabDictionary();
         public StageDataList stageList = new StageDataList();
 
         [Header("현 상황")]
@@ -111,6 +114,11 @@ namespace Sangmin
             {
                 normalEnemyDic.KeyValuePair[normalEnemy.name] = normalEnemy;
             }
+
+            foreach (var bossEnemy in bossEnemyList)
+            {
+                bossEnemyDic.KeyValuePair[bossEnemy.name] = bossEnemy;
+            }
         }
 
         private void Start()
@@ -127,6 +135,10 @@ namespace Sangmin
                         {
                             stage.normalEnemyPrefab = normalEnemyDic.KeyValuePair[stage.normalEnemyName];
                         }
+                        if (bossEnemyDic.KeyValuePair.ContainsKey(stage.bossEnemyName))
+                        {
+                            stage.bossEnemyPrefab = bossEnemyDic.KeyValuePair[stage.bossEnemyName];
+                        }
                     }
                 }
                 catch (Exception e)
@@ -136,7 +148,7 @@ namespace Sangmin
                 }
             }
 
-            currentWave = 0;
+            currentWave = -1;
             waveStartTime = 0f;
             currentWaveDuration = 0f;
             IsGameOver = false;
@@ -158,32 +170,55 @@ namespace Sangmin
             currentWave++;
             waveStartTime = Time.time;
 
-            // 웨이브 타입에 따른 지속 시간 설정
-            if (currentWave % 5 == 0)
-            {
-                currentWaveDuration = currentStage.bossWaveDuration;
-            }
-            else
-            {
-                currentWaveDuration = currentStage.normalWaveDuration;
-            }
-
-            OnWaveStart?.Invoke(currentWave);
-
-            SpawnWave();
-        }
-
-        public void SpawnWave()
-        {
             if (spawnCoroutine != null)
                 StopCoroutine(spawnCoroutine);
 
-            // 일반 웨이브
-            if (currentWave % 5 != 0)
-                spawnCoroutine = StartCoroutine(IENormalWave());
-            // 보스 웨이브
+            if (currentWave == 0)
+            {
+                currentWaveDuration = currentStage.breakTime;
+                spawnCoroutine = StartCoroutine(IEBreakTime());
+                return;
+            }
             else
-                spawnCoroutine = StartCoroutine(IEBossWave());
+            {
+                // 웨이브 타입에 따른 지속 시간 설정
+                if (currentWave % 5 == 0)
+                {
+                    currentWaveDuration = currentStage.bossWaveDuration;
+                    spawnCoroutine = StartCoroutine(IEBossWave());
+                }
+                else
+                {
+                    currentWaveDuration = currentStage.normalWaveDuration;
+                    spawnCoroutine = StartCoroutine(IENormalWave());
+                }
+            }
+
+            OnWaveStart?.Invoke(currentWave);
+        }
+
+        IEnumerator IEBreakTime()
+        {
+            float elapsedTime = 0f;
+
+            Debug.Log($"쉬는 시간 {currentWave} 시작");
+
+            // 웨이브 전체 시간 동안 반복
+            while (elapsedTime <= currentStage.breakTime && !IsGameOver)
+            {
+                OnFrameUpdate?.Invoke();
+
+                elapsedTime += Time.deltaTime;
+
+                yield return null;
+            }
+
+            // 웨이브 종료 - 다음 웨이브로 진행
+            if (!IsGameOver)
+            {
+                Debug.Log($"쉬는 시간 {currentWave} 종료. 다음 웨이브 준비...");
+                StartNextWave();
+            }
         }
 
         IEnumerator IENormalWave()
@@ -200,7 +235,6 @@ namespace Sangmin
 
                 elapsedTime += Time.deltaTime;
 
-                // 처음 지정한 시간 동안만 스폰
                 if (elapsedTime <= currentStage.spawnDuration)
                 {
                     spawnElapsedTime += Time.deltaTime;
@@ -213,7 +247,7 @@ namespace Sangmin
                         // 한 번에 지정된 수만큼 스폰
                         for (int i = 0; i < currentStage.enemiesPerSpawn; i++)
                         {
-                            SpawnEnemy();
+                            SpawnNormalEnemy();
 
                             // 게임 오버 체크
                             if (CheckGameOver())
@@ -237,18 +271,59 @@ namespace Sangmin
 
         IEnumerator IEBossWave()
         {
+            float elapsedTime = 0f;
+            float spawnElapsedTime = 0f;
+
+            SpawnBossEnemy();
+
             Debug.Log($"보스 웨이브 {currentWave} 시작");
-            yield return null;
+
+            // 웨이브 전체 시간 동안 반복
+            while (elapsedTime <= currentStage.bossWaveDuration && !IsGameOver)
+            {
+                OnFrameUpdate?.Invoke();
+
+                elapsedTime += Time.deltaTime;
+
+                if (elapsedTime <= currentStage.spawnDuration * 2)
+                {
+                    spawnElapsedTime += Time.deltaTime;
+
+                    // 스폰 간격마다 적 스폰
+                    if (spawnElapsedTime >= currentStage.spawnInterval * 2)
+                    {
+                        spawnElapsedTime = 0f;
+
+                        // 한 번에 지정된 수만큼 스폰
+                        for (int i = 0; i < currentStage.enemiesPerSpawn; i++)
+                        {
+                            SpawnNormalEnemy();
+
+                            // 게임 오버 체크
+                            if (CheckGameOver())
+                            {
+                                yield break;
+                            }
+                        }
+                    }
+                }
+
+                yield return null;
+            }
+
+            // 웨이브 종료 - 다음 웨이브로 진행
+            if (!IsGameOver)
+            {
+                Debug.Log($"보스 웨이브 {currentWave} 종료. 다음 웨이브 준비...");
+                StartNextWave();
+            }
         }
 
-        /// <summary>
-        /// 적을 스폰합니다.
-        /// </summary>
-        private void SpawnEnemy()
+        private void SpawnNormalEnemy()
         {
             if (currentStage.normalEnemyPrefab == null)
             {
-                Debug.LogError("Enemy Prefab이 할당되지 않았습니다!");
+                Debug.LogError("Normal Enemy Prefab이 할당되지 않았습니다!");
                 return;
             }
 
@@ -284,6 +359,46 @@ namespace Sangmin
             //Debug.Log($"적 스폰: 현재 적 수 = {activeEnemies.Count}");
         }
 
+        private void SpawnBossEnemy()
+        {
+            if (currentStage.bossEnemyPrefab == null)
+            {
+                Debug.LogError("Boss Enemy Prefab이 할당되지 않았습니다!");
+                return;
+            }
+
+            if (EnemyMoveRoute.Instance == null)
+            {
+                Debug.LogError("EnemyMoveRoute.Instance가 없습니다!");
+                return;
+            }
+
+            GameObject enemyObject = null;
+
+            // 오브젝트 풀링 사용 시도
+            if (ObjectPoolManager.Instance != null && ObjectPoolManager.Instance.IsReady)
+            {
+                enemyObject = ObjectPoolManager.Instance.GetObject(currentStage.bossEnemyPrefab);
+            }
+
+            if (enemyObject == null)
+            {
+                Debug.LogError("적 생성 실패!");
+                return;
+            }
+
+            // 스폰 위치 설정
+            enemyObject.transform.position = EnemyMoveRoute.Instance.startPosition;
+
+            var enemy = enemyObject.GetComponent<Enemy>();
+
+            // 활성 적 리스트에 추가
+            activeEnemies.Add(enemy);
+            OnEnemyCountChanged?.Invoke(activeEnemies.Count);
+
+            //Debug.Log($"적 스폰: 현재 적 수 = {activeEnemies.Count}");
+        }
+
         /// <summary>
         /// 적이 제거되었을 때 호출합니다.
         /// </summary>
@@ -295,7 +410,7 @@ namespace Sangmin
             {
                 activeEnemies.Remove(enemy);
                 OnEnemyCountChanged?.Invoke(activeEnemies.Count);
-                Debug.Log($"적 제거: 현재 적 수 = {activeEnemies.Count}");
+                //Debug.Log($"적 제거: 현재 적 수 = {activeEnemies.Count}");
             }
         }
 

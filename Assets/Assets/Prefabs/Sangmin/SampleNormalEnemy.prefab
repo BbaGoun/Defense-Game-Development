@@ -13,8 +13,8 @@ GameObject:
   - component: {fileID: 1850467408964534052}
   - component: {fileID: 6001961513056251239}
   - component: {fileID: 2005140264416564835}
-  - component: {fileID: 772299927829401925}
-  - component: {fileID: 919100085367014235}
+  - component: {fileID: 6091297022117591302}
+  - component: {fileID: 1137020029030677790}
   m_Layer: 0
   m_Name: SampleNormalEnemy
   m_TagString: Enemy
@@ -147,7 +147,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ad55699af963d048b3910c56bbf55f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Sangmin.PoolAble
---- !u!50 &772299927829401925
+--- !u!50 &6091297022117591302
 Rigidbody2D:
   serializedVersion: 5
   m_ObjectHideFlags: 0
@@ -174,7 +174,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!61 &919100085367014235
+--- !u!61 &1137020029030677790
 BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

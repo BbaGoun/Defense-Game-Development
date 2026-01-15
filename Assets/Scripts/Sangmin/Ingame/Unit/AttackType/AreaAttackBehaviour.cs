@@ -49,7 +49,7 @@ namespace Sangmin
 
             float dmg = self.finalAttackDamage;
             target.TakeDamage(dmg);
-            Debug.Log($"[{self.name}]가 [{target.name}]에게 {dmg} 광역 피해");
+            //Debug.Log($"[{self.name}]가 [{target.name}]에게 {dmg} 광역 피해");
         }
 
         private List<Enemy> FindEnemiesAround(Vector3 pos, float radius)
@@ -64,7 +64,7 @@ namespace Sangmin
                 if (enemy == null) continue;
 
                 float distance = Vector2.Distance(pos, enemy.transform.position);
-                Debug.Log($"{enemy.name}과의 거리 : {distance}");
+                //Debug.Log($"{enemy.name}과의 거리 : {distance}");
                 if (distance <= radius)
                 {
                     enemies.Add(enemy);
