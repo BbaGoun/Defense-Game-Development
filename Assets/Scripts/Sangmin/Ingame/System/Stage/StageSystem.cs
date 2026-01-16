@@ -22,10 +22,10 @@ namespace Sangmin
         public int enemiesPerSpawn = 1; // 한 번에 스폰되는 적 수
         public int maxEnemyCount = 60; // 최대 적 수 (한계)
 
-        public string normalEnemyName;
+        public string normalEnemyPath;
         public GameObject normalEnemyPrefab;
 
-        public string bossEnemyName;
+        public string bossEnemyPath;
         public GameObject bossEnemyPrefab;
     }
 
@@ -44,19 +44,10 @@ namespace Sangmin
             get { return _instance; }
         }
 
-        #region 직렬화
-        [Serializable]
-        private class NameToEnemyPrefabDictionary : SerializableDictionary<String, GameObject> { }
-        #endregion
-
         [Header("스테이지 설정")]
+        public String stageName;
         public TextAsset stageConfigJson;
         public StageData currentStage;
-        public List<GameObject> normalEnemyList = new List<GameObject>();
-        public List<GameObject> bossEnemyList = new List<GameObject>();
-        [SerializeField]
-        private NameToEnemyPrefabDictionary normalEnemyDic = new NameToEnemyPrefabDictionary();
-        private NameToEnemyPrefabDictionary bossEnemyDic = new NameToEnemyPrefabDictionary();
         public StageDataList stageList = new StageDataList();
 
         [Header("현 상황")]
@@ -109,19 +100,9 @@ namespace Sangmin
                 Destroy(this.gameObject);
                 return;
             }
-
-            foreach (var normalEnemy in normalEnemyList)
-            {
-                normalEnemyDic.KeyValuePair[normalEnemy.name] = normalEnemy;
-            }
-
-            foreach (var bossEnemy in bossEnemyList)
-            {
-                bossEnemyDic.KeyValuePair[bossEnemy.name] = bossEnemy;
-            }
         }
 
-        private void Start()
+        public void Init()
         {
             if (stageConfigJson != null)
             {
@@ -129,16 +110,17 @@ namespace Sangmin
                 {
                     stageList = JsonUtility.FromJson<StageDataList>(stageConfigJson.text);
 
-                    foreach (var stage in stageList.stages)
+                    currentStage = GetStageData(stageName);
+
+                    if (!string.IsNullOrEmpty(currentStage.normalEnemyPath))
                     {
-                        if (normalEnemyDic.KeyValuePair.ContainsKey(stage.normalEnemyName))
-                        {
-                            stage.normalEnemyPrefab = normalEnemyDic.KeyValuePair[stage.normalEnemyName];
-                        }
-                        if (bossEnemyDic.KeyValuePair.ContainsKey(stage.bossEnemyName))
-                        {
-                            stage.bossEnemyPrefab = bossEnemyDic.KeyValuePair[stage.bossEnemyName];
-                        }
+                        currentStage.normalEnemyPrefab = LoadEnemyPrefabByPath(currentStage.normalEnemyPath);
+                        ObjectPoolManager.Instance.AddObjectInfo(currentStage.normalEnemyPrefab, currentStage.maxEnemyCount / 2);
+                    }
+                    if (!string.IsNullOrEmpty(currentStage.bossEnemyPath))
+                    {
+                        currentStage.bossEnemyPrefab = LoadEnemyPrefabByPath(currentStage.bossEnemyPath);
+                        ObjectPoolManager.Instance.AddObjectInfo(currentStage.bossEnemyPrefab, 1);
                     }
                 }
                 catch (Exception e)
@@ -147,13 +129,14 @@ namespace Sangmin
                     stageList = new StageDataList();
                 }
             }
+        }
 
+        public void StartCode()
+        {
             currentWave = -1;
             waveStartTime = 0f;
             currentWaveDuration = 0f;
             IsGameOver = false;
-
-            currentStage = GetStageData("1-1");
 
             StartNextWave();
         }
@@ -161,6 +144,32 @@ namespace Sangmin
         private StageData GetStageData(string _stageName)
         {
             return stageList.stages.Find(x => x.stageName == _stageName);
+        }
+
+        /// <summary>
+        /// Resources 경로를 이용해 Enemy 프리팹을 동적으로 로드합니다.
+        /// </summary>
+        /// <param name="enemyPath">Resources 기준 경로 또는 프리팹 이름</param>
+        /// <returns>찾은 GameObject 프리팹, 실패 시 null</returns>
+        private GameObject LoadEnemyPrefabByPath(string enemyPath)
+        {
+            if (string.IsNullOrEmpty(enemyPath))
+            {
+                Debug.LogError("Enemy 프리팹 경로가 비어 있습니다.");
+                return null;
+            }
+
+            // 1. Resources.Load 를 사용하여 프리팹을 로드합니다.
+            //    enemyPath 에 "Prefabs/Enemies/Normal/Slime" 처럼 경로를 넣으면,
+            //    Assets/Resources/Prefabs/Enemies/Normal/Slime.prefab 를 찾습니다.
+            GameObject prefab = Resources.Load<GameObject>(enemyPath);
+
+            if (prefab == null)
+            {
+                Debug.LogError($"Enemy 프리팹을 찾지 못했습니다. 경로: {enemyPath}  (Resources 폴더 위치와 이름을 확인하세요)");
+            }
+
+            return prefab;
         }
 
         public void StartNextWave()

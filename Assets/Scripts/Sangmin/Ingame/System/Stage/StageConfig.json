@@ -2,8 +2,8 @@
     "stages": [
         {
         "stageName": "1-1",
-        "normalEnemyName": "SampleNormalEnemy",
-        "bossEnemyName": "SampleBossEnemy"
+        "normalEnemyPath": "Prefabs/Enemies/Normal/SampleNormalEnemy",
+        "bossEnemyPath": "Prefabs/Enemies/Boss/SampleBossEnemy"
         }
     ]
 }

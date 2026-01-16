@@ -13,6 +13,12 @@ namespace Sangmin
         public GameObject prefab;
         // 몇개를 미리 생성 해놓을건지
         public int count;
+
+        public ObjectInfo(GameObject _prefab, int _count)
+        {
+            prefab = _prefab;
+            count = _count;
+        }
     }
 
     public class ObjectPoolManager : MonoBehaviour
@@ -27,7 +33,7 @@ namespace Sangmin
         public bool IsReady { get; private set; }
 
         [SerializeField]
-        private ObjectInfo[] objectInfos = null;
+        private List<ObjectInfo> objectInfos = null;
 
         // 오브젝트풀들을 관리할 딕셔너리
         private Dictionary<GameObject, IObjectPool<GameObject>> objectPoolDic = new Dictionary<GameObject, IObjectPool<GameObject>>();
@@ -49,11 +55,14 @@ namespace Sangmin
                 _instance = this;
             else
                 Destroy(this.gameObject);
-
-            Init();
         }
 
-        private void Init()
+        public void AddObjectInfo(GameObject prefab, int count)
+        {
+            objectInfos.Add(new ObjectInfo(prefab, count));
+        }
+
+        public void Init()
         {
             IsReady = false;
 
