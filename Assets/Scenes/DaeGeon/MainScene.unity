@@ -4635,9 +4635,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnitManager
   allUnits:
-  - {fileID: 11400000, guid: 021dcf7bf82375f4e9c5d3a794c44afd, type: 2}
-  - {fileID: 11400000, guid: d47e7fda834135a4d8fe8122adaf03d7, type: 2}
-  - {fileID: 11400000, guid: 0edafacdf69bbd44ab9315f28ac2567c, type: 2}
+  - {fileID: 11400000, guid: e3a42b24091a37540a6d719752c03b21, type: 2}
+  - {fileID: 11400000, guid: 0540bb188a791894d9e04725801fff35, type: 2}
+  - {fileID: 11400000, guid: 61349db090ac11742be326fade09f460, type: 2}
+  - {fileID: 11400000, guid: 13bb10ad81442f84ea4353c9885a705f, type: 2}
+  - {fileID: 11400000, guid: bf2a49e7bb713e747b81b83d6b2be664, type: 2}
+  - {fileID: 11400000, guid: 95350ef9329282b4fb3d240ee9ed6371, type: 2}
+  - {fileID: 11400000, guid: ddca8f690c263bd48bd1af6f95ad465d, type: 2}
+  - {fileID: 11400000, guid: 2456494c22418914c9fe2c428defd022, type: 2}
+  - {fileID: 11400000, guid: f08eb9cada4df98458c27f13085d4822, type: 2}
+  - {fileID: 11400000, guid: 5144da39f83c05143a391282775f38a2, type: 2}
   normalSprite: {fileID: -1593477784551811952, guid: be46bec3664acf241b434d4c48a952a5, type: 3}
   rareSprite: {fileID: -6099873399732076034, guid: 3e3c8400cf7a1ec49a86fc81550f27b5, type: 3}
   uniqueSprite: {fileID: -8425141836431729757, guid: e16517bdf36b79a46b9f5999ee09dc4c, type: 3}

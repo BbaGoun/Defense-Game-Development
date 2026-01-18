@@ -1,19 +1,31 @@
 fileFormatVersion: 2
-guid: b880220b6f87e0441bef55a9fe36d60f
+guid: 253c1013cb867be4bbf5f41a89227fd6
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -4407874737806988285
-    second: Squirrel_Lighting_0
+      213: 2750416572296779181
+    second: unit08_02_0
   - first:
-      213: 8943624041283209674
-    second: Squirrel_Lighting_1
+      213: 4952846385183147214
+    second: unit08_02_1
   - first:
-      213: -3968457793683364689
-    second: Squirrel_Lighting_2
+      213: 3286540108285733071
+    second: unit08_02_2
   - first:
-      213: -5162312631542647701
-    second: Squirrel_Lighting_3
+      213: 8138971563270312212
+    second: unit08_02_3
+  - first:
+      213: 8344053020861722912
+    second: unit08_02_4
+  - first:
+      213: -4394782080840593165
+    second: unit08_02_5
+  - first:
+      213: 4494938649631735540
+    second: unit08_02_6
+  - first:
+      213: 5547612786842035612
+    second: unit08_02_7
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -57,7 +69,7 @@ TextureImporter:
   compressionQuality: 50
   spriteMode: 2
   spriteExtrude: 1
-  spriteMeshType: 0
+  spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 100
@@ -122,7 +134,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Squirrel_Lighting_Idle_0
+      name: unit08_02_0
       rect:
         serializedVersion: 2
         x: 0
@@ -135,16 +147,16 @@ TextureImporter:
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 64ccd38e873f24a418257df73c4c81b7
-      internalID: -502815312
+      spriteID: da5d818dc417b2620800000000000000
+      internalID: 2750416572296779181
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Squirrel_Lighting_Idle_1
+      name: unit08_02_1
       rect:
         serializedVersion: 2
         x: 128
@@ -157,16 +169,16 @@ TextureImporter:
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 64b7ea61c4eecdd4bbb17199f990dc36
-      internalID: 1594351090
+      spriteID: ec44be7cb8b0cb440800000000000000
+      internalID: 4952846385183147214
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Squirrel_Lighting_Idle_2
+      name: unit08_02_2
       rect:
         serializedVersion: 2
         x: 256
@@ -179,16 +191,16 @@ TextureImporter:
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: a612c216a1980f941ba2ece60e878202
-      internalID: 318260981
+      spriteID: fc8e17ec0d22c9d20800000000000000
+      internalID: 3286540108285733071
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Squirrel_Lighting_Idle_3
+      name: unit08_02_3
       rect:
         serializedVersion: 2
         x: 384
@@ -201,10 +213,98 @@ TextureImporter:
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 817f7b48883b13749acb4ad9ae19b9f9
-      internalID: -1776252689
+      spriteID: 4119bb1c38f63f070800000000000000
+      internalID: 8138971563270312212
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: unit08_02_4
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 0
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 021fc7783080cc370800000000000000
+      internalID: 8344053020861722912
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: unit08_02_5
+      rect:
+        serializedVersion: 2
+        x: 640
+        y: 0
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3f09e366bf89203c0800000000000000
+      internalID: -4394782080840593165
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: unit08_02_6
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 0
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4fe397af2ea316e30800000000000000
+      internalID: 4494938649631735540
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: unit08_02_7
+      rect:
+        serializedVersion: 2
+        x: 896
+        y: 0
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c956227ef641dfc40800000000000000
+      internalID: 5547612786842035612
       vertices: []
       indices: 
       edges: []
@@ -213,7 +313,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: c0416610753ba844ab4d3b8c4f90263a
+    spriteID: a5f6a62e0357aad489c4c80e80a88044
     internalID: 0
     vertices: []
     indices: 
@@ -223,12 +323,16 @@ TextureImporter:
     spriteCustomMetadata:
       entries:
       - key: SpriteEditor.SliceSettings
-        value: '{"sliceOnImport":false,"gridCellCount":{"x":4.0,"y":1.0},"gridSpriteSize":{"x":128.0,"y":128.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":8.0,"y":1.0},"gridSpriteSize":{"x":128.0,"y":128.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      Squirrel_Lighting_Idle_0: -502815312
-      Squirrel_Lighting_Idle_1: 1594351090
-      Squirrel_Lighting_Idle_2: 318260981
-      Squirrel_Lighting_Idle_3: -1776252689
+      unit08_02_0: 2750416572296779181
+      unit08_02_1: 4952846385183147214
+      unit08_02_2: 3286540108285733071
+      unit08_02_3: 8138971563270312212
+      unit08_02_4: 8344053020861722912
+      unit08_02_5: -4394782080840593165
+      unit08_02_6: 4494938649631735540
+      unit08_02_7: 5547612786842035612
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -1,0 +1,15 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Bone_Throw_Shiba
+  m_Controller: {fileID: 9100000, guid: f739c02c52764c145a41143fc77ec139, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: 1b15e3ebad943e6418faf1938f19e8f2, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 692d49d424a88154e839c554db5edcf3, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 8ca1b32c38127dc49a78f344c26bcd70, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 87f5ed3c0dbf3284db39c019abf8fb80, type: 2}
