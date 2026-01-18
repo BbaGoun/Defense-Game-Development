@@ -1,25 +1,19 @@
 fileFormatVersion: 2
-guid: a53b12b8006bb7b408b7c2f25c12a902
+guid: 519187696362e124cb7f5657b76d7080
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 5827129251348921883
-    second: warrior_1_normal_0
+      213: -5908916025661178218
+    second: unit02_01_0
   - first:
-      213: 7574641257465762511
-    second: warrior_1_normal_1
+      213: -4203117452165806224
+    second: unit02_01_1
   - first:
-      213: -4538698476376984344
-    second: warrior_1_normal_2
+      213: -1688119262927912974
+    second: unit02_01_2
   - first:
-      213: -8393911059893599748
-    second: warrior_1_normal_3
-  - first:
-      213: -4911619128395667793
-    second: warrior_1_normal_4
-  - first:
-      213: -8630038686192363077
-    second: warrior_1_normal_5
+      213: -9183204862367660235
+    second: unit02_01_3
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -128,13 +122,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: warrior_1_normal_0
+      name: unit02_01_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 799
-        height: 1023
+        width: 128
+        height: 128
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -143,20 +137,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: b1eb0fe3e2f1ed050800000000000000
-      internalID: 5827129251348921883
+      spriteID: 69e3ad27e205ffda0800000000000000
+      internalID: -5908916025661178218
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: warrior_1_normal_1
+      name: unit02_01_1
       rect:
         serializedVersion: 2
-        x: 799
+        x: 128
         y: 0
-        width: 799
-        height: 1023
+        width: 128
+        height: 128
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -165,20 +159,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: fc2d34c67188e1960800000000000000
-      internalID: 7574641257465762511
+      spriteID: 077896242f68ba5c0800000000000000
+      internalID: -4203117452165806224
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: warrior_1_normal_2
+      name: unit02_01_2
       rect:
         serializedVersion: 2
-        x: 1598
+        x: 256
         y: 0
-        width: 799
-        height: 1023
+        width: 128
+        height: 128
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -187,20 +181,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 8e471f468cd4301c0800000000000000
-      internalID: -4538698476376984344
+      spriteID: 2ffffa279789298e0800000000000000
+      internalID: -1688119262927912974
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: warrior_1_normal_3
+      name: unit02_01_3
       rect:
         serializedVersion: 2
-        x: 2397
+        x: 384
         y: 0
-        width: 799
-        height: 1023
+        width: 128
+        height: 128
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -209,52 +203,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: cf1c1d62d56d28b80800000000000000
-      internalID: -8393911059893599748
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: warrior_1_normal_4
-      rect:
-        serializedVersion: 2
-        x: 3196
-        y: 0
-        width: 799
-        height: 1023
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: fa666f3fc6c66dbb0800000000000000
-      internalID: -4911619128395667793
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: warrior_1_normal_5
-      rect:
-        serializedVersion: 2
-        x: 3995
-        y: 0
-        width: 799
-        height: 1023
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: bb910afe981fb3880800000000000000
-      internalID: -8630038686192363077
+      spriteID: 5378fe615d3be8080800000000000000
+      internalID: -9183204862367660235
       vertices: []
       indices: 
       edges: []
@@ -263,7 +213,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 92edcbe877871974f85abcddf33ea181
+    spriteID: 84474015459e3184681ea313c4faed9f
     internalID: 0
     vertices: []
     indices: 
@@ -273,14 +223,12 @@ TextureImporter:
     spriteCustomMetadata:
       entries:
       - key: SpriteEditor.SliceSettings
-        value: '{"sliceOnImport":false,"gridCellCount":{"x":6.0,"y":1.0},"gridSpriteSize":{"x":799.0,"y":1023.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":4.0,"y":1.0},"gridSpriteSize":{"x":128.0,"y":128.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      warrior_1_normal_0: 5827129251348921883
-      warrior_1_normal_1: 7574641257465762511
-      warrior_1_normal_2: -4538698476376984344
-      warrior_1_normal_3: -8393911059893599748
-      warrior_1_normal_4: -4911619128395667793
-      warrior_1_normal_5: -8630038686192363077
+      unit02_01_0: -5908916025661178218
+      unit02_01_1: -4203117452165806224
+      unit02_01_2: -1688119262927912974
+      unit02_01_3: -9183204862367660235
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

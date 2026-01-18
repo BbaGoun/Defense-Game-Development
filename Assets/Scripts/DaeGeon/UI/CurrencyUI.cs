@@ -8,6 +8,7 @@ public class CurrencyUI : MonoBehaviour
     public TMP_Text goldText;
     public TMP_Text cashText;
     public TMP_Text staminaText;
+    public TMP_Text staminaText2;
 
     private void Awake()
     {
@@ -43,7 +44,13 @@ public class CurrencyUI : MonoBehaviour
     }
 
     public void UpdateStamina()
-    {
-        staminaText.text = CurrencyManager.Instance.stamina.ToString();
-    }
+        {
+            // 기존 메인 UI 스태미나 갱신
+            if (staminaText != null)
+                staminaText.text = CurrencyManager.Instance.stamina.ToString();
+
+            // 새로 추가된 스테이지 패널용 스태미나 갱신
+            if (staminaText2 != null)
+                staminaText2.text = CurrencyManager.Instance.stamina.ToString();
+        }
 }
