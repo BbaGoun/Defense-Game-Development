@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53850ee3cb8d63c49b6b0cd6b446eedf, type: 3}
   m_Name: Bone_Throw_Shiba
   m_EditorClassIdentifier: Assembly-CSharp::UnitData
-  prefab: {fileID: 7515713994356280284, guid: 28a2bf41de598254397b689f4fef7a75, type: 3}
-  unitId: 3
+  prefab: {fileID: 1143663859429401536, guid: d28597f4f0dea1a4c92e818346c62490, type: 3}
+  unitId: 1
   unitName: "\uC0C1\uAE09 \uC804\uC0AC"
   icon: {fileID: -5603783567923696625, guid: 94fe30b913587a7438549c5c6a8f6d1f, type: 3}
   grade: 2

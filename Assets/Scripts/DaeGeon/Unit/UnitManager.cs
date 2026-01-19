@@ -22,6 +22,8 @@ public class UnitManager : MonoBehaviour
         {
             states[data.unitId] = new UnitState();
         }
+
+        DontDestroyOnLoad(gameObject);
     }
 
     public UnitState GetState(int unitId)
@@ -36,7 +38,7 @@ public class UnitManager : MonoBehaviour
         if (!state.owned)
         {
             state.owned = true; // 처음 획득, owned 활성화만
-            return;             
+            return;
         }
 
         // 이미 소유 중이면 샤드 증가
@@ -59,7 +61,7 @@ public class UnitManager : MonoBehaviour
         return true;
     }
 
-    
+
     public Sprite GetGradeSprite(UnitGrade grade)
     {
         return grade switch

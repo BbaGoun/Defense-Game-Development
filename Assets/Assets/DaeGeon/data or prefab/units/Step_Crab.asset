@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53850ee3cb8d63c49b6b0cd6b446eedf, type: 3}
   m_Name: Step_Crab
   m_EditorClassIdentifier: Assembly-CSharp::UnitData
-  prefab: {fileID: 7515713994356280284, guid: 28a2bf41de598254397b689f4fef7a75, type: 3}
-  unitId: 3
+  prefab: {fileID: 1143663859429401536, guid: d4940ecbbbd21a3448d2400e14766db6, type: 3}
+  unitId: 8
   unitName: "\uC0C1\uAE09 \uC804\uC0AC"
   icon: {fileID: 2147751783242263822, guid: 13ba5a9a965e25141ad16a40e4ebe18b, type: 3}
   grade: 2

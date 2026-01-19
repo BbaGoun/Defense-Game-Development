@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53850ee3cb8d63c49b6b0cd6b446eedf, type: 3}
   m_Name: Shooting_Cat
   m_EditorClassIdentifier: Assembly-CSharp::UnitData
-  prefab: {fileID: 7515713994356280284, guid: 28a2bf41de598254397b689f4fef7a75, type: 3}
-  unitId: 3
+  prefab: {fileID: 1143663859429401536, guid: 85bb8d39562a163478533c890860cd90, type: 3}
+  unitId: 6
   unitName: "\uC0C1\uAE09 \uC804\uC0AC"
   icon: {fileID: 670522209413358510, guid: 0fc6fe67cbd84a942a813494b487e7d2, type: 3}
   grade: 2

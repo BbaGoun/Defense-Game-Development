@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53850ee3cb8d63c49b6b0cd6b446eedf, type: 3}
   m_Name: Double_Knife_Chihuahua
   m_EditorClassIdentifier: Assembly-CSharp::UnitData
-  prefab: {fileID: 7515713994356280284, guid: 28a2bf41de598254397b689f4fef7a75, type: 3}
+  prefab: {fileID: 1143663859429401536, guid: 8337e28d78f5661428654c2de19347f5, type: 3}
   unitId: 3
   unitName: "\uC0C1\uAE09 \uC804\uC0AC"
   icon: {fileID: 3844404745284898735, guid: 05a94812fa90c7c40b65352ee944a3e8, type: 3}

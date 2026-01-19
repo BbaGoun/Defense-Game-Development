@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53850ee3cb8d63c49b6b0cd6b446eedf, type: 3}
   m_Name: Rat_Dance
   m_EditorClassIdentifier: Assembly-CSharp::UnitData
-  prefab: {fileID: 7515713994356280284, guid: 28a2bf41de598254397b689f4fef7a75, type: 3}
-  unitId: 3
+  prefab: {fileID: 1143663859429401536, guid: 4897d79a193b13a419f24a1ffc13acf2, type: 3}
+  unitId: 5
   unitName: "\uC0C1\uAE09 \uC804\uC0AC"
   icon: {fileID: -7505896508813351810, guid: 007fe390487024647a48245613920e46, type: 3}
   grade: 2

@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53850ee3cb8d63c49b6b0cd6b446eedf, type: 3}
   m_Name: Muscle_Shiba
   m_EditorClassIdentifier: Assembly-CSharp::UnitData
-  prefab: {fileID: 7515713994356280284, guid: 28a2bf41de598254397b689f4fef7a75, type: 3}
-  unitId: 3
+  prefab: {fileID: 1143663859429401536, guid: 6e116b5f64e1be64b8479e9f8e774f3a, type: 3}
+  unitId: 4
   unitName: "\uC0C1\uAE09 \uC804\uC0AC"
   icon: {fileID: -5908916025661178218, guid: 6ca31d5be1a61384dba6a4be3d9619fa, type: 3}
   grade: 2

@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53850ee3cb8d63c49b6b0cd6b446eedf, type: 3}
   m_Name: Twin_Bird
   m_EditorClassIdentifier: Assembly-CSharp::UnitData
-  prefab: {fileID: 7515713994356280284, guid: 28a2bf41de598254397b689f4fef7a75, type: 3}
-  unitId: 3
+  prefab: {fileID: 1143663859429401536, guid: de51aeb8298a22e4285e52861fe72731, type: 3}
+  unitId: 10
   unitName: "\uC0C1\uAE09 \uC804\uC0AC"
   icon: {fileID: -5323893526986295267, guid: cf2b61d4a2fb18e4c96b37c981478b9a, type: 3}
   grade: 2
