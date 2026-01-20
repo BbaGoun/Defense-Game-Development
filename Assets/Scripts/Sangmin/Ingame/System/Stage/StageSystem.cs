@@ -233,12 +233,12 @@ namespace Sangmin
         IEnumerator IENormalWave()
         {
             float elapsedTime = 0f;
-            float spawnElapsedTime = 0f;
+            float spawnElapsedTime = currentStage.spawnInterval;
 
             Debug.Log($"일반 웨이브 {currentWave} 시작");
 
             // 웨이브 전체 시간 동안 반복
-            while (elapsedTime <= currentStage.normalWaveDuration && !IsGameOver)
+            while (elapsedTime < currentStage.normalWaveDuration && !IsGameOver)
             {
                 OnFrameUpdate?.Invoke();
 

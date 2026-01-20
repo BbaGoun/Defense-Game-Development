@@ -464,7 +464,7 @@ namespace Sangmin
                     if (!_units.KeyValuePair.TryGetValue(id, out UnitNode unitNode))
                         continue;
 
-                    foreach (var syn in unitNode.unit.synergies)
+                    foreach (var syn in unitNode.unit.unitData.synergies)
                     {
                         // enum 리스트에 count++
                         synergyCounts[(int)syn.synergyName]++;
@@ -477,7 +477,7 @@ namespace Sangmin
                     if (!_units.KeyValuePair.TryGetValue(id, out UnitNode unitNode))
                         continue;
 
-                    foreach (var syn in unitNode.unit.synergies)
+                    foreach (var syn in unitNode.unit.unitData.synergies)
                     {
                         // unit의 synergy/count를 변경
                         syn.count = synergyCounts[(int)syn.synergyName];

@@ -35,12 +35,6 @@ namespace Sangmin
 
         void OnEnable()
         {
-            // 오브젝트 풀링 사용 시 OnEnable에서도 체력 초기화
-            currentHealth = maxHealth;
-        }
-
-        void Start()
-        {
             if (EnemyMoveRoute.Instance != null)
             {
                 EnemyMoveRoute.Instance.OnGenerateRoute += OnGenerateRoute;
@@ -49,6 +43,10 @@ namespace Sangmin
             transform.position = EnemyMoveRoute.Instance.startPosition;
 
             moveCoroutine = StartCoroutine(MoveAlongRoute(EnemyMoveRoute.Instance.WorldRoute));
+
+            // 오브젝트 풀링 사용 시 OnEnable에서도 체력 초기화
+            currentHealth = maxHealth;
+            UpdateHealthBar();
         }
 
         /// <summary>
@@ -103,17 +101,6 @@ namespace Sangmin
 
         void OnDisable()
         {
-            // 오브젝트 풀링 시 OnDisable이 호출되므로 여기서도 처리
-            // StageSystem에 적 제거 알림
-            if (StageSystem.Instance != null)
-            {
-                StageSystem.Instance.OnEnemyDestroyed(this);
-            }
-        }
-
-        void OnDestroy()
-        {
-            // 이벤트 구독 해제
             if (EnemyMoveRoute.Instance != null)
             {
                 EnemyMoveRoute.Instance.OnGenerateRoute -= OnGenerateRoute;

@@ -35,7 +35,7 @@ namespace Sangmin
         타입2(종족, 소속, 속성) // 시너지 별 상속
         */
         [Header("Base Stats")]
-        public UnitStatData unitStatData;
+        public UnitData unitData;
 
         // 실시간 스탯 변화를 계산할 필요가 있음
         [Header("Final Stats")]
@@ -73,12 +73,6 @@ namespace Sangmin
         [Header("Chain Visuals (8 방향, 인덱스 0~7 = 위, 오른위, 오른, 오른아래, 아래, 왼아래, 왼, 왼위)")]
         public List<ChainVisual> chainVisuals = new List<ChainVisual>(8);
 
-        [Header("Additive")]
-        public AttackBehaviour attackBehaviour;
-
-        public List<Synergy> synergies = new List<Synergy>();
-        public List<IStatusEffect> statusEffects = new List<IStatusEffect>();
-
         [Header("Else Components")]
         [SerializeField] private RangeIndicator rangeIndicator;
         public float rangeMultiplier
@@ -111,15 +105,15 @@ namespace Sangmin
 
         void Awake()
         {
-            if (unitStatData == null)
+            if (unitData == null)
             {
                 Debug.LogError($"유닛 스탯이 배정되지 않음 : {gameObject.name}");
                 return;
             }
 
-            finalAttackDamage = unitStatData.attackDamage;
-            finalAttackSpeed = unitStatData.attackSpeed;
-            finalAttackRange = unitStatData.attackRange;
+            finalAttackDamage = unitData.attackDamage;
+            finalAttackSpeed = unitData.attackSpeed;
+            finalAttackRange = unitData.attackRange;
 
             // 자식 오브젝트에서 RangeIndicator를 찾는다.
             rangeIndicator = GetComponentInChildren<RangeIndicator>(false);
@@ -132,7 +126,7 @@ namespace Sangmin
             }
             rangeIndicator.InitializeSpriteRenderer(finalAttackRange);
 
-            attackBehaviour.Initialize(this);
+            unitData.attackBehaviour.Initialize(this);
         }
 
         void OnEnable()
@@ -166,9 +160,9 @@ namespace Sangmin
         /// </summary>
         public void PerformAttack(Enemy target)
         {
-            if (target == null || attackBehaviour == null) return;
+            if (target == null || unitData.attackBehaviour == null) return;
 
-            attackBehaviour.Attack(this, target);
+            unitData.attackBehaviour.Attack(this, target);
             OnAttack(); // 시너지 시스템용
         }
 
@@ -209,7 +203,7 @@ namespace Sangmin
 
         public void OnWaveStart()
         {
-            foreach (var s in synergies)
+            foreach (var s in unitData.synergies)
                 s.OnCombatStart(this);
         }
 

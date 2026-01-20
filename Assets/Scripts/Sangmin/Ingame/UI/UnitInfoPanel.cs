@@ -97,31 +97,31 @@ namespace Sangmin
             // 공격력
             if (attackDamageText != null)
             {
-                float diffAtkDmg = unit.finalAttackDamage - unit.unitStatData.attackDamage;
+                float diffAtkDmg = unit.finalAttackDamage - unit.unitData.attackDamage;
                 char oper = diffAtkDmg >= 0 ? '+' : '-';
-                attackDamageText.text = $"공격력: {unit.unitStatData.attackDamage}{oper}{diffAtkDmg:F1}";
+                attackDamageText.text = $"공격력: {unit.unitData.attackDamage}{oper}{diffAtkDmg:F1}";
 
             }
             // 공격 속도
             if (attackSpeedText != null)
             {
-                float diffAtkSpd = unit.finalAttackSpeed - unit.unitStatData.attackSpeed;
+                float diffAtkSpd = unit.finalAttackSpeed - unit.unitData.attackSpeed;
                 char oper = diffAtkSpd >= 0 ? '+' : '-';
-                attackSpeedText.text = $"공격 속도: {unit.unitStatData.attackSpeed}{oper}{diffAtkSpd:F2}";
+                attackSpeedText.text = $"공격 속도: {unit.unitData.attackSpeed}{oper}{diffAtkSpd:F2}";
             }
 
             // 사거리
             if (attackRangeText != null)
             {
-                int diffAtkRange = unit.finalAttackRange - unit.unitStatData.attackRange;
+                int diffAtkRange = unit.finalAttackRange - unit.unitData.attackRange;
                 char oper = diffAtkRange >= 0 ? '+' : '-';
-                attackRangeText.text = $"사거리: {unit.unitStatData.attackRange}{oper}{diffAtkRange}";
+                attackRangeText.text = $"사거리: {unit.unitData.attackRange}{oper}{diffAtkRange}";
             }
 
             // 등급
             if (gradeText != null)
             {
-                string gradeName = GetGradeName(unit.unitStatData.grade);
+                string gradeName = GetGradeName(unit.unitData.grade);
                 gradeText.text = $"등급: {gradeName}";
             }
         }
@@ -129,19 +129,19 @@ namespace Sangmin
         /// <summary>
         /// 등급 이름을 한국어로 반환
         /// </summary>
-        private string GetGradeName(UnitStatData.Grade grade)
+        private string GetGradeName(Grade grade)
         {
             switch (grade)
             {
-                case UnitStatData.Grade.NORMAL:
+                case Grade.NORMAL:
                     return "일반";
-                case UnitStatData.Grade.RARE:
+                case Grade.RARE:
                     return "희귀";
-                case UnitStatData.Grade.HERO:
+                case Grade.HERO:
                     return "영웅";
-                case UnitStatData.Grade.LEGEND:
+                case Grade.LEGEND:
                     return "전설";
-                case UnitStatData.Grade.MYTHIC:
+                case Grade.MYTHIC:
                     return "신화";
                 default:
                     return "알 수 없음";
