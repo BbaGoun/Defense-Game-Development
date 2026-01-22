@@ -10,18 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2b9b845f816ebe2438419c60a9875f4d, type: 3}
-  m_Name: Bone_Throw_Shiba
+  m_Name: Cheering_Crab
   m_EditorClassIdentifier: Assembly-CSharp::Sangmin.UnitData
-  attackDamage: 100
-  attackSpeed: 1
-  attackRange: 2
-  grade: 4
-  attackEffect: {fileID: 8935922844047154205, guid: 9b795a203e239c84a83360c2eef362f7, type: 3}
-  attackBehaviour: {fileID: 11400000, guid: e5e6eb59b36a8d4468a1d4f55134fbcb, type: 2}
+  attackDamage: 0
+  attackSpeed: 0
+  attackRange: 0
+  grade: 0
+  attackEffect: {fileID: 0}
+  attackBehaviour: {fileID: 0}
   synergies: []
   radius: 0
-  projectilePrefab: {fileID: 8597705205972681036, guid: 59bd9cda5ecc8bd43b2c0ad1b2f9e0dd, type: 3}
+  projectilePrefab: {fileID: 0}
   projectileSpeed: 12
   maxLifetime: 2
-  attackDamageBonus: 0
-  attackSpeedBonus: 0

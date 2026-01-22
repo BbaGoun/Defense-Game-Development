@@ -22,12 +22,25 @@ namespace Sangmin
             spriteRenderer = GetComponent<SpriteRenderer>();
             boxCollider = GetComponent<BoxCollider2D>();
 
-
             Color colorWithAlpha = rangeColor;
             colorWithAlpha.a = alpha;
             spriteRenderer.color = colorWithAlpha;
 
             currentRange = range;
+
+            switch (currentRange)
+            {
+                case 1:
+                    multiplier = 4f;
+                    break;
+                case 2:
+                    multiplier = 3.3f;
+                    break;
+                case 3:
+                    multiplier = 3.1f;
+                    break;
+            }
+
             spriteRenderer.size = new Vector2(currentRange * multiplier, currentRange * multiplier);
             boxCollider.size = new(currentRange * multiplier, currentRange * multiplier);
 

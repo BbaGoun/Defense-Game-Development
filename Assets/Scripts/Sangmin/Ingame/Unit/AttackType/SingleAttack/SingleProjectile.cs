@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Sangmin
@@ -6,20 +7,21 @@ namespace Sangmin
     public class SingleProjectile : MonoBehaviour
     {
         private Unit owner;
-        private Enemy target;
+        [SerializeField] private Enemy target;
         private float damage;
         private float speed;
         //private float hitRadius;
         private float maxLifetime;
         private float lifeTimer;
         private PoolAble poolAble;
+        private GameObject attackEffect;
 
         private void Awake()
         {
             poolAble = GetComponent<PoolAble>();
         }
 
-        public void Launch(Unit owner, Enemy target, float damage, float speed, float maxLifetime)
+        public void Launch(Unit owner, Enemy target, float damage, float speed, float maxLifetime, GameObject attackEffectPrefab)
         {
             this.owner = owner;
             this.target = target;
@@ -28,15 +30,28 @@ namespace Sangmin
             //this.hitRadius = hitRadius;
             this.maxLifetime = maxLifetime;
             lifeTimer = 0f;
+            attackEffect = attackEffectPrefab;
         }
 
         private void Update()
         {
-            // 목표가 사라졌다면 투사체만 제거
-            if (target == null)
+            // 목표가 사라졌다면 가장 가까운 적으로 타겟 변경
+            if (target == null || target.gameObject.activeSelf == false)
             {
-                Release();
-                return;
+                // 가장 가까운 적 찾기
+                Enemy nearestEnemy = FindNearestEnemy();
+
+                // 새로운 타겟을 찾았으면 타겟 변경
+                if (nearestEnemy != null)
+                {
+                    target = nearestEnemy;
+                }
+                else
+                {
+                    // 활성화된 적이 없을 경우에만 투사체 제거
+                    Release();
+                    return;
+                }
             }
 
             lifeTimer += Time.deltaTime;
@@ -60,9 +75,9 @@ namespace Sangmin
             // }
         }
 
-        void OnTriggerEnter2D(Collider2D collision)
+        void OnTriggerStay2D(Collider2D collision)
         {
-            if (collision.gameObject.Equals(target.gameObject))
+            if (target != null && collision.gameObject.Equals(target.gameObject))
                 HitTarget();
         }
 
@@ -72,7 +87,41 @@ namespace Sangmin
             {
                 target.TakeDamage(damage);
             }
+            if (attackEffect != null)
+            {
+                var attackEffectInstance = ObjectPoolManager.Instance.GetObject(attackEffect);
+                attackEffectInstance.transform.position = target.transform.position;
+            }
             Release();
+        }
+
+        /// <summary>
+        /// 투사체 위치에서 가장 가까운 적을 찾습니다.
+        /// </summary>
+        private Enemy FindNearestEnemy()
+        {
+            if (StageSystem.Instance == null) return null;
+
+            List<Enemy> activeEnemies = StageSystem.Instance.GetActiveEnemies();
+            if (activeEnemies == null || activeEnemies.Count == 0) return null;
+
+            Enemy nearestEnemy = null;
+            float nearestDistance = float.MaxValue;
+            Vector3 projectilePosition = transform.position;
+
+            foreach (Enemy enemy in activeEnemies)
+            {
+                if (enemy == null || !enemy.gameObject.activeSelf) continue;
+
+                float distance = Vector2.Distance(projectilePosition, enemy.transform.position);
+                if (distance < nearestDistance)
+                {
+                    nearestEnemy = enemy;
+                    nearestDistance = distance;
+                }
+            }
+
+            return nearestEnemy;
         }
 
         private void Release()

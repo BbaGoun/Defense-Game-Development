@@ -324,6 +324,8 @@ namespace Sangmin
                 selectedCell = targetCell;
             }
 
+            SynergyCountSystem.Instance.OutlineConnectedNode(new Vector2Int(targetCell.row, targetCell.col));
+
             // 하이라이트 갱신
             ClearHighlight();
             DrawHighlight();

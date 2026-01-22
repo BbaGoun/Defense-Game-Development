@@ -7756,6 +7756,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RandomSummon
   UnitList:
+  - {fileID: 1143663859429401536, guid: d28597f4f0dea1a4c92e818346c62490, type: 3}
   - {fileID: 1143663859429401536, guid: 7ede9208b7c2b7a4aa0f9bfd0bccc69f, type: 3}
 --- !u!1001 &1711675707
 PrefabInstance:
@@ -8316,10 +8317,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Sangmin.ObjectPoolManager
   objectInfos:
-  - prefab: {fileID: 7777117128670843503, guid: 09dc011a4ebba9a4cba2911314309034, type: 3}
-    count: 2
+  - prefab: {fileID: 1143663859429401536, guid: d28597f4f0dea1a4c92e818346c62490, type: 3}
+    count: 3
+  - prefab: {fileID: 8597705205972681036, guid: 59bd9cda5ecc8bd43b2c0ad1b2f9e0dd, type: 3}
+    count: 3
+  - prefab: {fileID: 8935922844047154205, guid: 9b795a203e239c84a83360c2eef362f7, type: 3}
+    count: 3
   - prefab: {fileID: 1143663859429401536, guid: 7ede9208b7c2b7a4aa0f9bfd0bccc69f, type: 3}
-    count: 2
+    count: 3
+  - prefab: {fileID: 7777117128670843503, guid: 09dc011a4ebba9a4cba2911314309034, type: 3}
+    count: 3
 --- !u!1001 &1853041734
 PrefabInstance:
   m_ObjectHideFlags: 0

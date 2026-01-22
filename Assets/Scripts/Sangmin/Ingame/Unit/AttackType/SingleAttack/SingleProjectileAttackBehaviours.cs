@@ -9,6 +9,7 @@ namespace Sangmin
     public class SingleProjectileAttackBehaviours : AttackBehaviour
     {
         private GameObject projectilePrefab;
+        private GameObject attackEffectPrefab;
 
         public override void Initialize(Unit self)
         {
@@ -16,6 +17,10 @@ namespace Sangmin
             if (projectilePrefab == null)
             {
                 projectilePrefab = self.unitData.projectilePrefab;
+            }
+            if (attackEffectPrefab == null)
+            {
+                attackEffectPrefab = self.unitData.attackEffect;
             }
         }
 
@@ -48,7 +53,8 @@ namespace Sangmin
                 target: mainTarget,
                 damage: self.finalAttackDamage,
                 speed: self.unitData.projectileSpeed,
-                maxLifetime: self.unitData.maxLifetime);
+                maxLifetime: self.unitData.maxLifetime,
+                attackEffectPrefab: attackEffectPrefab);
         }
 
         private GameObject TryGetProjectileInstance()
@@ -59,7 +65,7 @@ namespace Sangmin
                 return ObjectPoolManager.Instance.GetObject(projectilePrefab);
             }
 
-            return GameObject.Instantiate(projectilePrefab);
+            return Instantiate(projectilePrefab);
         }
     }
 }

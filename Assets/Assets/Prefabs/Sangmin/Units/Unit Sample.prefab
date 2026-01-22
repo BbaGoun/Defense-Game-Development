@@ -152,6 +152,7 @@ MonoBehaviour:
   rangeIndicator: {fileID: 1288710351338662157}
   outliner: {fileID: 989504559730659838}
   poolAble: {fileID: 1513954799534953106}
+  animator: {fileID: 171049200951708098}
   enemiesInRange: []
   currentTarget: {fileID: 0}
 --- !u!114 &1513954799534953106

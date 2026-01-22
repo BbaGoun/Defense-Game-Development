@@ -84,12 +84,15 @@ namespace Sangmin
         }
         [SerializeField] private Outliner outliner;
         [SerializeField] private PoolAble poolAble;
+        [SerializeField] private Animator animator;
 
         [SerializeField]
         private List<Enemy> enemiesInRange = new List<Enemy>();
 
         // 전투 관련
         [SerializeField] private Enemy currentTarget; // 현재 타겟
+        bool isAttacking = false;
+
 
         private static readonly ChainDirection[] _allDirections =
         {
@@ -119,6 +122,7 @@ namespace Sangmin
             rangeIndicator = GetComponentInChildren<RangeIndicator>(false);
             outliner = GetComponent<Outliner>();
             poolAble = GetComponent<PoolAble>();
+            animator = GetComponent<Animator>();
             if (rangeIndicator == null)
             {
                 Debug.LogError($"RangeIndicator가 배정되지 않음 : {gameObject.name}");
@@ -155,14 +159,21 @@ namespace Sangmin
             FindAndAttackEnemy();
         }
 
+        public void PlayAttackAnimation()
+        {
+            animator.SetTrigger("TAttack");
+        }
+
         /// <summary>
         /// Enemy를 타겟으로 공격합니다.
         /// </summary>
-        public void PerformAttack(Enemy target)
+        public void PerformAttack()
         {
-            if (target == null || unitData.attackBehaviour == null) return;
+            if (currentTarget == null || unitData.attackBehaviour == null) return;
 
-            unitData.attackBehaviour.Attack(this, target);
+            isAttacking = false;
+            attackTimer = attackCooldown;
+            unitData.attackBehaviour.Attack(this, currentTarget);
             OnAttack(); // 시너지 시스템용
         }
 
@@ -437,6 +448,8 @@ namespace Sangmin
             // StageSystem이 없으면 공격 불가
             if (StageSystem.Instance == null) return;
 
+            if (isAttacking) return;
+
             // 공격 쿨다운이 남아있으면 공격 불가
             if (attackTimer > 0f) return;
 
@@ -510,9 +523,8 @@ namespace Sangmin
         {
             if (enemy == null) return;
 
-            PerformAttack(enemy);
-
-            attackTimer = attackCooldown;
+            PlayAttackAnimation();
+            isAttacking = true;
         }
 
         #endregion

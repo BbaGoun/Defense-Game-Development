@@ -46,5 +46,11 @@ namespace Sangmin
 
         [Tooltip("목표에 닿지 못했을 때의 최대 생존 시간")]
         public float maxLifetime = 2f;
+
+        [Header("버프 부여 사항, 해당되지 않으면 설정 No")]
+        [Tooltip("공격력 버프량")]
+        public float attackDamageBonus = 0f;
+        [Tooltip("공격속도 버프량")]
+        public float attackSpeedBonus = 0f;
     }
 }
