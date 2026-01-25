@@ -1,6 +1,8 @@
 using UnityEngine;
 
-public class UnitUI : MonoBehaviour
+namespace DaeGeon
+{
+    public class UnitUI : MonoBehaviour
 {
     public static UnitUI Instance;
 
@@ -60,4 +62,5 @@ void CreateUnitUI(UnitData data)
     ui.Setup(data, state);
 }
 
+}
 }

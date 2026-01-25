@@ -1,24 +1,26 @@
 using UnityEngine;
 
-public enum UnitGrade
+namespace DaeGeon
 {
-    NORMAL,
-    RARE,
-    UNIQUE,
-    LEGEND,
-    MYTHIC
-}
+    public enum UnitGrade
+    {
+        NORMAL,
+        RARE,
+        UNIQUE,
+        LEGEND,
+        MYTHIC
+    }
 
-public enum UnitType
-{
-    MELEE,
-    RANGED,
-    MAGIC
-}
+    public enum UnitType
+    {
+        MELEE,
+        RANGED,
+        MAGIC
+    }
 
-[CreateAssetMenu(fileName = "UnitData", menuName = "Game/Unit Data")]
-public class UnitData : ScriptableObject
-{
+    [CreateAssetMenu(fileName = "UnitData", menuName = "Game/Unit Data")]
+    public class UnitData : ScriptableObject
+    {
     public GameObject prefab;  //해당 구조
     
     [Header("Identity")]
@@ -43,7 +45,8 @@ public class UnitData : ScriptableObject
     public float baseAttackSpeed;
     public float baseRange;
 
-    [Header("Upgrade")]
-    public int shardsRequiredPerUpgrade = 10;
-    public float upgradeMultiplier = 1.2f;
+        [Header("Upgrade")]
+        public int shardsRequiredPerUpgrade = 10;
+        public float upgradeMultiplier = 1.2f;
+    }
 }

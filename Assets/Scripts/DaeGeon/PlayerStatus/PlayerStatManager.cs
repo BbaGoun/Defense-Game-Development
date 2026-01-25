@@ -1,7 +1,9 @@
 using UnityEngine;
 using System;
 
-public class PlayerStatManager : MonoBehaviour
+namespace DaeGeon
+{
+    public class PlayerStatManager : MonoBehaviour
 {
     public static PlayerStatManager Instance;
 
@@ -88,4 +90,5 @@ public class PlayerStatManager : MonoBehaviour
     {
         OnStatChanged?.Invoke(TotalStatus);
     }
+}
 }

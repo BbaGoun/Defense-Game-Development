@@ -361,6 +361,12 @@ namespace Sangmin
 
             var enemy = enemyObject.GetComponent<Enemy>();
 
+            // 일반 몬스터로 설정
+            if (enemy != null)
+            {
+                enemy.isBoss = false;
+            }
+
             // 활성 적 리스트에 추가
             activeEnemies.Add(enemy);
             OnEnemyCountChanged?.Invoke(activeEnemies.Count);
@@ -400,6 +406,13 @@ namespace Sangmin
             enemyObject.transform.position = EnemyMoveRoute.Instance.startPosition;
 
             var enemy = enemyObject.GetComponent<Enemy>();
+
+            // 보스 몬스터로 설정 및 골드 보상 계산
+            if (enemy != null)
+            {
+                enemy.isBoss = true;
+                enemy.RecalculateBossGoldReward();
+            }
 
             // 활성 적 리스트에 추가
             activeEnemies.Add(enemy);

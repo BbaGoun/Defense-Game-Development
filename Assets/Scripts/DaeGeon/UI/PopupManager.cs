@@ -1,6 +1,8 @@
 using UnityEngine;
 
-public class SimpleToggle : MonoBehaviour
+namespace DaeGeon
+{
+    public class SimpleToggle : MonoBehaviour
 {
     public void Toggle(GameObject panel)
     {
@@ -19,4 +21,5 @@ public class SimpleToggle : MonoBehaviour
     {
         if (panel != null) panel.SetActive(false);
     }
+}
 }

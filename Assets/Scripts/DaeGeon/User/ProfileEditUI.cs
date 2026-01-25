@@ -1,7 +1,9 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ProfileEditUI : MonoBehaviour
+namespace DaeGeon
+{
+    public class ProfileEditUI : MonoBehaviour
 {
     [SerializeField] private UserVisualDatabase visualDB;
     
@@ -39,4 +41,5 @@ public class ProfileEditUI : MonoBehaviour
             applyButton.onClick.AddListener(() => UserManager.Instance.ApplyChanges());
         }
     }
+}
 }

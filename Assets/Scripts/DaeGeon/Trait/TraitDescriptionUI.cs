@@ -2,7 +2,9 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 
-public class TraitDescriptionUI : MonoBehaviour
+namespace DaeGeon
+{
+    public class TraitDescriptionUI : MonoBehaviour
 {
     public static TraitDescriptionUI Instance;
 
@@ -30,4 +32,5 @@ public class TraitDescriptionUI : MonoBehaviour
     {
         if (selectedNode != null) selectedNode.ConfirmUnlock();
     }
+}
 }

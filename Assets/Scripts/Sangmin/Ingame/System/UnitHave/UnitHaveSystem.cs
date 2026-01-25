@@ -23,22 +23,22 @@ public class UnitHaveSystem : MonoBehaviour
 
     public void Init()
     {
-        if (UnitManager.Instance == null)
+        if (DaeGeon.UnitManager.Instance == null)
             return;
-        foreach (var unitData in UnitManager.Instance.allUnits)
+        foreach (var unitData in DaeGeon.UnitManager.Instance.allUnits)
         {
-            if (!UnitManager.Instance.GetState(unitData.unitId).owned)
+            if (!DaeGeon.UnitManager.Instance.GetState(unitData.unitId).owned)
                 continue;
             switch (unitData.grade)
             {
-                case UnitGrade.NORMAL:
-                case UnitGrade.RARE:
-                case UnitGrade.UNIQUE:
+                case DaeGeon.UnitGrade.NORMAL:
+                case DaeGeon.UnitGrade.RARE:
+                case DaeGeon.UnitGrade.UNIQUE:
                     RandomSummon.Instance.UnitList.Add(unitData.prefab);
                     ObjectPoolManager.Instance.AddObjectInfo(unitData.prefab, 3);
                     break;
-                case UnitGrade.LEGEND:
-                case UnitGrade.MYTHIC:
+                case DaeGeon.UnitGrade.LEGEND:
+                case DaeGeon.UnitGrade.MYTHIC:
                     // 가능 조합식에 추가
                     ObjectPoolManager.Instance.AddObjectInfo(unitData.prefab, 1);
                     break;

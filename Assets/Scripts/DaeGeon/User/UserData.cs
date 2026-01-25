@@ -1,7 +1,9 @@
-using System; 
+using System;
 
-[Serializable]
-public class UserData
+namespace DaeGeon
+{
+    [System.Serializable]
+    public class UserData
 {
     public string userName;
     public string iconId;
@@ -10,4 +12,5 @@ public class UserData
     // 필요한 경우 레벨/경험치 추가
     public int level;
     public int exp;
+}
 }

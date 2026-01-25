@@ -1,11 +1,13 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-// 어떤 재화를 사용할지 선택하기 위한 열거형
-public enum CurrencyType { Cash, Gold }
-public enum GachaType { Unit, Equipment }
+namespace DaeGeon
+{
+    // 어떤 재화를 사용할지 선택하기 위한 열거형
+    public enum CurrencyType { Cash, Gold }
+    public enum GachaType { Unit, Equipment }
 
-public class GachaButton : MonoBehaviour
+    public class GachaButton : MonoBehaviour
 {
     [Header("가챠 종류 설정")]
     public GachaType gachaType;      // Unit 또는 Equipment (아까 만든 enum)
@@ -66,4 +68,5 @@ public class GachaButton : MonoBehaviour
         else
             CurrencyManager.Instance.SpendGold(amount); // CurrencyManager에 SpendGold 함수가 있다고 가정
     }
+}
 }

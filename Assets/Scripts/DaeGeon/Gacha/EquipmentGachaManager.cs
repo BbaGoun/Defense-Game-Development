@@ -2,7 +2,9 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class EquipmentGachaManager : MonoBehaviour
+namespace DaeGeon
+{
+    public class EquipmentGachaManager : MonoBehaviour
 {
     public static EquipmentGachaManager Instance;
 
@@ -83,4 +85,5 @@ public class EquipmentGachaManager : MonoBehaviour
     }
 
     public void CloseResultPanel() => resultPanel.SetActive(false);
+}
 }

@@ -1,7 +1,9 @@
 using UnityEngine;
 using TMPro;
 
-public class CurrencyUI : MonoBehaviour
+namespace DaeGeon
+{
+    public class CurrencyUI : MonoBehaviour
 {
     public static CurrencyUI Instance;
 
@@ -53,4 +55,5 @@ public class CurrencyUI : MonoBehaviour
             if (staminaText2 != null)
                 staminaText2.text = CurrencyManager.Instance.stamina.ToString();
         }
+}
 }

@@ -2,7 +2,9 @@ using System.Collections.Generic;
 using System.Linq; // 등급별 필터링을 위해 추가
 using UnityEngine;
 
-public class ItemDatabase : MonoBehaviour
+namespace DaeGeon
+{
+    public class ItemDatabase : MonoBehaviour
 {
     public static ItemDatabase Instance;
 
@@ -42,4 +44,5 @@ public class ItemDatabase : MonoBehaviour
         // equipmentItems 리스트에서 해당 등급만 골라냅니다.
         return equipmentItems.Where(it => it.grade == grade).ToList();
     }
+}
 }

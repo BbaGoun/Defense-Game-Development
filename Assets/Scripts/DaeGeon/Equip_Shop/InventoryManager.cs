@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InventoryManager : MonoBehaviour
+namespace DaeGeon
+{
+    public class InventoryManager : MonoBehaviour
 {
     public static InventoryManager Instance;
     
@@ -82,4 +84,5 @@ public class InventoryManager : MonoBehaviour
         // 장비 리스트 확인 (인스턴스들이 가진 원본 data와 비교)
         return equipItems.Exists(instance => instance.data == data);
     }
+}
 }

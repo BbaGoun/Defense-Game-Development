@@ -1,5 +1,7 @@
-[System.Serializable]
-public class PlayerStatus
+namespace DaeGeon
+{
+    [System.Serializable]
+    public class PlayerStatus
 {
     public int strength;
     public int agility;
@@ -20,4 +22,5 @@ public class PlayerStatus
             mana = a.mana + b.mana
         };
     }
+}
 }

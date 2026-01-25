@@ -1,7 +1,9 @@
 using System;
 using UnityEngine;
 
-public class UserManager : MonoBehaviour
+namespace DaeGeon
+{
+    public class UserManager : MonoBehaviour
 {
     public static UserManager Instance;
 
@@ -85,4 +87,5 @@ public class UserManager : MonoBehaviour
     // 프로필 바 등이 참조할 '실제 적용된' 데이터 가져오기
     public UserIconEntry GetCurrentIcon() => visualDB.GetIconEntry(Data.iconId);
     public UserFrameEntry GetCurrentFrame() => visualDB.GetFrameEntry(Data.frameId);
+}
 }

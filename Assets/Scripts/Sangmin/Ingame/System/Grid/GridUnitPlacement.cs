@@ -2,6 +2,7 @@ using Unity.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.EventSystems;
+using System;
 
 namespace Sangmin
 {
@@ -23,8 +24,15 @@ namespace Sangmin
 
         private int unitCount;
 
-        public int unitCountMax;
+        [Header("Unit Limit")]
+        [Tooltip("소환할 수 있는 최대 유닛 수")]
+        [SerializeField] private int unitCountMax = 21;
+        private int previousUnitCountMax; // 이전 값 추적용
+
         public GameObject gridParent;
+
+        // 유닛 수 변경 이벤트
+        public Action<int, int> OnUnitCountChanged; // (현재 유닛 수, 최대 유닛 수)
 
         public bool isCellSelected => selectedCell != null;
         public UnitCell[,] cellInfos { get; private set; }
@@ -49,6 +57,11 @@ namespace Sangmin
             }
         }
 
+        // Public Properties
+        public int UnitCount => unitCount;
+        public int UnitCountMax => unitCountMax;
+        public bool IsUnitLimitReached => unitCount >= unitCountMax;
+
         void Awake()
         {
             if (_instance == null)
@@ -59,6 +72,7 @@ namespace Sangmin
             cellSize = gridRoot.transform.localScale.x;
 
             unitCount = 0;
+            previousUnitCountMax = unitCountMax;
 
             // [행, 열] 순서로 2차원 배열 생성
             cellInfos = new UnitCell[gridHeight, gridWidth];
@@ -86,15 +100,181 @@ namespace Sangmin
 
         }
 
+        [Header("유닛 구매/판매 설정")]
+        [SerializeField] private int unitSellPrice = 1; // 유닛 판매 가격
+
+        /// <summary>
+        /// 일반 뽑기 (골드 사용)
+        /// </summary>
         public void PlaceUnitFromFront()
         {
             if (unitCount >= unitCountMax)
+            {
+                Debug.LogWarning($"유닛 소환 실패: 유닛 수 한계 도달 (현재: {unitCount}/{unitCountMax})");
                 return;
+            }
 
-            unitCount++;
-            // 돈 감소
+            // 뽑기 비용 확인 및 소비 (뽑기 비용은 IngameCurrencyManager에서 관리)
+            if (IngameCurrencyManager.Instance == null || !IngameCurrencyManager.Instance.SpendSummonCost())
+            {
+                int currentCost = IngameCurrencyManager.Instance != null ? IngameCurrencyManager.Instance.CurrentSummonCost : 0;
+                Debug.LogWarning($"유닛 구매 실패: 골드 부족 (필요: {currentCost})");
+                return;
+            }
 
             var unit = RandomSummon.Instance.SummonRandomUnit();
+            if (unit == null)
+            {
+                Debug.LogError("유닛 뽑기 실패!");
+                IngameCurrencyManager.Instance?.AddGold(IngameCurrencyManager.Instance.CurrentSummonCost); // 골드 환불
+                return;
+            }
+
+            // 유닛 배치 시도
+            if (PlaceUnitOnGrid(unit))
+            {
+                // 배치 성공 시에만 카운트 증가
+                unitCount++;
+                OnUnitCountChanged?.Invoke(unitCount, unitCountMax);
+            }
+            else
+            {
+                // 배치 실패 시 골드 환불
+                IngameCurrencyManager.Instance?.AddGold(IngameCurrencyManager.Instance.CurrentSummonCost);
+            }
+        }
+
+        /// <summary>
+        /// 희귀 등급 뽑기 (쥬얼 사용)
+        /// </summary>
+        public void PlaceRareUnit()
+        {
+            if (unitCount >= unitCountMax)
+            {
+                Debug.LogWarning($"유닛 소환 실패: 유닛 수 한계 도달 (현재: {unitCount}/{unitCountMax})");
+                return;
+            }
+
+            // 쥬얼 확인 및 소비
+            if (IngameCurrencyManager.Instance == null || !IngameCurrencyManager.Instance.SpendRareSummonCost())
+            {
+                int cost = IngameCurrencyManager.Instance != null ? IngameCurrencyManager.Instance.RareSummonCost : 0;
+                Debug.LogWarning($"희귀 등급 뽑기 실패: 쥬얼 부족 (필요: {cost})");
+                return;
+            }
+
+            var unit = RandomSummon.Instance != null ? RandomSummon.Instance.SummonRareUnit() : null;
+            if (unit == null)
+            {
+                Debug.LogError("희귀 등급 유닛 뽑기 실패!");
+                IngameCurrencyManager.Instance?.AddJewel(IngameCurrencyManager.Instance.RareSummonCost); // 쥬얼 환불
+                return;
+            }
+
+            // 유닛 배치 시도
+            if (PlaceUnitOnGrid(unit))
+            {
+                // 배치 성공 시에만 카운트 증가
+                unitCount++;
+                OnUnitCountChanged?.Invoke(unitCount, unitCountMax);
+            }
+            else
+            {
+                // 배치 실패 시 쥬얼 환불
+                IngameCurrencyManager.Instance?.AddJewel(IngameCurrencyManager.Instance.RareSummonCost);
+            }
+        }
+
+        /// <summary>
+        /// 영웅 등급 뽑기 (쥬얼 사용)
+        /// </summary>
+        public void PlaceHeroUnit()
+        {
+            if (unitCount >= unitCountMax)
+            {
+                Debug.LogWarning($"유닛 소환 실패: 유닛 수 한계 도달 (현재: {unitCount}/{unitCountMax})");
+                return;
+            }
+
+            // 쥬얼 확인 및 소비
+            if (IngameCurrencyManager.Instance == null || !IngameCurrencyManager.Instance.SpendHeroSummonCost())
+            {
+                int cost = IngameCurrencyManager.Instance != null ? IngameCurrencyManager.Instance.HeroSummonCost : 0;
+                Debug.LogWarning($"영웅 등급 뽑기 실패: 쥬얼 부족 (필요: {cost})");
+                return;
+            }
+
+            var unit = RandomSummon.Instance != null ? RandomSummon.Instance.SummonHeroUnit() : null;
+            if (unit == null)
+            {
+                Debug.LogError("영웅 등급 유닛 뽑기 실패!");
+                IngameCurrencyManager.Instance?.AddJewel(IngameCurrencyManager.Instance.HeroSummonCost); // 쥬얼 환불
+                return;
+            }
+
+            // 유닛 배치 시도
+            if (PlaceUnitOnGrid(unit))
+            {
+                // 배치 성공 시에만 카운트 증가
+                unitCount++;
+                OnUnitCountChanged?.Invoke(unitCount, unitCountMax);
+            }
+            else
+            {
+                // 배치 실패 시 쥬얼 환불
+                IngameCurrencyManager.Instance?.AddJewel(IngameCurrencyManager.Instance.HeroSummonCost);
+            }
+        }
+
+        /// <summary>
+        /// 전설 등급 뽑기 (쥬얼 사용)
+        /// </summary>
+        public void PlaceLegendUnit()
+        {
+            if (unitCount >= unitCountMax)
+            {
+                Debug.LogWarning($"유닛 소환 실패: 유닛 수 한계 도달 (현재: {unitCount}/{unitCountMax})");
+                return;
+            }
+
+            // 쥬얼 확인 및 소비
+            if (IngameCurrencyManager.Instance == null || !IngameCurrencyManager.Instance.SpendLegendSummonCost())
+            {
+                int cost = IngameCurrencyManager.Instance != null ? IngameCurrencyManager.Instance.LegendSummonCost : 0;
+                Debug.LogWarning($"전설 등급 뽑기 실패: 쥬얼 부족 (필요: {cost})");
+                return;
+            }
+
+            var unit = RandomSummon.Instance != null ? RandomSummon.Instance.SummonLegendUnit() : null;
+            if (unit == null)
+            {
+                Debug.LogError("전설 등급 유닛 뽑기 실패!");
+                IngameCurrencyManager.Instance?.AddJewel(IngameCurrencyManager.Instance.LegendSummonCost); // 쥬얼 환불
+                return;
+            }
+
+            // 유닛 배치 시도
+            if (PlaceUnitOnGrid(unit))
+            {
+                // 배치 성공 시에만 카운트 증가
+                unitCount++;
+                OnUnitCountChanged?.Invoke(unitCount, unitCountMax);
+            }
+            else
+            {
+                // 배치 실패 시 쥬얼 환불
+                IngameCurrencyManager.Instance?.AddJewel(IngameCurrencyManager.Instance.LegendSummonCost);
+            }
+        }
+
+        /// <summary>
+        /// 유닛을 그리드에 배치하는 공통 로직
+        /// </summary>
+        /// <returns>배치 성공 여부</returns>
+        private bool PlaceUnitOnGrid(Unit unit)
+        {
+            if (unit == null) return false;
+
             // 행(row)을 먼저, 그 다음 열(col)을 순회
             for (int row = 0; row < gridHeight; row++)
             {
@@ -113,9 +293,13 @@ namespace Sangmin
                     {
                         SynergyCountSystem.Instance.OutlineConnectedNode(new Vector2Int(selectedCell.row, selectedCell.col));
                     }
-                    return;
+                    return true;
                 }
             }
+
+            // 배치할 수 있는 셀이 없음
+            Debug.LogWarning("유닛 배치 실패: 사용 가능한 셀이 없습니다.");
+            return false;
         }
 
         public void SellUnit()
@@ -129,8 +313,13 @@ namespace Sangmin
 
             Debug.Log($"Sell Unit: {unitToSell.name}");
             unitCount--;
+            OnUnitCountChanged?.Invoke(unitCount, unitCountMax);
 
-            // 가치에 따라 돈 추가
+            // 골드 추가
+            if (IngameCurrencyManager.Instance != null)
+            {
+                IngameCurrencyManager.Instance.AddGold(unitSellPrice);
+            }
 
             // 셀에서 유닛 제거
             unitToSell.OnSell();
@@ -618,6 +807,81 @@ namespace Sangmin
 
                     cellInfos[row, col].SetIsCellActive(active);
                 }
+            }
+        }
+
+        #endregion
+
+        #region Unit Count Max Management
+
+        /// <summary>
+        /// 최대 유닛 수를 설정합니다. (런타임에서 동적으로 변경 가능)
+        /// </summary>
+        /// <param name="newMax">새로운 최대 유닛 수</param>
+        public void SetUnitCountMax(int newMax)
+        {
+            if (newMax < 0)
+            {
+                Debug.LogWarning($"SetUnitCountMax: 최대 유닛 수는 0 이상이어야 합니다. (요청값: {newMax})");
+                return;
+            }
+
+            if (unitCountMax != newMax)
+            {
+                unitCountMax = newMax;
+                previousUnitCountMax = newMax;
+                
+                // 최대값이 줄어들었고 현재 유닛 수가 새로운 최대값을 초과하는 경우 처리
+                if (unitCount > unitCountMax)
+                {
+                    Debug.LogWarning($"SetUnitCountMax: 최대 유닛 수가 {unitCountMax}로 줄어들었지만 현재 유닛 수({unitCount})가 더 많습니다.");
+                }
+
+                // 이벤트 발생하여 UI 업데이트
+                OnUnitCountChanged?.Invoke(unitCount, unitCountMax);
+            }
+        }
+
+        /// <summary>
+        /// 최대 유닛 수를 증가시킵니다.
+        /// </summary>
+        /// <param name="amount">증가할 양</param>
+        public void IncreaseUnitCountMax(int amount)
+        {
+            if (amount <= 0)
+            {
+                Debug.LogWarning($"IncreaseUnitCountMax: 증가량은 0보다 커야 합니다. (요청값: {amount})");
+                return;
+            }
+
+            SetUnitCountMax(unitCountMax + amount);
+        }
+
+        /// <summary>
+        /// 최대 유닛 수를 감소시킵니다.
+        /// </summary>
+        /// <param name="amount">감소할 양</param>
+        public void DecreaseUnitCountMax(int amount)
+        {
+            if (amount <= 0)
+            {
+                Debug.LogWarning($"DecreaseUnitCountMax: 감소량은 0보다 커야 합니다. (요청값: {amount})");
+                return;
+            }
+
+            SetUnitCountMax(Mathf.Max(0, unitCountMax - amount));
+        }
+
+        /// <summary>
+        /// Inspector에서 값이 변경되었을 때 감지 (런타임에서도 작동)
+        /// </summary>
+        private void Update()
+        {
+            // unitCountMax가 Inspector에서 직접 변경되었는지 감지
+            if (unitCountMax != previousUnitCountMax)
+            {
+                previousUnitCountMax = unitCountMax;
+                OnUnitCountChanged?.Invoke(unitCount, unitCountMax);
             }
         }
 

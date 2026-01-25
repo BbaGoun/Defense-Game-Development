@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MaterialManager : MonoBehaviour
+namespace DaeGeon
+{
+    public class MaterialManager : MonoBehaviour
 {
     public static MaterialManager Instance;
 
@@ -90,4 +92,5 @@ public class MaterialManager : MonoBehaviour
             MaterialUI.Instance.RefreshMaterialList();
         }
     }
+}
 }

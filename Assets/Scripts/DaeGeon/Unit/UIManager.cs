@@ -1,6 +1,8 @@
 using UnityEngine;
 
-public class UIManager : MonoBehaviour
+namespace DaeGeon
+{
+    public class UIManager : MonoBehaviour
 {
     public static UIManager Instance;
 
@@ -24,4 +26,5 @@ public class UIManager : MonoBehaviour
 
         popupObj.SetActive(true);
     }
+}
 }

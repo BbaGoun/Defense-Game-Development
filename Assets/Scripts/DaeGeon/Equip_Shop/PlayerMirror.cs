@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerMirror : MonoBehaviour
+namespace DaeGeon
+{
+    public class PlayerMirror : MonoBehaviour
 {
     public static PlayerMirror Instance;
 
@@ -40,5 +42,6 @@ public class PlayerMirror : MonoBehaviour
     {
         foreach (var unit in registeredUnits)
             unit.ClearPreview();
+    }
     }
 }

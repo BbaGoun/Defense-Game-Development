@@ -1,7 +1,9 @@
 using System;
 using UnityEngine;
 
-public class TraitManager : MonoBehaviour
+namespace DaeGeon
+{
+    public class TraitManager : MonoBehaviour
 {
     public static TraitManager Instance;
 
@@ -51,4 +53,5 @@ public class TraitManager : MonoBehaviour
         OnPointsChanged?.Invoke();
         return true;
     }
+}
 }

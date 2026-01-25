@@ -2,7 +2,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class DismantleResultUI : MonoBehaviour
+namespace DaeGeon
+{
+    public class DismantleResultUI : MonoBehaviour
 {
     public static DismantleResultUI Instance;
 
@@ -51,4 +53,5 @@ public class DismantleResultUI : MonoBehaviour
     {
         panel.SetActive(false);
     }
+}
 }

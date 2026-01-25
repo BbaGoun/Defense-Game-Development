@@ -2,7 +2,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class ItemDetailUI : MonoBehaviour
+namespace DaeGeon
+{
+    public class ItemDetailUI : MonoBehaviour
 {
     public static ItemDetailUI Instance;
 
@@ -206,4 +208,5 @@ public class ItemDetailUI : MonoBehaviour
         if (MaterialUI.Instance != null) 
             MaterialUI.Instance.RefreshMaterialList(); // 재료 리스트 새로고침
     }
+}
 }

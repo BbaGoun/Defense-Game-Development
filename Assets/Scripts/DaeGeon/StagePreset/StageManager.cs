@@ -3,7 +3,9 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Collections;
 
-public class StageManager : MonoBehaviour
+namespace DaeGeon
+{
+    public class StageManager : MonoBehaviour
 {
     public ScrollRect scrollRect;
     public RectTransform contentParent;
@@ -81,4 +83,5 @@ public class StageManager : MonoBehaviour
             }
         }
     }
+}
 }

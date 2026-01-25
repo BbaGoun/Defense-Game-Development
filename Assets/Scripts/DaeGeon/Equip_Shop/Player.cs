@@ -1,6 +1,8 @@
 using UnityEngine;
 
-public class Player : MonoBehaviour
+namespace DaeGeon
+{
+    public class Player : MonoBehaviour
 {
     // 데이터의 기준점이 되는 단 하나의 인스턴스
     public static Player Instance; 
@@ -230,4 +232,5 @@ public class Player : MonoBehaviour
         if (slot == null) return false;
         return slot.itemID == data.itemID;
     }
+}
 }

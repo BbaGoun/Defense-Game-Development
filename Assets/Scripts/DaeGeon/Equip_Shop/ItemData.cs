@@ -1,39 +1,41 @@
 using UnityEngine;
 
-// 1. 장비 종류 정의
-public enum EquipmentType 
+namespace DaeGeon
 {
-    None,
-    HELMET, 
-    CHEST, 
-    LEGS, 
-    WEAPON, 
-    BOOTS, 
-    GLOVES
-}
+    // 1. 장비 종류 정의
+    public enum EquipmentType 
+    {
+        None,
+        HELMET, 
+        CHEST, 
+        LEGS, 
+        WEAPON, 
+        BOOTS, 
+        GLOVES
+    }
 
-// 2. 외형 장착 위치 정의
-public enum AttachPoint 
-{
-    None,
-    HEAD, 
-    FACE, 
-    BODY
-}
+    // 2. 외형 장착 위치 정의
+    public enum AttachPoint 
+    {
+        None,
+        HEAD, 
+        FACE, 
+        BODY
+    }
 
-public enum ItemGrade 
-{
-    None,
-    NORMAL,
-    RARE,
-    UNIQUE,
-    LEGENDARY,
-    MYTHIC
-}
+    public enum ItemGrade 
+    {
+        None,
+        NORMAL,
+        RARE,
+        UNIQUE,
+        LEGENDARY,
+        MYTHIC
+    }
 
-[CreateAssetMenu(fileName = "New Item", menuName = "Game/Item")]
-public class ItemData : ScriptableObject
-{
+    [CreateAssetMenu(fileName = "New Item", menuName = "Game/Item")]
+    public class ItemData : ScriptableObject
+    {
     [Header("--- 공통 정보 ---")]
     public string itemID;      
     public string itemName;    
@@ -63,6 +65,7 @@ public class ItemData : ScriptableObject
     public int baseMaterialCount;    // 기본 필요 개수
 
     [Header("--- 분해 설정 ---")]
-    public ItemData dismantleResult; // 분해 시 나올 재료 (강화석 등)
-    public int dismantleAmount;     // 분해 시 획득할 개수
+        public ItemData dismantleResult; // 분해 시 나올 재료 (강화석 등)
+        public int dismantleAmount;     // 분해 시 획득할 개수
+    }
 }

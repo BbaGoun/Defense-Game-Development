@@ -2,7 +2,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class UserFrameSelectButton : MonoBehaviour
+namespace DaeGeon
+{
+    public class UserFrameSelectButton : MonoBehaviour
 {
     [SerializeField] private Image frameImage;
     [SerializeField] private TMP_Text nameText;
@@ -52,4 +54,5 @@ public class UserFrameSelectButton : MonoBehaviour
         bool isSelected = UserManager.Instance.SelectedFrameId == frameId;
         selectedMark.SetActive(isSelected);
     }
+}
 }

@@ -2,7 +2,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class InventoryUI : MonoBehaviour
+namespace DaeGeon
+{
+    public class InventoryUI : MonoBehaviour
 {
     public static InventoryUI Instance;
 
@@ -124,4 +126,5 @@ public class InventoryUI : MonoBehaviour
             slotImage.color = new Color(1f, 1f, 1f, 0f);
         }
     }
+}
 }

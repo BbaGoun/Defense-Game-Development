@@ -3,7 +3,9 @@ using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
 
-public class ShopUI : MonoBehaviour
+namespace DaeGeon
+{
+    public class ShopUI : MonoBehaviour
 {
     public Transform content;                   // ScrollView → Content
     public GameObject itemButtonPrefab;         // ShopItemButton 프리팹
@@ -41,4 +43,5 @@ public class ShopUI : MonoBehaviour
             btn.Setup(data);
         }
     }
+}
 }

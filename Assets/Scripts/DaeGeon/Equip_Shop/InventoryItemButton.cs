@@ -2,7 +2,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class InventoryItemButton : MonoBehaviour
+namespace DaeGeon
+{
+    public class InventoryItemButton : MonoBehaviour
 {
     public Image icon;
     public TMP_Text nameText;
@@ -102,4 +104,5 @@ public class InventoryItemButton : MonoBehaviour
             default: return ap.ToString();
         }
     }
+}
 }

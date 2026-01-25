@@ -2,19 +2,21 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-[System.Serializable]
-public class SaveData
+namespace DaeGeon
 {
-    public List<string> inventoryItemIDs = new List<string>();
-    public string headSlotID;
-    public string bodySlotID;
-    public int gold;
-    public int cash;
-    public int stamina;
-}
+    [System.Serializable]
+    public class SaveData
+    {
+        public List<string> inventoryItemIDs = new List<string>();
+        public string headSlotID;
+        public string bodySlotID;
+        public int gold;
+        public int cash;
+        public int stamina;
+    }
 
-public class SaveManager : MonoBehaviour
-{
+    public class SaveManager : MonoBehaviour
+    {
     public static SaveManager Instance;
 
     private string savePath => Path.Combine(Application.persistentDataPath, "save.json");
@@ -186,8 +188,9 @@ public class SaveManager : MonoBehaviour
             File.Delete(savePath);
     }
 
-    public bool HasSave()
-    {
-        return File.Exists(savePath);
+        public bool HasSave()
+        {
+            return File.Exists(savePath);
+        }
     }
 }

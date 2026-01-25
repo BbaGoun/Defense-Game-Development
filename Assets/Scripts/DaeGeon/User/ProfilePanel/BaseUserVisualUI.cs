@@ -1,7 +1,9 @@
 using UnityEngine;
 using System.Collections;
 
-public abstract class BaseUserVisualUI : MonoBehaviour
+namespace DaeGeon
+{
+    public abstract class BaseUserVisualUI : MonoBehaviour
 {
     // 임시 선택 이벤트를 사용할지 여부 (기본 false)
     protected virtual bool UseSelectionEvent => false;
@@ -58,4 +60,5 @@ public abstract class BaseUserVisualUI : MonoBehaviour
     }
 
     protected abstract void Refresh();
+}
 }

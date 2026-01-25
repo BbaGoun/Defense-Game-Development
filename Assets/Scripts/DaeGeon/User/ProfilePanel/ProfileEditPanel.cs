@@ -2,7 +2,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class ProfileEditPanel : BaseUserVisualUI
+namespace DaeGeon
+{
+    public class ProfileEditPanel : BaseUserVisualUI
 {
     [SerializeField] private Image icon;
     [SerializeField] private Image frame;
@@ -39,4 +41,5 @@ public class ProfileEditPanel : BaseUserVisualUI
             acquireDescText.text = um.LastSelectedDesc;
         }
     }
+}
 }

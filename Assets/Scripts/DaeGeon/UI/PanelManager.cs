@@ -1,7 +1,9 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PanelManager : MonoBehaviour
+namespace DaeGeon
+{
+    public class PanelManager : MonoBehaviour
 {
     public GameObject[] panels;
 
@@ -39,4 +41,5 @@ public class PanelManager : MonoBehaviour
                 panels[i].SetActive(i == index);
         }
     }
+}
 }

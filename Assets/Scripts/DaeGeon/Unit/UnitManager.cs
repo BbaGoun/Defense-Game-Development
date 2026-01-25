@@ -1,7 +1,9 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class UnitManager : MonoBehaviour
+namespace DaeGeon
+{
+    public class UnitManager : MonoBehaviour
 {
     public static UnitManager Instance;
 
@@ -72,4 +74,5 @@ public class UnitManager : MonoBehaviour
             _ => null
         };
     }
+}
 }

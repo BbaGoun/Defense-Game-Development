@@ -3,7 +3,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
 
-public class EquipmentUI : MonoBehaviour
+namespace DaeGeon
+{
+    public class EquipmentUI : MonoBehaviour
 {
     public static EquipmentUI Instance;
 
@@ -159,4 +161,5 @@ public class EquipmentUI : MonoBehaviour
         EquipmentType.GLOVES => glovesSlot, 
         _ => null
     };
+}
 }

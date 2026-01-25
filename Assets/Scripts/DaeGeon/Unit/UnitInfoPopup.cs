@@ -2,7 +2,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class UnitInfoPopup : MonoBehaviour
+namespace DaeGeon
+{
+    public class UnitInfoPopup : MonoBehaviour
 {
     [Header("UI")]
     public Image icon;
@@ -114,4 +116,5 @@ public class UnitInfoPopup : MonoBehaviour
     {
         Destroy(gameObject);
     }
+}
 }

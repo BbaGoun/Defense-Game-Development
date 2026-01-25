@@ -18,13 +18,19 @@ namespace Sangmin
         private void OnEnable()
         {
             if (animator != null)
+            {
                 animator.enabled = true;
+                animator.Rebind();
+            }
         }
 
         private void OnDisable()
         {
             if (animator != null)
+            {
                 animator.enabled = false;
+                animator.Rebind();
+            }
         }
 
         public virtual void ReleaseObject()

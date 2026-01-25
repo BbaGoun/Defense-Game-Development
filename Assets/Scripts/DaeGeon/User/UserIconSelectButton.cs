@@ -2,7 +2,9 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UserIconSelectButton : MonoBehaviour
+namespace DaeGeon
+{
+    public class UserIconSelectButton : MonoBehaviour
 {
     [SerializeField] private Image iconImage;
     [SerializeField] private GameObject selectedMark;
@@ -35,4 +37,5 @@ public class UserIconSelectButton : MonoBehaviour
     {
         selectedMark.SetActive(UserManager.Instance.SelectedIconId == iconId);
     }
+}
 }

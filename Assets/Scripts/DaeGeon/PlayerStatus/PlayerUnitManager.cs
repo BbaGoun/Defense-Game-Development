@@ -1,7 +1,9 @@
 using System;
 using UnityEngine;
 
-public class PlayerUnitManager : MonoBehaviour
+namespace DaeGeon
+{
+    public class PlayerUnitManager : MonoBehaviour
 {
     public static PlayerUnitManager Instance;
 
@@ -58,4 +60,5 @@ public class PlayerUnitManager : MonoBehaviour
         outStatus = Status;
         return Status != null;
     }
+}
 }

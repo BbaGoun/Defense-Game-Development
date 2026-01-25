@@ -1,6 +1,8 @@
 using UnityEngine;
 
-public class UnitPrefab : MonoBehaviour
+namespace DaeGeon
+{
+    public class UnitPrefab : MonoBehaviour
 {
     [Header("Status")]
     public int shardCount = 0;   // 현재 조각 수
@@ -58,4 +60,5 @@ public class UnitPrefab : MonoBehaviour
         attackSpeed *= multiplier;
         range *= multiplier;
     }
+}
 }

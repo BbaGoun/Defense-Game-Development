@@ -20,7 +20,7 @@ MonoBehaviour:
   attackBehaviour: {fileID: 11400000, guid: e5e6eb59b36a8d4468a1d4f55134fbcb, type: 2}
   synergies: []
   radius: 0
-  projectilePrefab: {fileID: 8597705205972681036, guid: 59bd9cda5ecc8bd43b2c0ad1b2f9e0dd, type: 3}
+  projectilePrefab: {fileID: 4098904906678458094, guid: 314ff5ae531d76648938be4257da88ed, type: 3}
   projectileSpeed: 12
   maxLifetime: 2
   attackDamageBonus: 0

@@ -1,8 +1,10 @@
 using UnityEngine;
 using System; // DateTime을 사용하기 위해 추가
 
-[System.Serializable]
-public class ItemInstance
+namespace DaeGeon
+{
+    [System.Serializable]
+    public class ItemInstance
 {
     public string instanceID;
     public ItemData data;
@@ -83,4 +85,5 @@ public class ItemInstance
 
         Debug.Log($"{data.itemName} 강화 성공! 현재 레벨: +{upgradeLevel}");
     }
+}
 }

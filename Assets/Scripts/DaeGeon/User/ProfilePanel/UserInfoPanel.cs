@@ -1,7 +1,9 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UserInfoPanel : BaseUserVisualUI
+namespace DaeGeon
+{
+    public class UserInfoPanel : BaseUserVisualUI
 {
     [SerializeField] private Image icon;
     [SerializeField] private Image frame;
@@ -16,4 +18,5 @@ public class UserInfoPanel : BaseUserVisualUI
         if (icon != null && iconEntry != null) icon.sprite = iconEntry.sprite;
         if (frame != null && frameEntry != null) frame.sprite = frameEntry.sprite;
     }
+}
 }

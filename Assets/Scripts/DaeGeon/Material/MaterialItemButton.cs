@@ -2,7 +2,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class MaterialItemButton : MonoBehaviour
+namespace DaeGeon
+{
+    public class MaterialItemButton : MonoBehaviour
 {
     public Image iconImage;
     public TextMeshProUGUI nameText;
@@ -41,4 +43,5 @@ public class MaterialItemButton : MonoBehaviour
             ItemDetailUI.Instance.Open(currentInstance);
         }
     }
+}
 }

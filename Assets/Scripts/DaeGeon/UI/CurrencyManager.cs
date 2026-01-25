@@ -1,6 +1,8 @@
 using UnityEngine;
 
-public class CurrencyManager : MonoBehaviour
+namespace DaeGeon
+{
+    public class CurrencyManager : MonoBehaviour
 {
     public static CurrencyManager Instance;
 
@@ -66,4 +68,5 @@ public class CurrencyManager : MonoBehaviour
         stamina += amount;
         CurrencyUI.Instance.UpdateStamina();
     }
+}
 }

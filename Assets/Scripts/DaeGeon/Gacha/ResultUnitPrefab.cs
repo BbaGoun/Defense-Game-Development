@@ -2,7 +2,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class ResultUnitPrefab : MonoBehaviour
+namespace DaeGeon
+{
+    public class ResultUnitPrefab : MonoBehaviour
 {
     public Image icon;
     public Image gradeBg;
@@ -37,4 +39,5 @@ public class ResultUnitPrefab : MonoBehaviour
             default: return "알수없음";
         }
     }
+}
 }

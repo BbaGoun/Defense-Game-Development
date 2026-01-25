@@ -1,6 +1,8 @@
 using UnityEngine;
 
-public class MaterialUI : MonoBehaviour
+namespace DaeGeon
+{
+    public class MaterialUI : MonoBehaviour
 {
     public static MaterialUI Instance;
 
@@ -29,4 +31,5 @@ public class MaterialUI : MonoBehaviour
             obj.GetComponent<MaterialItemButton>().Setup(item);
         }
     }
+}
 }

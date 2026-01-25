@@ -2,7 +2,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class EquipmentItemButton : MonoBehaviour
+namespace DaeGeon
+{
+    public class EquipmentItemButton : MonoBehaviour
 {
     public Image iconImage;
     public TextMeshProUGUI nameText;
@@ -82,4 +84,5 @@ public class EquipmentItemButton : MonoBehaviour
         ItemGrade.MYTHIC => Color.orange,
         _ => Color.white
     };
+}
 }

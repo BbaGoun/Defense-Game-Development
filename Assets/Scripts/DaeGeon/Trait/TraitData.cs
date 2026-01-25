@@ -1,7 +1,9 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "NewTrait", menuName = "Traits/TraitData")]
-public class TraitData : ScriptableObject
+namespace DaeGeon
+{
+    [CreateAssetMenu(fileName = "NewTrait", menuName = "Traits/TraitData")]
+    public class TraitData : ScriptableObject
 {
     [Header("기본 정보")]
     public string traitName;
@@ -20,4 +22,5 @@ public class TraitData : ScriptableObject
     public float addAgiMultiplier;
     public float addIntMultiplier;
     public float addManaMultiplier;
+}
 }

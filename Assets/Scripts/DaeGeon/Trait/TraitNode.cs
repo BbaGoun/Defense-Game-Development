@@ -1,7 +1,9 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class TraitNode : MonoBehaviour
+namespace DaeGeon
+{
+    public class TraitNode : MonoBehaviour
 {
     [Header("Data Settings")]
     [SerializeField] private TraitData traitData;
@@ -62,4 +64,5 @@ public class TraitNode : MonoBehaviour
             lockOverlay.SetActive(!isUnlocked);
         }
     }
+}
 }

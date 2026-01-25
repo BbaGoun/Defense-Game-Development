@@ -2,7 +2,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class UnitPrefabUI : MonoBehaviour
+namespace DaeGeon
+{
+    public class UnitPrefabUI : MonoBehaviour
 {
     public Image icon;
     public TMP_Text nameText;
@@ -58,4 +60,5 @@ public class UnitPrefabUI : MonoBehaviour
     {
         return UnitManager.Instance.GetGradeSprite(grade);
     }
+}
 }

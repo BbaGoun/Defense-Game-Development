@@ -2,7 +2,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class ShopItemButton : MonoBehaviour
+namespace DaeGeon
+{
+    public class ShopItemButton : MonoBehaviour
 {
     public Image icon;       
     public TMP_Text nameText; 
@@ -60,4 +62,5 @@ public class ShopItemButton : MonoBehaviour
         // 품절 처리 (재구매 불가 시)
         buyButton.interactable = false;
     }
+}
 }
