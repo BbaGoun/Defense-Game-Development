@@ -105,6 +105,12 @@ namespace Sangmin
                 Debug.Log($"{enemyType} 처치! 골드 +{goldReward} (생성 웨이브: {spawnWave}, 현재 웨이브: {(StageSystem.Instance != null ? StageSystem.Instance.currentWave.ToString() : "N/A")})");
             }
 
+            // 쥬얼 보상 시스템 이벤트: 보스 처치
+            if (isBoss && spawnWave > 0)
+            {
+                JewelEventBus.RaiseBossKilled(spawnWave);
+            }
+
             if (poolAble != null)
             {
                 poolAble.ReleaseObject();

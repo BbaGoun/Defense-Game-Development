@@ -313,6 +313,18 @@ namespace Sangmin
                     _nodeIdToComponent[id] = comp;
                 }
             }
+
+            // 3-1) 최대 컴포넌트 길이(=시너지 최대 길이) 계산 및 이벤트 발행
+            int maxLen = 0;
+            foreach (var comp in _allComponents.Values)
+            {
+                if (comp == null) continue;
+                if (comp.Count > maxLen) maxLen = comp.Count;
+            }
+            if (maxLen > 0)
+            {
+                JewelEventBus.RaiseSynergyMaxLengthUpdated(maxLen);
+            }
             // Debug.Log($"현재 연결된 컴포넌트 개수: {_allComponents.Count}");
             // int index = 1;
             // foreach (var comp in _allComponents.Values)

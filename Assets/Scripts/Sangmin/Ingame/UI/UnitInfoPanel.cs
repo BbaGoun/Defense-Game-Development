@@ -137,7 +137,7 @@ namespace Sangmin
                     return "일반";
                 case Grade.RARE:
                     return "희귀";
-                case Grade.HERO:
+                case Grade.UNIQUE:
                     return "영웅";
                 case Grade.LEGEND:
                     return "전설";

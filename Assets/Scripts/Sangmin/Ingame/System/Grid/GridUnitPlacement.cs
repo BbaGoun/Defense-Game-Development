@@ -136,6 +136,9 @@ namespace Sangmin
                 // 배치 성공 시에만 카운트 증가
                 unitCount++;
                 OnUnitCountChanged?.Invoke(unitCount, unitCountMax);
+
+                // 쥬얼 보상 시스템 이벤트: 일반 뽑기 성공(배치 성공)
+                JewelEventBus.RaiseNormalSummonPlaced(unit);
             }
             else
             {
@@ -293,6 +296,9 @@ namespace Sangmin
                     {
                         SynergyCountSystem.Instance.OutlineConnectedNode(new Vector2Int(selectedCell.row, selectedCell.col));
                     }
+
+                    // 쥬얼 보상 시스템 이벤트: 어떤 방식이든 유닛 배치 성공
+                    JewelEventBus.RaiseAnyUnitPlaced(unit);
                     return true;
                 }
             }

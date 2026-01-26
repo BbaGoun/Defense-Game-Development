@@ -85,6 +85,7 @@ namespace Sangmin
         [SerializeField] private Outliner outliner;
         [SerializeField] private PoolAble poolAble;
         [SerializeField] private Animator animator;
+        [SerializeField] private UnitAura unitAura;
 
         [SerializeField]
         private List<Enemy> enemiesInRange = new List<Enemy>();
@@ -123,6 +124,8 @@ namespace Sangmin
             outliner = GetComponent<Outliner>();
             poolAble = GetComponent<PoolAble>();
             animator = GetComponent<Animator>();
+            unitAura = GetComponentInChildren<UnitAura>(false);
+
             if (rangeIndicator == null)
             {
                 Debug.LogError($"RangeIndicator가 배정되지 않음 : {gameObject.name}");
@@ -131,6 +134,7 @@ namespace Sangmin
             rangeIndicator.InitializeSpriteRenderer(finalAttackRange);
 
             unitData.attackBehaviour.Initialize(this);
+            unitAura.Initialize(this);
         }
 
         void OnEnable()

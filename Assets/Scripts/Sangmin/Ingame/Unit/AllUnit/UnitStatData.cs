@@ -8,7 +8,7 @@ namespace Sangmin
     {
         NORMAL,
         RARE,
-        HERO,
+        UNIQUE,
         LEGEND,
         MYTHIC
     }

@@ -157,48 +157,44 @@ namespace Sangmin
             heroUnitList.Clear();
             legendUnitList.Clear();
 
-            if (DaeGeon.UnitManager.Instance == null)
-            {
-                Debug.LogWarning("[RandomSummon] UnitManager.Instance가 없습니다! 등급별 리스트를 초기화할 수 없습니다.");
-                return;
-            }
-
             if (UnitList == null || UnitList.Count == 0)
             {
                 Debug.LogWarning("[RandomSummon] UnitList가 비어있습니다! 등급별 리스트를 초기화할 수 없습니다.");
                 return;
             }
 
-            // UnitList의 각 프리팹을 UnitManager의 allUnits와 비교하여 등급 확인
+            // UnitList의 각 프리팹에서 Unit 컴포넌트를 가져와 등급 확인
             foreach (GameObject unitPrefab in UnitList)
             {
                 if (unitPrefab == null) continue;
 
-                // UnitManager에서 해당 프리팹과 일치하는 UnitData 찾기
-                DaeGeon.UnitData matchingUnitData = null;
-                foreach (var unitData in DaeGeon.UnitManager.Instance.allUnits)
+                // 프리팹에서 Unit 컴포넌트 가져오기
+                Unit unitComponent = unitPrefab.GetComponent<Unit>();
+                if (unitComponent == null)
                 {
-                    if (unitData.prefab == unitPrefab)
-                    {
-                        matchingUnitData = unitData;
-                        break;
-                    }
+                    Debug.LogWarning($"[RandomSummon] {unitPrefab.name}에 Unit 컴포넌트가 없습니다.");
+                    continue;
                 }
 
-                if (matchingUnitData == null) continue;
+                // UnitData가 없으면 스킵
+                if (unitComponent.unitData == null)
+                {
+                    Debug.LogWarning($"[RandomSummon] {unitPrefab.name}의 UnitData가 null입니다.");
+                    continue;
+                }
 
                 // 등급에 따라 분류
-                switch (matchingUnitData.grade)
+                switch (unitComponent.unitData.grade)
                 {
-                    case DaeGeon.UnitGrade.RARE:
+                    case Grade.RARE:
                         if (!rareUnitList.Contains(unitPrefab))
                             rareUnitList.Add(unitPrefab);
                         break;
-                    case DaeGeon.UnitGrade.UNIQUE: // UNIQUE를 HERO로 매핑
+                    case Grade.UNIQUE: // UNIQUE를 HERO로 매핑
                         if (!heroUnitList.Contains(unitPrefab))
                             heroUnitList.Add(unitPrefab);
                         break;
-                    case DaeGeon.UnitGrade.LEGEND:
+                    case Grade.LEGEND:
                         if (!legendUnitList.Contains(unitPrefab))
                             legendUnitList.Add(unitPrefab);
                         break;
