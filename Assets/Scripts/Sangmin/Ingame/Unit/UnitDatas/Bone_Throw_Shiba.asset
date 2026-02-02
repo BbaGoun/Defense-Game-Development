@@ -15,7 +15,7 @@ MonoBehaviour:
   attackDamage: 100
   attackSpeed: 1
   attackRange: 2
-  grade: 4
+  grade: 0
   attackEffect: {fileID: 8935922844047154205, guid: 9b795a203e239c84a83360c2eef362f7, type: 3}
   attackBehaviour: {fileID: 11400000, guid: e5e6eb59b36a8d4468a1d4f55134fbcb, type: 2}
   synergies: []

@@ -1118,7 +1118,6 @@ MonoBehaviour:
   blockedColor: {r: 1, g: 0, b: 0, a: 1}
   dragPathColor: {r: 0, g: 1, b: 1, a: 1}
   dragTargetColor: {r: 0, g: 0, b: 1, a: 1}
-  unitSellPrice: 1
 --- !u!120 &335647663
 LineRenderer:
   serializedVersion: 3
@@ -6031,6 +6030,11 @@ MonoBehaviour:
   rareSummonCost: 50
   heroSummonCost: 100
   legendSummonCost: 200
+  normalUnitSellPriceMultiplier: 1
+  rareUnitSellPriceMultiplier: 3
+  uniqueUnitSellPriceMultiplier: 9
+  legendUnitSellPriceMultiplier: 21
+  mythicUnitSellPriceMultiplier: 51
 --- !u!114 &1314293607
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8210,12 +8214,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7908a1dfe617d84f918f3975c874f71, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RandomSummon
-  UnitList:
-  - {fileID: 1143663859429401536, guid: d28597f4f0dea1a4c92e818346c62490, type: 3}
-  - {fileID: 1143663859429401536, guid: 7ede9208b7c2b7a4aa0f9bfd0bccc69f, type: 3}
+  normalUnitList: []
   rareUnitList: []
-  heroUnitList: []
+  uniqueUnitList: []
   legendUnitList: []
+  normalSummonProbability: 70
+  rareSummonProbability: 20
+  uniqueSummonProbability: 8
+  legendSummonProbability: 2
 --- !u!1001 &1711675707
 PrefabInstance:
   m_ObjectHideFlags: 0

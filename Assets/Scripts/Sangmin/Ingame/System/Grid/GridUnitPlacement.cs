@@ -36,8 +36,7 @@ namespace Sangmin
 
         public bool isCellSelected => selectedCell != null;
         public UnitCell[,] cellInfos { get; private set; }
-        [SerializeField]
-        private UnitCell selectedCell;
+        [SerializeField] private UnitCell selectedCell;
         private Unit currentSelectedUnit;
 
         [Header("Colors")]
@@ -100,13 +99,10 @@ namespace Sangmin
 
         }
 
-        [Header("유닛 구매/판매 설정")]
-        [SerializeField] private int unitSellPrice = 1; // 유닛 판매 가격
-
         /// <summary>
         /// 일반 뽑기 (골드 사용)
         /// </summary>
-        public void PlaceUnitFromFront()
+        public void SummonRandomUnit()
         {
             if (unitCount >= unitCountMax)
             {
@@ -117,12 +113,10 @@ namespace Sangmin
             // 뽑기 비용 확인 및 소비 (뽑기 비용은 IngameCurrencyManager에서 관리)
             if (IngameCurrencyManager.Instance == null || !IngameCurrencyManager.Instance.SpendSummonCost())
             {
-                int currentCost = IngameCurrencyManager.Instance != null ? IngameCurrencyManager.Instance.CurrentSummonCost : 0;
-                Debug.LogWarning($"유닛 구매 실패: 골드 부족 (필요: {currentCost})");
                 return;
             }
 
-            var unit = RandomSummon.Instance.SummonRandomUnit();
+            var unit = RandomSummon.Instance.GetRandomUnit();
             if (unit == null)
             {
                 Debug.LogError("유닛 뽑기 실패!");
@@ -150,7 +144,7 @@ namespace Sangmin
         /// <summary>
         /// 희귀 등급 뽑기 (쥬얼 사용)
         /// </summary>
-        public void PlaceRareUnit()
+        public void SummonRareUnit()
         {
             if (unitCount >= unitCountMax)
             {
@@ -166,7 +160,7 @@ namespace Sangmin
                 return;
             }
 
-            var unit = RandomSummon.Instance != null ? RandomSummon.Instance.SummonRareUnit() : null;
+            var unit = RandomSummon.Instance != null ? RandomSummon.Instance.GetRareUnit() : null;
             if (unit == null)
             {
                 Debug.LogError("희귀 등급 유닛 뽑기 실패!");
@@ -191,7 +185,7 @@ namespace Sangmin
         /// <summary>
         /// 영웅 등급 뽑기 (쥬얼 사용)
         /// </summary>
-        public void PlaceHeroUnit()
+        public void SummonUniqueUnit()
         {
             if (unitCount >= unitCountMax)
             {
@@ -207,7 +201,7 @@ namespace Sangmin
                 return;
             }
 
-            var unit = RandomSummon.Instance != null ? RandomSummon.Instance.SummonHeroUnit() : null;
+            var unit = RandomSummon.Instance != null ? RandomSummon.Instance.GetUniqueUnit() : null;
             if (unit == null)
             {
                 Debug.LogError("영웅 등급 유닛 뽑기 실패!");
@@ -232,7 +226,7 @@ namespace Sangmin
         /// <summary>
         /// 전설 등급 뽑기 (쥬얼 사용)
         /// </summary>
-        public void PlaceLegendUnit()
+        public void SummonLegendUnit()
         {
             if (unitCount >= unitCountMax)
             {
@@ -248,7 +242,7 @@ namespace Sangmin
                 return;
             }
 
-            var unit = RandomSummon.Instance != null ? RandomSummon.Instance.SummonLegendUnit() : null;
+            var unit = RandomSummon.Instance != null ? RandomSummon.Instance.GetLegendUnit() : null;
             if (unit == null)
             {
                 Debug.LogError("전설 등급 유닛 뽑기 실패!");
@@ -278,28 +272,58 @@ namespace Sangmin
         {
             if (unit == null) return false;
 
-            // 행(row)을 먼저, 그 다음 열(col)을 순회
-            for (int row = 0; row < gridHeight; row++)
+            int placementCount = RandomSummon.Instance.GetUnitPlacementCount(unit);
+
+            // 3의 배수인 경우나 신화 등급 유닛인 경우 유닛을 배치, 그 외일 경우 유닛을 겹치기
+            if (placementCount % 3 == 0 || unit.unitData.grade == Grade.MYTHIC)
             {
-                for (int col = 0; col < gridWidth; col++)
+                // 행(row)을 먼저, 그 다음 열(col)을 순회
+                for (int row = 0; row < gridHeight; row++)
                 {
-                    // 비활성화된 셀이거나 이미 점유된 셀은 건너뛰기
-                    if (cellInfos[row, col] == null || !cellInfos[row, col].isCellActive || cellInfos[row, col].isOccupied)
-                        continue;
-
-                    // 시너지 계산 시스템에 Unit을 생성하는 코드
-                    SynergyCountSystem.Instance.SpawnUnit(new Vector2Int(row, col), mask: unit.chain, unit);
-                    // UnitCell에 유닛을 배정하는 코드
-                    cellInfos[row, col].PlaceUnit(unit);
-
-                    if (selectedCell != null && currentSelectedUnit != null)
+                    for (int col = 0; col < gridWidth; col++)
                     {
-                        SynergyCountSystem.Instance.OutlineConnectedNode(new Vector2Int(selectedCell.row, selectedCell.col));
-                    }
+                        // 비활성화된 셀은 건너뛰기기
+                        if (cellInfos[row, col] == null || !cellInfos[row, col].isCellActive || cellInfos[row, col].isOccupied)
+                            continue;
 
-                    // 쥬얼 보상 시스템 이벤트: 어떤 방식이든 유닛 배치 성공
-                    JewelEventBus.RaiseAnyUnitPlaced(unit);
-                    return true;
+                        var unitInstance = RandomSummon.Instance.SummonUnit(unit);
+
+                        // 시너지 계산 시스템에 Unit을 생성하는 코드
+                        SynergyCountSystem.Instance.SpawnUnit(new Vector2Int(row, col), mask: unitInstance.chain, unitInstance);
+                        // UnitCell에 유닛을 배정하는 코드
+                        cellInfos[row, col].PlaceUnit(unitInstance);
+
+                        if (selectedCell != null && currentSelectedUnit != null)
+                        {
+                            SynergyCountSystem.Instance.OutlineConnectedNode(new Vector2Int(selectedCell.row, selectedCell.col));
+                        }
+
+                        // 쥬얼 보상 시스템 이벤트: 어떤 방식이든 유닛 배치 성공
+                        JewelEventBus.RaiseAnyUnitPlaced(unitInstance);
+                        return true;
+                    }
+                }
+            }
+            else
+            {
+                for (int row = 0; row < gridHeight; row++)
+                {
+                    for (int col = 0; col < gridWidth; col++)
+                    {
+                        // 비활성화된 셀이거나 유닛이 없는 셀은 건너뛰기
+                        if (cellInfos[row, col] == null || !cellInfos[row, col].isCellActive || !cellInfos[row, col].isOccupied)
+                            continue;
+
+                        if (!cellInfos[row, col].CanStack(unit))
+                        {
+                            continue;
+                        }
+
+                        // UnitCell에 유닛을 겹쳐 배정하는 코드
+                        cellInfos[row, col].AddStackCount();
+
+                        return true;
+                    }
                 }
             }
 
@@ -321,10 +345,12 @@ namespace Sangmin
             unitCount--;
             OnUnitCountChanged?.Invoke(unitCount, unitCountMax);
 
-            // 골드 추가
+            // 골드 추가 - 스택 수에 따라 곱셈 적용
             if (IngameCurrencyManager.Instance != null)
             {
-                IngameCurrencyManager.Instance.AddGold(unitSellPrice);
+                int totalSellPrice = unitToSell.GetSellPrice();
+                IngameCurrencyManager.Instance.AddGold(totalSellPrice);
+                Debug.Log($"Sold unit with {unitToSell.StackCount} stacks for {totalSellPrice} gold");
             }
 
             // 셀에서 유닛 제거
@@ -836,7 +862,7 @@ namespace Sangmin
             {
                 unitCountMax = newMax;
                 previousUnitCountMax = newMax;
-                
+
                 // 최대값이 줄어들었고 현재 유닛 수가 새로운 최대값을 초과하는 경우 처리
                 if (unitCount > unitCountMax)
                 {

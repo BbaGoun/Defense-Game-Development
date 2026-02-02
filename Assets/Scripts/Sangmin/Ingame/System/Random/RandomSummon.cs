@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Sangmin;
 using UnityEngine;
 
 namespace Sangmin
@@ -19,12 +18,19 @@ namespace Sangmin
         }
 
         [Header("사용 가능한 유닛 리스트")]
-        public List<GameObject> UnitList;
+        private List<GameObject> UnitList;
+        private Dictionary<Unit, int> UnitPlacementCount;
 
         [Header("등급별 유닛 리스트 (자동 생성)")]
+        [SerializeField] private List<GameObject> normalUnitList = new List<GameObject>();
         [SerializeField] private List<GameObject> rareUnitList = new List<GameObject>();
-        [SerializeField] private List<GameObject> heroUnitList = new List<GameObject>();
+        [SerializeField] private List<GameObject> uniqueUnitList = new List<GameObject>();
         [SerializeField] private List<GameObject> legendUnitList = new List<GameObject>();
+
+        [SerializeField] private float normalSummonProbability;
+        [SerializeField] private float rareSummonProbability;
+        [SerializeField] private float uniqueSummonProbability;
+        [SerializeField] private float legendSummonProbability;
 
         private bool gradeListsInitialized = false;
 
@@ -38,13 +44,50 @@ namespace Sangmin
             {
                 Destroy(this.gameObject);
             }
+            UnitList = new List<GameObject>();
+            UnitPlacementCount = new Dictionary<Unit, int>();
+            gradeListsInitialized = false;
+
+            foreach (var unit in UnitList)
+            {
+                UnitPlacementCount[unit.GetComponent<Unit>()] = 0;
+            }
+        }
+
+        public void AddToUnitList(GameObject unitPrefab)
+        {
+            if (UnitList == null)
+            {
+                UnitList = new List<GameObject>();
+            }
+            UnitList.Add(unitPrefab);
+            UnitPlacementCount[unitPrefab.GetComponent<Unit>()] = 0;
+        }
+
+        public int GetUnitPlacementCount(Unit unit)
+        {
+            return UnitPlacementCount[unit];
+        }
+
+        public void AddToUnitPlacementCount(Unit unit, int count)
+        {
+            UnitPlacementCount[unit] += count;
+        }
+
+        public void ReduceUnitPlacementCount(Unit unit, int count)
+        {
+            UnitPlacementCount[unit] -= count;
+            if (UnitPlacementCount[unit] < 0)
+            {
+                UnitPlacementCount[unit] = 0;
+            }
         }
 
         /// <summary>
         /// 일반 뽑기 (UnitList에서 랜덤 선택)
         /// </summary>
         /// <returns>뽑은 유닛 (실패 시 null)</returns>
-        public Unit SummonRandomUnit()
+        public Unit GetRandomUnit()
         {
             if (UnitList == null || UnitList.Count == 0)
             {
@@ -52,109 +95,85 @@ namespace Sangmin
                 return null;
             }
 
-            int randomIndex = Random.Range(0, UnitList.Count);
-            GameObject unitPrefab = UnitList[randomIndex];
-
-            if (unitPrefab == null)
+            float totalProbability = normalSummonProbability + rareSummonProbability + uniqueSummonProbability + legendSummonProbability;
+            if (totalProbability <= 0f)
             {
-                Debug.LogError($"[RandomSummon] 유닛 프리팹이 null입니다! (인덱스: {randomIndex})");
+                Debug.LogError("[RandomSummon] 소환 확률 총합이 0 이하입니다!");
                 return null;
             }
 
-            Unit selectedUnit = ObjectPoolManager.Instance.GetObject(unitPrefab).GetComponent<Unit>();
-            return selectedUnit;
+            float rand = Random.value; // 0 이상 1 미만
+            float cumulative = 0f;
+
+            // 1. NORMAL
+            cumulative += normalSummonProbability / totalProbability;
+            if (rand < cumulative)
+            {
+                return GetUnitByGrade(Grade.NORMAL);
+            }
+
+            // 2. RARE
+            cumulative += rareSummonProbability / totalProbability;
+            if (rand < cumulative)
+            {
+                return GetUnitByGrade(Grade.RARE);
+            }
+
+            // 3. UNIQUE
+            cumulative += uniqueSummonProbability / totalProbability;
+            if (rand < cumulative)
+            {
+                return GetUnitByGrade(Grade.UNIQUE);
+            }
+
+            // 4. LEGEND
+            cumulative += legendSummonProbability / totalProbability;
+            if (rand <= cumulative)
+            {
+                return GetUnitByGrade(Grade.LEGEND);
+            }
+
+            Debug.Log("유닛 소환 오류: 어느 등급에도 포함되지 않음");
+            return null;
         }
 
         /// <summary>
         /// 희귀 등급 유닛을 뽑습니다.
         /// </summary>
         /// <returns>뽑은 유닛 (실패 시 null)</returns>
-        public Unit SummonRareUnit()
+        public Unit GetRareUnit()
         {
-            InitializeGradeListsIfNeeded();
-
-            if (rareUnitList == null || rareUnitList.Count == 0)
-            {
-                Debug.LogWarning("[RandomSummon] 희귀 등급 유닛 리스트가 비어있습니다!");
-                return null;
-            }
-
-            int randomIndex = Random.Range(0, rareUnitList.Count);
-            GameObject unitPrefab = rareUnitList[randomIndex];
-
-            if (unitPrefab == null)
-            {
-                Debug.LogError($"[RandomSummon] 희귀 등급 유닛 프리팹이 null입니다! (인덱스: {randomIndex})");
-                return null;
-            }
-
-            Unit selectedUnit = ObjectPoolManager.Instance.GetObject(unitPrefab).GetComponent<Unit>();
-            return selectedUnit;
+            return GetUnitByGrade(Grade.RARE);
         }
 
         /// <summary>
-        /// 영웅 등급 유닛을 뽑습니다.
+        /// 유니크(UNIQUE) 등급 유닛을 뽑습니다.
         /// </summary>
         /// <returns>뽑은 유닛 (실패 시 null)</returns>
-        public Unit SummonHeroUnit()
+        public Unit GetUniqueUnit()
         {
-            InitializeGradeListsIfNeeded();
-
-            if (heroUnitList == null || heroUnitList.Count == 0)
-            {
-                Debug.LogWarning("[RandomSummon] 영웅 등급 유닛 리스트가 비어있습니다!");
-                return null;
-            }
-
-            int randomIndex = Random.Range(0, heroUnitList.Count);
-            GameObject unitPrefab = heroUnitList[randomIndex];
-
-            if (unitPrefab == null)
-            {
-                Debug.LogError($"[RandomSummon] 영웅 등급 유닛 프리팹이 null입니다! (인덱스: {randomIndex})");
-                return null;
-            }
-
-            Unit selectedUnit = ObjectPoolManager.Instance.GetObject(unitPrefab).GetComponent<Unit>();
-            return selectedUnit;
+            return GetUnitByGrade(Grade.UNIQUE);
         }
 
         /// <summary>
         /// 전설 등급 유닛을 뽑습니다.
         /// </summary>
         /// <returns>뽑은 유닛 (실패 시 null)</returns>
-        public Unit SummonLegendUnit()
+        public Unit GetLegendUnit()
         {
-            InitializeGradeListsIfNeeded();
-
-            if (legendUnitList == null || legendUnitList.Count == 0)
-            {
-                Debug.LogWarning("[RandomSummon] 전설 등급 유닛 리스트가 비어있습니다!");
-                return null;
-            }
-
-            int randomIndex = Random.Range(0, legendUnitList.Count);
-            GameObject unitPrefab = legendUnitList[randomIndex];
-
-            if (unitPrefab == null)
-            {
-                Debug.LogError($"[RandomSummon] 전설 등급 유닛 프리팹이 null입니다! (인덱스: {randomIndex})");
-                return null;
-            }
-
-            Unit selectedUnit = ObjectPoolManager.Instance.GetObject(unitPrefab).GetComponent<Unit>();
-            return selectedUnit;
+            return GetUnitByGrade(Grade.LEGEND);
         }
 
         /// <summary>
         /// 등급별 유닛 리스트를 초기화합니다. (UnitList를 기반으로 자동 분류)
         /// </summary>
-        private void InitializeGradeListsIfNeeded()
+        private void InitializeGradeLists()
         {
             if (gradeListsInitialized) return;
 
+            normalUnitList.Clear();
             rareUnitList.Clear();
-            heroUnitList.Clear();
+            uniqueUnitList.Clear();
             legendUnitList.Clear();
 
             if (UnitList == null || UnitList.Count == 0)
@@ -186,13 +205,17 @@ namespace Sangmin
                 // 등급에 따라 분류
                 switch (unitComponent.unitData.grade)
                 {
+                    case Grade.NORMAL:
+                        if (!normalUnitList.Contains(unitPrefab))
+                            normalUnitList.Add(unitPrefab);
+                        break;
                     case Grade.RARE:
                         if (!rareUnitList.Contains(unitPrefab))
                             rareUnitList.Add(unitPrefab);
                         break;
-                    case Grade.UNIQUE: // UNIQUE를 HERO로 매핑
-                        if (!heroUnitList.Contains(unitPrefab))
-                            heroUnitList.Add(unitPrefab);
+                    case Grade.UNIQUE:
+                        if (!uniqueUnitList.Contains(unitPrefab))
+                            uniqueUnitList.Add(unitPrefab);
                         break;
                     case Grade.LEGEND:
                         if (!legendUnitList.Contains(unitPrefab))
@@ -202,7 +225,38 @@ namespace Sangmin
             }
 
             gradeListsInitialized = true;
-            Debug.Log($"[RandomSummon] 등급별 유닛 리스트 초기화 완료 - 희귀: {rareUnitList.Count}, 영웅: {heroUnitList.Count}, 전설: {legendUnitList.Count}");
+            Debug.Log($"[RandomSummon] 등급별 유닛 리스트 초기화 완료 - 일반: {normalUnitList.Count}, 희귀: {rareUnitList.Count}, 유니크: {uniqueUnitList.Count}, 전설: {legendUnitList.Count}");
+        }
+
+        /// <summary>
+        /// 등급에 맞는 랜덤 유닛 프리팹을 반환합니다. (없으면 null)
+        /// </summary>
+        public GameObject GetRandomUnitPrefabByGrade(Grade grade)
+        {
+            InitializeGradeLists();
+
+            List<GameObject> list = null;
+            switch (grade)
+            {
+                case Grade.NORMAL: list = normalUnitList; break;
+                case Grade.RARE: list = rareUnitList; break;
+                case Grade.UNIQUE: list = uniqueUnitList; break;
+                case Grade.LEGEND: list = legendUnitList; break;
+                default: return null;
+            }
+
+            if (list == null || list.Count == 0) return null;
+            return list[Random.Range(0, list.Count)];
+        }
+
+        /// <summary>
+        /// 등급에 맞는 랜덤 유닛을 소환합니다. (ObjectPool 사용)
+        /// </summary>
+        public Unit GetUnitByGrade(Grade grade)
+        {
+            GameObject prefab = GetRandomUnitPrefabByGrade(grade);
+            if (prefab == null) return null;
+            return prefab.GetComponent<Unit>();
         }
 
         /// <summary>
@@ -211,7 +265,17 @@ namespace Sangmin
         public void RefreshGradeLists()
         {
             gradeListsInitialized = false;
-            InitializeGradeListsIfNeeded();
+            InitializeGradeLists();
+        }
+
+        public Unit SummonUnit(Unit unit)
+        {
+            return ObjectPoolManager.Instance.GetObject(unit.gameObject).GetComponent<Unit>();
+        }
+
+        public Unit SummonUnit(GameObject unitPrefab)
+        {
+            return ObjectPoolManager.Instance.GetObject(unitPrefab).GetComponent<Unit>();
         }
     }
 }

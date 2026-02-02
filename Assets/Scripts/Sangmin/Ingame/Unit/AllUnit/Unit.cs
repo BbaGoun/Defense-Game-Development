@@ -94,6 +94,16 @@ namespace Sangmin
         [SerializeField] private Enemy currentTarget; // 현재 타겟
         bool isAttacking = false;
 
+        // 스택 관련
+        private int stackCount = 1;
+        public int StackCount
+        {
+            get => stackCount;
+            set
+            {
+                stackCount = Mathf.Clamp(value, 1, 3);
+            }
+        }
 
         private static readonly ChainDirection[] _allDirections =
         {
@@ -149,6 +159,9 @@ namespace Sangmin
             // 전투 관련 초기화
             attackTimer = attackCooldown;
             currentTarget = null;
+
+            // 스택 초기화
+            stackCount = 1;
         }
 
         void Update()
@@ -163,13 +176,21 @@ namespace Sangmin
             FindAndAttackEnemy();
         }
 
+
+        /// <summary>
+        /// 공격 애니메이션 재생 (스택된 모든 유닛)
+        /// </summary>
         public void PlayAttackAnimation()
         {
-            animator.SetTrigger("TAttack");
+            // 메인 유닛 애니메이션 재생
+            if (animator != null)
+            {
+                animator.SetTrigger("TAttack");
+            }
         }
 
         /// <summary>
-        /// Enemy를 타겟으로 공격합니다.
+        /// Enemy를 타겟으로 공격합니다. (스택 수만큼 데미지 곱셈)
         /// </summary>
         public void PerformAttack()
         {
@@ -177,8 +198,16 @@ namespace Sangmin
 
             isAttacking = false;
             attackTimer = attackCooldown;
+
+            // 스택 수만큼 데미지 곱셈 적용
+            float originalDamage = finalAttackDamage;
+            finalAttackDamage = unitData.attackDamage * stackCount;
+
             unitData.attackBehaviour.Attack(this, currentTarget);
             OnAttack(); // 시너지 시스템용
+
+            // 데미지 원래대로 복구 (다른 시스템에 영향 방지)
+            finalAttackDamage = originalDamage;
         }
 
         /*
@@ -225,6 +254,29 @@ namespace Sangmin
         public void OnSell()
         {
             poolAble.ReleaseObject();
+        }
+
+        /// <summary>
+        /// 판매 가격 계산 (스택 수 적용)
+        /// </summary>
+        public int GetSellPrice()
+        {
+            // 기본 판매 가격에 스택 수를 곱함
+            int basePrice = 1; // 기본 가격 (필요시 unitData에서 가져오기)
+
+            // 등급에 따른 기본 가격 설정 (예시)
+            if (unitData != null)
+            {
+                switch (unitData.grade)
+                {
+                    case Grade.NORMAL: basePrice = 1; break;
+                    case Grade.RARE: basePrice = 3; break;
+                    case Grade.UNIQUE: basePrice = 9; break;
+                    case Grade.LEGEND: basePrice = 27; break;
+                }
+            }
+
+            return basePrice * stackCount;
         }
 
         #region Chain Logic

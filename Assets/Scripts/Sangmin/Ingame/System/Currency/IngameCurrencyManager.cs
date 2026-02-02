@@ -28,6 +28,14 @@ namespace Sangmin
         [SerializeField] private int heroSummonCost = 100; // 영웅 등급 뽑기 비용
         [SerializeField] private int legendSummonCost = 200; // 전설 등급 뽑기 비용
 
+        [Header("유닛 판매 설정")]
+        // 판매 가격 = 소환 비용 / 10 * multiplier
+        [SerializeField] private int normalUnitSellPriceMultiplier = 1; // 일반 유닛 
+        [SerializeField] private int rareUnitSellPriceMultiplier = 3; // 희귀 유닛 
+        [SerializeField] private int uniqueUnitSellPriceMultiplier = 9; // 유니크 유닛 
+        [SerializeField] private int legendUnitSellPriceMultiplier = 21; // 전설 유닛 
+        [SerializeField] private int mythicUnitSellPriceMultiplier = 51; // 신화 유닛 
+
         private int currentGold;
         private int currentJewel;
         private int currentSummonCost; // 현재 일반 뽑기 비용
@@ -44,6 +52,11 @@ namespace Sangmin
         public int RareSummonCost => rareSummonCost;
         public int HeroSummonCost => heroSummonCost;
         public int LegendSummonCost => legendSummonCost;
+        public int NormalUnitSellPrice => (int)(currentSummonCost / 10) * normalUnitSellPriceMultiplier;
+        public int RareUnitSellPriceMultiplier => (int)(currentSummonCost / 10) * rareUnitSellPriceMultiplier;
+        public int UniqueUnitSellPriceMultiplier => (int)(currentSummonCost / 10) * uniqueUnitSellPriceMultiplier;
+        public int LegendUnitSellPriceMultiplier => (int)(currentSummonCost / 10) * legendUnitSellPriceMultiplier;
+        public int MythicUnitSellPriceMultiplier => (int)(currentSummonCost / 10) * mythicUnitSellPriceMultiplier;
 
         private void Awake()
         {

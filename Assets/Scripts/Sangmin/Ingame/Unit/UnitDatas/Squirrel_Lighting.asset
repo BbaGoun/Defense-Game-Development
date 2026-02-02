@@ -15,12 +15,13 @@ MonoBehaviour:
   attackDamage: 25
   attackSpeed: 1
   attackRange: 1
-  grade: 4
+  grade: 1
   attackEffect: {fileID: 7777117128670843503, guid: 09dc011a4ebba9a4cba2911314309034, type: 3}
   attackBehaviour: {fileID: 11400000, guid: 1c303cfe63b4c6e4c94864308c9deb7d, type: 2}
   synergies: []
   radius: 1
   projectilePrefab: {fileID: 0}
   projectileSpeed: 12
-  hitRadius: 0.1
   maxLifetime: 2
+  attackDamageBonus: 0
+  attackSpeedBonus: 0

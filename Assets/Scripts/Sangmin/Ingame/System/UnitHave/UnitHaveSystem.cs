@@ -34,7 +34,7 @@ public class UnitHaveSystem : MonoBehaviour
                 case DaeGeon.UnitGrade.NORMAL:
                 case DaeGeon.UnitGrade.RARE:
                 case DaeGeon.UnitGrade.UNIQUE:
-                    RandomSummon.Instance.UnitList.Add(unitData.prefab);
+                    RandomSummon.Instance.AddToUnitList(unitData.prefab);
                     ObjectPoolManager.Instance.AddObjectInfo(unitData.prefab, 3);
                     break;
                 case DaeGeon.UnitGrade.LEGEND:
