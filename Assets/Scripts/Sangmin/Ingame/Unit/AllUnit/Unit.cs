@@ -82,10 +82,12 @@ namespace Sangmin
                 return rangeIndicator.GetRangeMultiplier();
             }
         }
+        [SerializeField] private SpriteRenderer spriteRenderer;
         [SerializeField] private Outliner outliner;
         [SerializeField] private PoolAble poolAble;
         [SerializeField] private Animator animator;
         [SerializeField] private UnitAura unitAura;
+        [SerializeField] private UnitDummy[] dummies;
 
         [SerializeField]
         private List<Enemy> enemiesInRange = new List<Enemy>();
@@ -102,6 +104,7 @@ namespace Sangmin
             set
             {
                 stackCount = Mathf.Clamp(value, 1, 3);
+                RefreshStackVisuals();
             }
         }
 
@@ -129,12 +132,25 @@ namespace Sangmin
             finalAttackSpeed = unitData.attackSpeed;
             finalAttackRange = unitData.attackRange;
 
+            spriteRenderer = GetComponent<SpriteRenderer>();
             // 자식 오브젝트에서 RangeIndicator를 찾는다.
             rangeIndicator = GetComponentInChildren<RangeIndicator>(false);
             outliner = GetComponent<Outliner>();
             poolAble = GetComponent<PoolAble>();
             animator = GetComponent<Animator>();
             unitAura = GetComponentInChildren<UnitAura>(false);
+            dummies = GetComponentsInChildren<UnitDummy>(false);
+
+            if (dummies != null)
+            {
+                foreach (var dummy in dummies)
+                {
+                    if (spriteRenderer != null && animator != null)
+                    {
+                        dummy.Init(spriteRenderer, animator);
+                    }
+                }
+            }
 
             if (rangeIndicator == null)
             {
@@ -162,6 +178,7 @@ namespace Sangmin
 
             // 스택 초기화
             stackCount = 1;
+            RefreshStackVisuals();
         }
 
         void Update()
@@ -176,6 +193,37 @@ namespace Sangmin
             FindAndAttackEnemy();
         }
 
+        /// <summary>
+        /// 스택 수에 맞춰 시각적 유닛들을 갱신한다.
+        /// 실제 전투/시너지에는 영향을 주지 않고, 화면에 보이는 개수만 조절한다.
+        /// </summary>
+        private void RefreshStackVisuals()
+        {
+            if (dummies == null)
+                return;
+
+            ClearStackVisuals();
+
+            switch (stackCount)
+            {
+                case 2:
+                    dummies[0].gameObject.SetActive(true);
+                    break;
+                case 3:
+                    dummies[0].gameObject.SetActive(true);
+                    dummies[1].gameObject.SetActive(true);
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// 모든 시각적 스택 유닛을 제거한다.
+        /// </summary>
+        private void ClearStackVisuals()
+        {
+            dummies[0].gameObject.SetActive(false);
+            dummies[1].gameObject.SetActive(false);
+        }
 
         /// <summary>
         /// 공격 애니메이션 재생 (스택된 모든 유닛)
@@ -186,6 +234,20 @@ namespace Sangmin
             if (animator != null)
             {
                 animator.SetTrigger("TAttack");
+            }
+
+            if (dummies == null)
+                return;
+
+            switch (stackCount)
+            {
+                case 2:
+                    //dummies[0].enabled = true;
+                    break;
+                case 3:
+                    //dummies[0].enabled = true;
+                    //dummies[1].enabled = true;
+                    break;
             }
         }
 

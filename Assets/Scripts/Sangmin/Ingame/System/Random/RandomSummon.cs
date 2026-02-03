@@ -18,8 +18,8 @@ namespace Sangmin
         }
 
         [Header("사용 가능한 유닛 리스트")]
-        private List<GameObject> UnitList;
-        private Dictionary<Unit, int> UnitPlacementCount;
+        [SerializeField] private List<GameObject> UnitList = new List<GameObject>();
+        private Dictionary<UnitData, int> UnitPlacementCount = new Dictionary<UnitData, int>();
 
         [Header("등급별 유닛 리스트 (자동 생성)")]
         [SerializeField] private List<GameObject> normalUnitList = new List<GameObject>();
@@ -44,42 +44,36 @@ namespace Sangmin
             {
                 Destroy(this.gameObject);
             }
-            UnitList = new List<GameObject>();
-            UnitPlacementCount = new Dictionary<Unit, int>();
             gradeListsInitialized = false;
 
             foreach (var unit in UnitList)
             {
-                UnitPlacementCount[unit.GetComponent<Unit>()] = 0;
+                UnitPlacementCount[unit.GetComponent<Unit>().unitData] = 0;
             }
         }
 
         public void AddToUnitList(GameObject unitPrefab)
         {
-            if (UnitList == null)
-            {
-                UnitList = new List<GameObject>();
-            }
             UnitList.Add(unitPrefab);
-            UnitPlacementCount[unitPrefab.GetComponent<Unit>()] = 0;
+            UnitPlacementCount[unitPrefab.GetComponent<Unit>().unitData] = 0;
         }
 
-        public int GetUnitPlacementCount(Unit unit)
+        public int GetUnitPlacementCount(UnitData unitData)
         {
-            return UnitPlacementCount[unit];
+            return UnitPlacementCount[unitData];
         }
 
-        public void AddToUnitPlacementCount(Unit unit, int count)
+        public void IncreaseUnitPlacementCount(UnitData unitData, int count)
         {
-            UnitPlacementCount[unit] += count;
+            UnitPlacementCount[unitData] += count;
         }
 
-        public void ReduceUnitPlacementCount(Unit unit, int count)
+        public void ReduceUnitPlacementCount(UnitData unitData, int count)
         {
-            UnitPlacementCount[unit] -= count;
-            if (UnitPlacementCount[unit] < 0)
+            UnitPlacementCount[unitData] -= count;
+            if (UnitPlacementCount[unitData] < 0)
             {
-                UnitPlacementCount[unit] = 0;
+                UnitPlacementCount[unitData] = 0;
             }
         }
 
@@ -225,7 +219,7 @@ namespace Sangmin
             }
 
             gradeListsInitialized = true;
-            Debug.Log($"[RandomSummon] 등급별 유닛 리스트 초기화 완료 - 일반: {normalUnitList.Count}, 희귀: {rareUnitList.Count}, 유니크: {uniqueUnitList.Count}, 전설: {legendUnitList.Count}");
+            //Debug.Log($"[RandomSummon] 등급별 유닛 리스트 초기화 완료 - 일반: {normalUnitList.Count}, 희귀: {rareUnitList.Count}, 유니크: {uniqueUnitList.Count}, 전설: {legendUnitList.Count}");
         }
 
         /// <summary>

@@ -85,7 +85,7 @@ namespace Sangmin
 
             currentGold += amount;
             OnGoldChanged?.Invoke(currentGold);
-            Debug.Log($"[IngameCurrency] 골드 추가: +{amount} (현재: {currentGold})");
+            //Debug.Log($"[IngameCurrency] 골드 추가: +{amount} (현재: {currentGold})");
         }
 
         /// <summary>
@@ -104,7 +104,7 @@ namespace Sangmin
 
             currentGold -= amount;
             OnGoldChanged?.Invoke(currentGold);
-            Debug.Log($"[IngameCurrency] 골드 소비: -{amount} (현재: {currentGold})");
+            //Debug.Log($"[IngameCurrency] 골드 소비: -{amount} (현재: {currentGold})");
             return true;
         }
 
@@ -126,7 +126,7 @@ namespace Sangmin
         {
             currentGold = amount ?? initialGold;
             OnGoldChanged?.Invoke(currentGold);
-            Debug.Log($"[IngameCurrency] 골드 초기화: {currentGold}");
+            //Debug.Log($"[IngameCurrency] 골드 초기화: {currentGold}");
         }
 
         #endregion
@@ -143,7 +143,7 @@ namespace Sangmin
 
             currentJewel += amount;
             OnJewelChanged?.Invoke(currentJewel);
-            Debug.Log($"[IngameCurrency] 쥬얼 추가: +{amount} (현재: {currentJewel})");
+            //Debug.Log($"[IngameCurrency] 쥬얼 추가: +{amount} (현재: {currentJewel})");
         }
 
         /// <summary>
@@ -162,7 +162,7 @@ namespace Sangmin
 
             currentJewel -= amount;
             OnJewelChanged?.Invoke(currentJewel);
-            Debug.Log($"[IngameCurrency] 쥬얼 소비: -{amount} (현재: {currentJewel})");
+            //Debug.Log($"[IngameCurrency] 쥬얼 소비: -{amount} (현재: {currentJewel})");
             return true;
         }
 
@@ -184,7 +184,7 @@ namespace Sangmin
         {
             currentJewel = amount ?? initialJewel;
             OnJewelChanged?.Invoke(currentJewel);
-            Debug.Log($"[IngameCurrency] 쥬얼 초기화: {currentJewel}");
+            //Debug.Log($"[IngameCurrency] 쥬얼 초기화: {currentJewel}");
         }
 
         #endregion
@@ -205,7 +205,7 @@ namespace Sangmin
             // 뽑기 비용 증가
             currentSummonCost += costIncreasePerSummon;
             OnSummonCostChanged?.Invoke(currentSummonCost);
-            Debug.Log($"[IngameCurrency] 일반 뽑기 완료! 다음 뽑기 비용: {currentSummonCost}");
+            //Debug.Log($"[IngameCurrency] 일반 뽑기 완료! 다음 뽑기 비용: {currentSummonCost}");
 
             return true;
         }
@@ -217,7 +217,7 @@ namespace Sangmin
         {
             currentSummonCost = initialSummonCost;
             OnSummonCostChanged?.Invoke(currentSummonCost);
-            Debug.Log($"[IngameCurrency] 일반 뽑기 비용 초기화: {currentSummonCost}");
+            //Debug.Log($"[IngameCurrency] 일반 뽑기 비용 초기화: {currentSummonCost}");
         }
 
         /// <summary>

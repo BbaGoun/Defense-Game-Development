@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7910644817020623444}
   - component: {fileID: 3847906674910882633}
   m_Layer: 0
-  m_Name: Sample AttackEffect
+  m_Name: Sample HitEffect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

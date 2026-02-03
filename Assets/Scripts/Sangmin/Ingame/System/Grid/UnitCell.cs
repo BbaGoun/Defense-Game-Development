@@ -10,7 +10,6 @@ namespace Sangmin
         public int col;
         [Header("Runtime state")]
         [SerializeField] private Unit unit;
-        [SerializeField, Range(0, 3)] private int stackCount;
         [field: SerializeField] public bool isOccupied { get; private set; }
         [field: SerializeField] public bool isCellActive { get; private set; }
         [SerializeField] private float cellSize = 1f;
@@ -57,11 +56,9 @@ namespace Sangmin
 
             unit = _unit;
 
-            stackCount = 1;
             isOccupied = true;
             _unit.transform.position = transform.position;
-            _unit.StackCount = stackCount;
-            RefreshStackVisuals();
+            _unit.StackCount = 1;
         }
 
         /// <summary>
@@ -74,7 +71,7 @@ namespace Sangmin
 
         public int GetStackCount()
         {
-            return isOccupied ? stackCount : 0;
+            return isOccupied && unit != null ? unit.StackCount : 0;
         }
 
         /// <summary>
@@ -86,7 +83,7 @@ namespace Sangmin
             if (!isOccupied) return false;
             if (unit == null || unit.unitData == null) return false;
 
-            if (stackCount >= 3) return false;
+            if (unit.StackCount >= 3) return false;
             if (unit.unitData != newUnit.unitData) return false;
 
             Grade g = unit.unitData.grade;
@@ -94,27 +91,18 @@ namespace Sangmin
         }
 
         /// <summary>
-        /// 스택을 +1 한다. (실제 유닛 오브젝트는 1개만 유지)
+        /// 스택을 + 한다. (실제 유닛 오브젝트는 1개만 유지)
         /// </summary>
-        public void AddStackCount()
+        public void IncreaseStackCount(int count)
         {
-            stackCount = Mathf.Clamp(stackCount + 1, 1, 3);
-            if (unit != null) unit.StackCount = stackCount;
-
-            RefreshStackVisuals();
+            if (unit != null)
+                unit.StackCount += count;
         }
 
-        public void SetStackCount(int count)
+        public void ReduceStackCount(int count)
         {
-            if (!isOccupied || unit == null)
-            {
-                stackCount = 0;
-                RefreshStackVisuals();
-                return;
-            }
-            stackCount = Mathf.Clamp(count, 1, 3);
-            unit.StackCount = stackCount;
-            RefreshStackVisuals();
+            if (unit != null)
+                unit.StackCount -= count;
         }
 
         /// <summary>
@@ -123,9 +111,7 @@ namespace Sangmin
         public void ClearUnit()
         {
             unit = null;
-            stackCount = 0;
             isOccupied = false;
-            ClearStackVisuals();
         }
 
         public void SetOccupied(bool occupied)
@@ -245,29 +231,6 @@ namespace Sangmin
         {
             boxCollider2D.size = new Vector2(cellSize, cellSize);
             boxCollider2D.offset = Vector2.zero;
-        }
-
-        /// <summary>
-        /// 셀의 스택 수에 맞춰 시각적 유닛들을 갱신한다.
-        /// 실제 전투/시너지에는 영향을 주지 않고, 화면에 보이는 개수만 조절한다.
-        /// </summary>
-        private void RefreshStackVisuals()
-        {
-            ClearStackVisuals();
-
-            if (!isOccupied || unit == null)
-            {
-                return;
-            }
-
-
-        }
-
-        /// <summary>
-        /// 모든 시각적 스택 유닛을 제거한다.
-        /// </summary>
-        private void ClearStackVisuals()
-        {
         }
 
         private void UpdateCellVisual()

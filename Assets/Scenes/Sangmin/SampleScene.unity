@@ -212,7 +212,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 335647662}
         m_TargetAssemblyTypeName: Sangmin.GridUnitPlacement, Assembly-CSharp
-        m_MethodName: PlaceUnitFromFront
+        m_MethodName: SummonRandomUnit
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -8214,14 +8214,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7908a1dfe617d84f918f3975c874f71, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RandomSummon
+  UnitList:
+  - {fileID: 1808669204507063515, guid: cce28fbf6424d564cbd5bd0655968647, type: 3}
   normalUnitList: []
   rareUnitList: []
   uniqueUnitList: []
   legendUnitList: []
-  normalSummonProbability: 70
-  rareSummonProbability: 20
-  uniqueSummonProbability: 8
-  legendSummonProbability: 2
+  normalSummonProbability: 100
+  rareSummonProbability: 0
+  uniqueSummonProbability: 0
+  legendSummonProbability: 0
 --- !u!1001 &1711675707
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8781,15 +8783,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Sangmin.ObjectPoolManager
   objectInfos:
-  - prefab: {fileID: 1143663859429401536, guid: d28597f4f0dea1a4c92e818346c62490, type: 3}
+  - prefab: {fileID: 1808669204507063515, guid: cce28fbf6424d564cbd5bd0655968647, type: 3}
     count: 3
   - prefab: {fileID: 4098904906678458094, guid: 314ff5ae531d76648938be4257da88ed, type: 3}
     count: 3
   - prefab: {fileID: 8935922844047154205, guid: 9b795a203e239c84a83360c2eef362f7, type: 3}
-    count: 3
-  - prefab: {fileID: 1143663859429401536, guid: 7ede9208b7c2b7a4aa0f9bfd0bccc69f, type: 3}
-    count: 3
-  - prefab: {fileID: 7777117128670843503, guid: 09dc011a4ebba9a4cba2911314309034, type: 3}
     count: 3
 --- !u!1001 &1853041734
 PrefabInstance:

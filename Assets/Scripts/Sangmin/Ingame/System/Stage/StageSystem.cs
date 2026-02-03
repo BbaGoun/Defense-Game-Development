@@ -225,7 +225,7 @@ namespace Sangmin
             // 웨이브 종료 - 다음 웨이브로 진행
             if (!IsGameOver)
             {
-                Debug.Log($"쉬는 시간 {currentWave} 종료. 다음 웨이브 준비...");
+                //Debug.Log($"쉬는 시간 {currentWave} 종료. 다음 웨이브 준비...");
                 StartNextWave();
             }
         }
@@ -235,7 +235,7 @@ namespace Sangmin
             float elapsedTime = 0f;
             float spawnElapsedTime = currentStage.spawnInterval;
 
-            Debug.Log($"일반 웨이브 {currentWave} 시작");
+            // Debug.Log($"일반 웨이브 {currentWave} 시작");
 
             // 웨이브 전체 시간 동안 반복
             while (elapsedTime < currentStage.normalWaveDuration && !IsGameOver)

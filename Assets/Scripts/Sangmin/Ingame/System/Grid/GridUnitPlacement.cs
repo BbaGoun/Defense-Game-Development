@@ -129,6 +129,7 @@ namespace Sangmin
             {
                 // 배치 성공 시에만 카운트 증가
                 unitCount++;
+                RandomSummon.Instance.IncreaseUnitPlacementCount(unit.unitData, 1);
                 OnUnitCountChanged?.Invoke(unitCount, unitCountMax);
 
                 // 쥬얼 보상 시스템 이벤트: 일반 뽑기 성공(배치 성공)
@@ -272,11 +273,14 @@ namespace Sangmin
         {
             if (unit == null) return false;
 
-            int placementCount = RandomSummon.Instance.GetUnitPlacementCount(unit);
+            int placementCount = RandomSummon.Instance.GetUnitPlacementCount(unit.unitData);
+
+            Debug.Log($"{unit.unitData.name}: {placementCount}");
 
             // 3의 배수인 경우나 신화 등급 유닛인 경우 유닛을 배치, 그 외일 경우 유닛을 겹치기
             if (placementCount % 3 == 0 || unit.unitData.grade == Grade.MYTHIC)
             {
+                Debug.Log("겹칠 수 없음");
                 // 행(row)을 먼저, 그 다음 열(col)을 순회
                 for (int row = 0; row < gridHeight; row++)
                 {
@@ -306,6 +310,7 @@ namespace Sangmin
             }
             else
             {
+                Debug.Log("겹칠 수 있음");
                 for (int row = 0; row < gridHeight; row++)
                 {
                     for (int col = 0; col < gridWidth; col++)
@@ -320,7 +325,7 @@ namespace Sangmin
                         }
 
                         // UnitCell에 유닛을 겹쳐 배정하는 코드
-                        cellInfos[row, col].AddStackCount();
+                        cellInfos[row, col].IncreaseStackCount(1);
 
                         return true;
                     }

@@ -131,7 +131,7 @@ namespace Sangmin
             _units.KeyValuePair[id] = node;
             _posToUnitId.KeyValuePair[gridPos] = id;
 
-            Debug.Log($"SpawnUnit: id={id}, pos={gridPos}, mask={System.Convert.ToString((int)mask, 2).PadLeft(8, '0')}");
+            //Debug.Log($"SpawnUnit: id={id}, pos={gridPos}, mask={System.Convert.ToString((int)mask, 2).PadLeft(8, '0')}");
 
             RebuildAndLogComponents();
             return id;
