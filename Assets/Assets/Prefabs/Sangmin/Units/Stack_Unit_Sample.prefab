@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2846814242065887191}
   - component: {fileID: 3931605318026604590}
   - component: {fileID: 8558442104108379603}
+  - component: {fileID: 2480376765498191130}
   - component: {fileID: 2311595286255859429}
   m_Layer: 0
   m_Name: Right Dummy
@@ -105,6 +106,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1bc52542d177b09499393f9819b021bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnitDummy
+--- !u!114 &2480376765498191130
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2862250120260751555}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca480013ef0ac9f4fb71107f8da2de0c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Sangmin.AnimationEventForwarder
+  attackEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4201307792917412441}
+        m_TargetAssemblyTypeName: Sangmin.Unit, Assembly-CSharp
+        m_MethodName: AttackEvent
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 2846814242065887191}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Transform, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!95 &2311595286255859429
 Animator:
   serializedVersion: 7
@@ -138,6 +166,7 @@ GameObject:
   - component: {fileID: 5496947230582096059}
   - component: {fileID: 7378989928629023255}
   - component: {fileID: 2280510086512751232}
+  - component: {fileID: 3622176973610658943}
   - component: {fileID: 2245415019023991830}
   m_Layer: 0
   m_Name: Left Dummy
@@ -232,6 +261,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1bc52542d177b09499393f9819b021bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnitDummy
+--- !u!114 &3622176973610658943
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3742730338603343917}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca480013ef0ac9f4fb71107f8da2de0c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Sangmin.AnimationEventForwarder
+  attackEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4201307792917412441}
+        m_TargetAssemblyTypeName: Sangmin.Unit, Assembly-CSharp
+        m_MethodName: AttackEvent
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 5496947230582096059}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Transform, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!95 &2245415019023991830
 Animator:
   serializedVersion: 7
@@ -314,6 +370,38 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6540575244248195134, guid: 864f738ae9fca6c48bcc0e87cbcb9b55, type: 3}
+      propertyPath: attackEvent.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540575244248195134, guid: 864f738ae9fca6c48bcc0e87cbcb9b55, type: 3}
+      propertyPath: attackEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540575244248195134, guid: 864f738ae9fca6c48bcc0e87cbcb9b55, type: 3}
+      propertyPath: attackEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 4201307792917412441}
+    - target: {fileID: 6540575244248195134, guid: 864f738ae9fca6c48bcc0e87cbcb9b55, type: 3}
+      propertyPath: attackEvent.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540575244248195134, guid: 864f738ae9fca6c48bcc0e87cbcb9b55, type: 3}
+      propertyPath: attackEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: AttackEvent
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540575244248195134, guid: 864f738ae9fca6c48bcc0e87cbcb9b55, type: 3}
+      propertyPath: attackEvent.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: Sangmin.Unit, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540575244248195134, guid: 864f738ae9fca6c48bcc0e87cbcb9b55, type: 3}
+      propertyPath: attackEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
+      value: 
+      objectReference: {fileID: 4289779409619602548}
+    - target: {fileID: 6540575244248195134, guid: 864f738ae9fca6c48bcc0e87cbcb9b55, type: 3}
+      propertyPath: attackEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Transform, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 7855928322533682679, guid: 864f738ae9fca6c48bcc0e87cbcb9b55, type: 3}
       propertyPath: m_Name
       value: Stack_Unit_Sample
@@ -329,6 +417,17 @@ PrefabInstance:
       addedObject: {fileID: 2846814242065887191}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 864f738ae9fca6c48bcc0e87cbcb9b55, type: 3}
+--- !u!114 &4201307792917412441 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5480839661711331456, guid: 864f738ae9fca6c48bcc0e87cbcb9b55, type: 3}
+  m_PrefabInstance: {fileID: 8521322385020889817}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd64689cecacd774d9a83bc08234dccf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Unit
 --- !u!4 &4289779409619602548 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5605163127401899693, guid: 864f738ae9fca6c48bcc0e87cbcb9b55, type: 3}

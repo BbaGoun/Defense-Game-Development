@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b9b845f816ebe2438419c60a9875f4d, type: 3}
   m_Name: Squirrel_Lighting
   m_EditorClassIdentifier: Assembly-CSharp::Sangmin.UnitData
-  attackDamage: 25
+  attackDamage: 50
   attackSpeed: 1
   attackRange: 1
   grade: 1

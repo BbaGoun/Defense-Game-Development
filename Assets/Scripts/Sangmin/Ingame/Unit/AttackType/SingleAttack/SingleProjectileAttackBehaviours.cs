@@ -24,7 +24,7 @@ namespace Sangmin
             }
         }
 
-        public override void Attack(Unit self, Enemy mainTarget)
+        public override void Attack(Unit self, Transform startPos, Enemy mainTarget)
         {
             if (self == null || mainTarget == null) return;
             if (projectilePrefab == null)
@@ -40,7 +40,7 @@ namespace Sangmin
                 return;
             }
 
-            projectileGo.transform.position = self.transform.position;
+            projectileGo.transform.position = startPos.transform.position;
 
             var projectile = projectileGo.GetComponent<SingleProjectile>();
             if (projectile == null)

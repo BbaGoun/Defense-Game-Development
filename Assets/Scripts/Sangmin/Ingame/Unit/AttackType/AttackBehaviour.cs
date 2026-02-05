@@ -5,7 +5,7 @@ namespace Sangmin
 {
     public class AttackBehaviour : ScriptableObject, IAttackBehaviour
     {
-        virtual public void Attack(Unit self, Enemy target)
+        virtual public void Attack(Unit self, Transform startPos, Enemy target)
         {
             throw new System.NotImplementedException();
         }

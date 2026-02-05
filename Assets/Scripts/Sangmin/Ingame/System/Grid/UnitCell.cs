@@ -58,7 +58,6 @@ namespace Sangmin
 
             isOccupied = true;
             _unit.transform.position = transform.position;
-            _unit.StackCount = 1;
         }
 
         /// <summary>
@@ -103,6 +102,12 @@ namespace Sangmin
         {
             if (unit != null)
                 unit.StackCount -= count;
+        }
+
+        public void SetStackCount(int count)
+        {
+            if (unit != null)
+                unit.StackCount = count;
         }
 
         /// <summary>

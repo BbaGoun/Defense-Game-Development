@@ -10,7 +10,7 @@ namespace Sangmin
             base.Initialize(self);
         }
 
-        override public void Attack(Unit self, Enemy mainTarget)
+        override public void Attack(Unit self, Transform startPos, Enemy mainTarget)
         {
             // 1) 메인 타깃에게 데미지
             DealDamage(self, mainTarget);

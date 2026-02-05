@@ -134,6 +134,12 @@ namespace Sangmin
 
                 // 쥬얼 보상 시스템 이벤트: 일반 뽑기 성공(배치 성공)
                 JewelEventBus.RaiseNormalSummonPlaced(unit);
+
+                // UI 패널 표시
+                if (UnitInfoPanel.Instance != null)
+                {
+                    UnitInfoPanel.Instance.ShowUnitInfo(currentSelectedUnit);
+                }
             }
             else
             {
@@ -275,12 +281,12 @@ namespace Sangmin
 
             int placementCount = RandomSummon.Instance.GetUnitPlacementCount(unit.unitData);
 
-            Debug.Log($"{unit.unitData.name}: {placementCount}");
+            //Debug.Log($"{unit.unitData.name}: {placementCount}");
 
             // 3의 배수인 경우나 신화 등급 유닛인 경우 유닛을 배치, 그 외일 경우 유닛을 겹치기
             if (placementCount % 3 == 0 || unit.unitData.grade == Grade.MYTHIC)
             {
-                Debug.Log("겹칠 수 없음");
+                //Debug.Log("겹칠 수 없음");
                 // 행(row)을 먼저, 그 다음 열(col)을 순회
                 for (int row = 0; row < gridHeight; row++)
                 {
@@ -296,6 +302,7 @@ namespace Sangmin
                         SynergyCountSystem.Instance.SpawnUnit(new Vector2Int(row, col), mask: unitInstance.chain, unitInstance);
                         // UnitCell에 유닛을 배정하는 코드
                         cellInfos[row, col].PlaceUnit(unitInstance);
+                        cellInfos[row, col].SetStackCount(1);
 
                         if (selectedCell != null && currentSelectedUnit != null)
                         {
@@ -310,7 +317,7 @@ namespace Sangmin
             }
             else
             {
-                Debug.Log("겹칠 수 있음");
+                //Debug.Log("겹칠 수 있음");
                 for (int row = 0; row < gridHeight; row++)
                 {
                     for (int col = 0; col < gridWidth; col++)
@@ -337,6 +344,29 @@ namespace Sangmin
             return false;
         }
 
+        public void UpgradeUnit()
+        {
+            if (selectedCell == null || currentSelectedUnit == null)
+                return;
+
+            Debug.Log($"Upgrade Unit: {currentSelectedUnit.name}");
+
+            switch (currentSelectedUnit.unitData.grade)
+            {
+                case Grade.NORMAL:
+
+                    break;
+                case Grade.RARE:
+                    break;
+                case Grade.UNIQUE:
+                    break;
+            }
+
+            unitCount++;
+            RandomSummon.Instance.IncreaseUnitPlacementCount(currentSelectedUnit.unitData, 1);
+            OnUnitCountChanged?.Invoke(unitCount, unitCountMax);
+        }
+
         public void SellUnit()
         {
             if (selectedCell == null)
@@ -359,9 +389,9 @@ namespace Sangmin
             }
 
             // 셀에서 유닛 제거
-            unitToSell.OnSell();
+            unitToSell.OnRemove();
 
-            SynergyCountSystem.Instance.SellUnit(new Vector2Int(selectedCell.row, selectedCell.col));
+            SynergyCountSystem.Instance.RemoveUnit(new Vector2Int(selectedCell.row, selectedCell.col));
 
             selectedCell.ClearUnit();
 

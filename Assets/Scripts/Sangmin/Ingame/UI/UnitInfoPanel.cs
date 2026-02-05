@@ -24,6 +24,7 @@ namespace Sangmin
         [SerializeField] private TextMeshProUGUI gradeText;
         [SerializeField] private Button sellButton;
         [SerializeField] private Button rotateChainButton;
+        [SerializeField] private Button upgradeButton;
 
         private Unit currentSelectedUnit;
 
@@ -44,6 +45,9 @@ namespace Sangmin
 
             if (rotateChainButton != null)
                 rotateChainButton.onClick.AddListener(OnRotateChainButtonClicked);
+
+            // if (upgradeButton != null)
+            //     upgradeButton.onClick.AddListener();
         }
 
         private void OnDestroy()
@@ -124,6 +128,15 @@ namespace Sangmin
                 string gradeName = GetGradeName(unit.unitData.grade);
                 gradeText.text = $"등급: {gradeName}";
             }
+
+            if (currentSelectedUnit.StackCount < 3)
+            {
+                upgradeButton.interactable = false;
+            }
+            else
+            {
+                upgradeButton.interactable = true;
+            }
         }
 
         /// <summary>
@@ -183,6 +196,15 @@ namespace Sangmin
                         SynergyCountSystem.Instance.UpdateUnitChain(gridPos, currentSelectedUnit.chain);
                     }
                 }
+            }
+        }
+
+        private void OnUpgradeButtonClicked()
+        {
+            if (currentSelectedUnit != null && GridUnitPlacement.Instance != null)
+            {
+                GridUnitPlacement.Instance.UpgradeUnit();
+                HideUnitInfo();
             }
         }
     }

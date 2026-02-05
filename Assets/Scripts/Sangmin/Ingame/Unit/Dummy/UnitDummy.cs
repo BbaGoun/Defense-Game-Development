@@ -15,4 +15,12 @@ public class UnitDummy : MonoBehaviour
         spriteRenderer.sortingOrder = _sr.sortingOrder - 1;
         animator.runtimeAnimatorController = _animator.runtimeAnimatorController;
     }
+
+    public void PlayAttackAnimation()
+    {
+        if (animator != null)
+        {
+            animator.SetTrigger("TAttack");
+        }
+    }
 }

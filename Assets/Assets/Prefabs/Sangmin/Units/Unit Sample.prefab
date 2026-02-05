@@ -181,6 +181,7 @@ GameObject:
   - component: {fileID: 9207390338146533856}
   - component: {fileID: 989504559730659838}
   - component: {fileID: 5480839661711331456}
+  - component: {fileID: 6540575244248195134}
   - component: {fileID: 1513954799534953106}
   - component: {fileID: 171049200951708098}
   - component: {fileID: 3678427680446897709}
@@ -313,7 +314,7 @@ MonoBehaviour:
   - {fileID: 5910673557381159749}
   - {fileID: 2975613201175442439}
   rangeIndicator: {fileID: 1288710351338662157}
-  spriteRenderer: {fileID: 0}
+  spriteRenderer: {fileID: 9207390338146533856}
   outliner: {fileID: 989504559730659838}
   poolAble: {fileID: 1513954799534953106}
   animator: {fileID: 171049200951708098}
@@ -321,6 +322,34 @@ MonoBehaviour:
   dummies: []
   enemiesInRange: []
   currentTarget: {fileID: 0}
+  stackCount: 1
+--- !u!114 &6540575244248195134
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7855928322533682679}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca480013ef0ac9f4fb71107f8da2de0c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Sangmin.AnimationEventForwarder
+  attackEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 5480839661711331456}
+        m_TargetAssemblyTypeName: Sangmin.Unit, Assembly-CSharp
+        m_MethodName: AttackEvent
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 5605163127401899693}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Transform, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1513954799534953106
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -343,7 +372,7 @@ Animator:
   m_GameObject: {fileID: 7855928322533682679}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 65aaece14ac6ef945bb2eff097b19de7, type: 2}
+  m_Controller: {fileID: 9100000, guid: f739c02c52764c145a41143fc77ec139, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

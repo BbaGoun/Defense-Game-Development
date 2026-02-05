@@ -97,7 +97,7 @@ namespace Sangmin
         bool isAttacking = false;
 
         // 스택 관련
-        private int stackCount = 1;
+        [SerializeField] private int stackCount = 1;
         public int StackCount
         {
             get => stackCount;
@@ -242,19 +242,19 @@ namespace Sangmin
             switch (stackCount)
             {
                 case 2:
-                    //dummies[0].enabled = true;
+                    dummies[0].PlayAttackAnimation();
                     break;
                 case 3:
-                    //dummies[0].enabled = true;
-                    //dummies[1].enabled = true;
+                    dummies[0].PlayAttackAnimation();
+                    dummies[1].PlayAttackAnimation();
                     break;
             }
         }
 
         /// <summary>
-        /// Enemy를 타겟으로 공격합니다. (스택 수만큼 데미지 곱셈)
+        /// 애니메이션에서 호출하는 공격 이벤트
         /// </summary>
-        public void PerformAttack()
+        public void AttackEvent(Transform startPos)
         {
             if (currentTarget == null || unitData.attackBehaviour == null) return;
 
@@ -262,14 +262,14 @@ namespace Sangmin
             attackTimer = attackCooldown;
 
             // 스택 수만큼 데미지 곱셈 적용
-            float originalDamage = finalAttackDamage;
-            finalAttackDamage = unitData.attackDamage * stackCount;
+            // float originalDamage = finalAttackDamage;
+            // finalAttackDamage = unitData.attackDamage * stackCount;
 
-            unitData.attackBehaviour.Attack(this, currentTarget);
+            unitData.attackBehaviour.Attack(this, startPos, currentTarget);
             OnAttack(); // 시너지 시스템용
 
             // 데미지 원래대로 복구 (다른 시스템에 영향 방지)
-            finalAttackDamage = originalDamage;
+            // finalAttackDamage = originalDamage;
         }
 
         /*
@@ -313,7 +313,7 @@ namespace Sangmin
                 s.OnCombatStart(this);
         }
 
-        public void OnSell()
+        public void OnRemove()
         {
             poolAble.ReleaseObject();
         }

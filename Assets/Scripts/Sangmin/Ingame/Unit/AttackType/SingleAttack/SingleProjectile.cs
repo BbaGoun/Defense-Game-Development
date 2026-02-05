@@ -85,7 +85,8 @@ namespace Sangmin
         {
             if (target != null)
             {
-                target.TakeDamage(damage);
+                if (target.TakeDamage(damage))
+                    return;
             }
             if (attackEffect != null)
             {

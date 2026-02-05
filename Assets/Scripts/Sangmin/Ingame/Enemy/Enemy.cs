@@ -75,12 +75,17 @@ namespace Sangmin
         /// 데미지를 받습니다.
         /// </summary>
         /// <param name="damage">받을 데미지</param>
-        public void TakeDamage(float damage)
+        public bool TakeDamage(float damage)
         {
-            if (damage <= 0) return;
+            if (damage <= 0) return true;
+            if (currentHealth <= 0) return true;
+
+            //Debug.Log($"맞기 전: {gameObject.name}, hp:{currentHealth}");
 
             currentHealth -= damage;
             currentHealth = Mathf.Max(0f, currentHealth);
+
+            //Debug.Log($"맞은 후: {gameObject.name}, hp:{currentHealth}");
 
             UpdateHealthBar();
 
@@ -89,6 +94,8 @@ namespace Sangmin
             {
                 Die();
             }
+
+            return false;
         }
 
         /// <summary>

@@ -13,7 +13,7 @@ namespace Sangmin
             this.realRadius = self.rangeMultiplier * self.transform.localScale.x * self.unitData.radius;
         }
 
-        override public void Attack(Unit self, Enemy mainTarget)
+        override public void Attack(Unit self, Transform startPos, Enemy mainTarget)
         {
             if (mainTarget == null) return;
 

@@ -258,11 +258,11 @@ namespace Sangmin
         }
 
         /// <summary>
-        /// 3) 유닛 판매(삭제): 유닛을 완전히 제거
+        /// 3) 유닛 판매/업그레이드드(삭제): 유닛을 완전히 제거
         /// - 유닛 딕셔너리와 좌표 매핑에서 제거
         /// - 이후 그래프/컴포넌트 재계산 시 이 유닛은 포함되지 않음
         /// </summary>
-        public void SellUnit(Vector2Int pos)
+        public void RemoveUnit(Vector2Int pos)
         {
             if (!_posToUnitId.KeyValuePair.ContainsKey(pos))
             {
@@ -283,7 +283,7 @@ namespace Sangmin
             _units.KeyValuePair.Remove(unitId);
             _posToUnitId.KeyValuePair.Remove(node.gridPos);
 
-            Debug.Log($"SellUnit: id={unitId} 판매(삭제)");
+            Debug.Log($"RemoveUnit: id={unitId} 삭제");
 
             RebuildAndLogComponents();
         }
