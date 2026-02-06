@@ -46,8 +46,8 @@ namespace Sangmin
             if (rotateChainButton != null)
                 rotateChainButton.onClick.AddListener(OnRotateChainButtonClicked);
 
-            // if (upgradeButton != null)
-            //     upgradeButton.onClick.AddListener();
+            if (upgradeButton != null)
+                upgradeButton.onClick.AddListener(OnUpgradeButtonClicked);
         }
 
         private void OnDestroy()
@@ -129,7 +129,7 @@ namespace Sangmin
                 gradeText.text = $"등급: {gradeName}";
             }
 
-            if (currentSelectedUnit.StackCount < 3)
+            if (currentSelectedUnit.StackCount < 3 || currentSelectedUnit.unitData.grade == Grade.MYTHIC || currentSelectedUnit.unitData.grade == Grade.LEGEND || currentSelectedUnit.unitData.grade == Grade.UNIQUE)
             {
                 upgradeButton.interactable = false;
             }

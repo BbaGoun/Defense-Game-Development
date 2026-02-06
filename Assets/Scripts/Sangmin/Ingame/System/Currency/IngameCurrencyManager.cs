@@ -25,7 +25,7 @@ namespace Sangmin
 
         [Header("특정 등급 뽑기 비용 설정")]
         [SerializeField] private int rareSummonCost = 50; // 희귀 등급 뽑기 비용
-        [SerializeField] private int heroSummonCost = 100; // 영웅 등급 뽑기 비용
+        [SerializeField] private int UniqueSummonCost = 100; // 영웅 등급 뽑기 비용
         [SerializeField] private int legendSummonCost = 200; // 전설 등급 뽑기 비용
 
         [Header("유닛 판매 설정")]
@@ -50,7 +50,7 @@ namespace Sangmin
         public int Jewel => currentJewel;
         public int CurrentSummonCost => currentSummonCost;
         public int RareSummonCost => rareSummonCost;
-        public int HeroSummonCost => heroSummonCost;
+        public int HeroSummonCost => UniqueSummonCost;
         public int LegendSummonCost => legendSummonCost;
         public int NormalUnitSellPrice => (int)(currentSummonCost / 10) * normalUnitSellPriceMultiplier;
         public int RareUnitSellPriceMultiplier => (int)(currentSummonCost / 10) * rareUnitSellPriceMultiplier;
@@ -246,9 +246,9 @@ namespace Sangmin
         /// 영웅 등급 뽑기 비용을 지불합니다.
         /// </summary>
         /// <returns>뽑기 성공 여부</returns>
-        public bool SpendHeroSummonCost()
+        public bool SpendUniqueSummonCost()
         {
-            return SpendJewel(heroSummonCost);
+            return SpendJewel(UniqueSummonCost);
         }
 
         /// <summary>
@@ -275,7 +275,7 @@ namespace Sangmin
         /// <returns>충분한지 여부</returns>
         public bool HasEnoughHeroSummonCost()
         {
-            return HasEnoughJewel(heroSummonCost);
+            return HasEnoughJewel(UniqueSummonCost);
         }
 
         /// <summary>

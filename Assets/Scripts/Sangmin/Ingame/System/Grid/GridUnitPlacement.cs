@@ -129,8 +129,8 @@ namespace Sangmin
             {
                 // 배치 성공 시에만 카운트 증가
                 unitCount++;
-                RandomSummon.Instance.IncreaseUnitPlacementCount(unit.unitData, 1);
                 OnUnitCountChanged?.Invoke(unitCount, unitCountMax);
+                RandomSummon.Instance.IncreaseUnitPlacementCount(unit.unitData, 1);
 
                 // 쥬얼 보상 시스템 이벤트: 일반 뽑기 성공(배치 성공)
                 JewelEventBus.RaiseNormalSummonPlaced(unit);
@@ -167,7 +167,7 @@ namespace Sangmin
                 return;
             }
 
-            var unit = RandomSummon.Instance != null ? RandomSummon.Instance.GetRareUnit() : null;
+            var unit = RandomSummon.Instance.GetRareUnit();
             if (unit == null)
             {
                 Debug.LogError("희귀 등급 유닛 뽑기 실패!");
@@ -181,6 +181,13 @@ namespace Sangmin
                 // 배치 성공 시에만 카운트 증가
                 unitCount++;
                 OnUnitCountChanged?.Invoke(unitCount, unitCountMax);
+                RandomSummon.Instance.IncreaseUnitPlacementCount(unit.unitData, 1);
+
+                // UI 패널 표시
+                if (UnitInfoPanel.Instance != null)
+                {
+                    UnitInfoPanel.Instance.ShowUnitInfo(currentSelectedUnit);
+                }
             }
             else
             {
@@ -201,14 +208,14 @@ namespace Sangmin
             }
 
             // 쥬얼 확인 및 소비
-            if (IngameCurrencyManager.Instance == null || !IngameCurrencyManager.Instance.SpendHeroSummonCost())
+            if (IngameCurrencyManager.Instance == null || !IngameCurrencyManager.Instance.SpendUniqueSummonCost())
             {
                 int cost = IngameCurrencyManager.Instance != null ? IngameCurrencyManager.Instance.HeroSummonCost : 0;
                 Debug.LogWarning($"영웅 등급 뽑기 실패: 쥬얼 부족 (필요: {cost})");
                 return;
             }
 
-            var unit = RandomSummon.Instance != null ? RandomSummon.Instance.GetUniqueUnit() : null;
+            var unit = RandomSummon.Instance.GetUniqueUnit();
             if (unit == null)
             {
                 Debug.LogError("영웅 등급 유닛 뽑기 실패!");
@@ -222,6 +229,14 @@ namespace Sangmin
                 // 배치 성공 시에만 카운트 증가
                 unitCount++;
                 OnUnitCountChanged?.Invoke(unitCount, unitCountMax);
+
+                RandomSummon.Instance.IncreaseUnitPlacementCount(unit.unitData, 1);
+
+                // UI 패널 표시
+                if (UnitInfoPanel.Instance != null)
+                {
+                    UnitInfoPanel.Instance.ShowUnitInfo(currentSelectedUnit);
+                }
             }
             else
             {
@@ -249,7 +264,7 @@ namespace Sangmin
                 return;
             }
 
-            var unit = RandomSummon.Instance != null ? RandomSummon.Instance.GetLegendUnit() : null;
+            var unit = RandomSummon.Instance.GetLegendUnit();
             if (unit == null)
             {
                 Debug.LogError("전설 등급 유닛 뽑기 실패!");
@@ -263,6 +278,14 @@ namespace Sangmin
                 // 배치 성공 시에만 카운트 증가
                 unitCount++;
                 OnUnitCountChanged?.Invoke(unitCount, unitCountMax);
+
+                RandomSummon.Instance.IncreaseUnitPlacementCount(unit.unitData, 1);
+
+                // UI 패널 표시
+                if (UnitInfoPanel.Instance != null)
+                {
+                    UnitInfoPanel.Instance.ShowUnitInfo(currentSelectedUnit);
+                }
             }
             else
             {
@@ -351,20 +374,32 @@ namespace Sangmin
 
             Debug.Log($"Upgrade Unit: {currentSelectedUnit.name}");
 
+            Unit unit = null;
+
             switch (currentSelectedUnit.unitData.grade)
             {
                 case Grade.NORMAL:
-
+                    unit = RandomSummon.Instance.GetRareUnit();
                     break;
                 case Grade.RARE:
-                    break;
-                case Grade.UNIQUE:
+                    unit = RandomSummon.Instance.GetUniqueUnit();
                     break;
             }
 
-            unitCount++;
-            RandomSummon.Instance.IncreaseUnitPlacementCount(currentSelectedUnit.unitData, 1);
-            OnUnitCountChanged?.Invoke(unitCount, unitCountMax);
+            currentSelectedUnit.OnRemove();
+            SynergyCountSystem.Instance.RemoveUnit(new Vector2Int(selectedCell.row, selectedCell.col));
+            selectedCell.ClearUnit();
+            UnSelectUnit();
+
+            // 유닛 배치 시도
+            if (PlaceUnitOnGrid(unit))
+            {
+                // 배치 성공 시에만 카운트 증가
+                unitCount -= 2;
+                OnUnitCountChanged?.Invoke(unitCount, unitCountMax);
+
+                RandomSummon.Instance.IncreaseUnitPlacementCount(unit.unitData, 1);
+            }
         }
 
         public void SellUnit()

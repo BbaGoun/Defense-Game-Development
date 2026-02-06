@@ -7,7 +7,7 @@ namespace Sangmin
     {
         public override void Initialize(Unit self)
         {
-            base.Initialize(self);
+            return;
         }
 
         override public void Attack(Unit self, Transform startPos, Enemy mainTarget)
@@ -23,7 +23,11 @@ namespace Sangmin
             float dmg = self.finalAttackDamage;
             // 여기서 데마시아 시너지 등으로 최종 수치가 이미 반영됐다고 가정
             target.TakeDamage(dmg);
-            Debug.Log($"[{self.name}]가 [{target.name}]에게 {dmg} 데미지");
+
+            var attackEffectInstance = ObjectPoolManager.Instance.GetObject(self.unitData.attackEffect);
+            attackEffectInstance.transform.position = target.transform.position;
+
+            //Debug.Log($"[{self.name}]가 [{target.name}]에게 {dmg} 데미지");
         }
     }
 }
