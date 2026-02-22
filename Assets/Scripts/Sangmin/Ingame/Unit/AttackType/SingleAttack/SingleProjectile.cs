@@ -65,6 +65,9 @@ namespace Sangmin
             Vector3 direction = (targetPos - transform.position).normalized;
             transform.position += direction * speed * Time.deltaTime;
 
+            float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+            transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+
             // 회전 방향을 맞추고 싶다면 Z축 기준 회전 추가
             // float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
             // transform.rotation = Quaternion.AngleAxis(angle - 90f, Vector3.forward);

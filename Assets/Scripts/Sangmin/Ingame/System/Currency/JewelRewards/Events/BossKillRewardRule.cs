@@ -6,7 +6,7 @@ namespace Sangmin
     /// 보스 처치 퀘스트 보상
     /// - 보스 처치 시 보스 웨이브만큼 지급 (예: 60웨이브 보스 처치 => 60 쥬얼)
     /// </summary>
-    [CreateAssetMenu(menuName = "Sangmin/Jewel Rewards/Rule - Boss Kill", fileName = "JewelRule_BossKill")]
+    [CreateAssetMenu(menuName = "Scriptable Objects/Jewel Rewards/Rule - Boss Kill", fileName = "JewelRule_BossKill")]
     public class BossKillRewardRule : JewelRewardRule
     {
         private JewelRewardContext _ctx;

@@ -7,7 +7,7 @@ namespace Sangmin
     /// - 최초: 8개
     /// - 이후: 4개씩 증가 (30회=8, 60회=12, 90회=16, ...)
     /// </summary>
-    [CreateAssetMenu(menuName = "Sangmin/Jewel Rewards/Rule - Normal Summon Milestone", fileName = "JewelRule_NormalSummonMilestone")]
+    [CreateAssetMenu(menuName = "Scriptable Objects/Jewel Rewards/Rule - Normal Summon Milestone", fileName = "JewelRule_NormalSummonMilestone")]
     public class NormalSummonMilestoneRule : JewelRewardRule
     {
         [Header("Rule Params")]

@@ -48,10 +48,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4072496719451385717, guid: 59bd9cda5ecc8bd43b2c0ad1b2f9e0dd, type: 3}
+      propertyPath: m_SpriteTilingProperty.oldSize.x
+      value: 0.14
+      objectReference: {fileID: 0}
+    - target: {fileID: 4072496719451385717, guid: 59bd9cda5ecc8bd43b2c0ad1b2f9e0dd, type: 3}
+      propertyPath: m_SpriteTilingProperty.oldSize.y
+      value: 0.11
+      objectReference: {fileID: 0}
     - target: {fileID: 4917113043923442204, guid: 59bd9cda5ecc8bd43b2c0ad1b2f9e0dd, type: 3}
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 53a2c455037314047a69ef827e81efa8, type: 2}
+    - target: {fileID: 7694509651952587510, guid: 59bd9cda5ecc8bd43b2c0ad1b2f9e0dd, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 7753666783757196175, guid: 4c67f71eda991814f977346d7e90b201, type: 3}
     - target: {fileID: 8597705205972681036, guid: 59bd9cda5ecc8bd43b2c0ad1b2f9e0dd, type: 3}
       propertyPath: m_Name
       value: Bone

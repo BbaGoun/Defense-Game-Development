@@ -7,7 +7,7 @@ namespace Sangmin
     /// - 길이 4 이상의 "짝수"를 최초 달성할 때마다 지급
     /// - 보상 = 길이 * 6
     /// </summary>
-    [CreateAssetMenu(menuName = "Sangmin/Jewel Rewards/Rule - Synergy Max Even Length", fileName = "JewelRule_SynergyMaxEvenLength")]
+    [CreateAssetMenu(menuName = "Scriptable Objects/Jewel Rewards/Rule - Synergy Max Even Length", fileName = "JewelRule_SynergyMaxEvenLength")]
     public class SynergyMaxEvenLengthRewardRule : JewelRewardRule
     {
         [Header("Rule Params")]

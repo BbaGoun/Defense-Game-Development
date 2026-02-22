@@ -8,7 +8,7 @@ namespace Sangmin
     /// - LEGEND: 25
     /// - MYTHIC: 50
     /// </summary>
-    [CreateAssetMenu(menuName = "Sangmin/Jewel Rewards/Rule - First Grade Unit", fileName = "JewelRule_FirstGradeUnit")]
+    [CreateAssetMenu(menuName = "Scriptable Objects/Jewel Rewards/Rule - First Grade Unit", fileName = "JewelRule_FirstGradeUnit")]
     public class FirstGradeUnitRewardRule : JewelRewardRule
     {
         [Header("Rewards")]

@@ -315,6 +315,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Stack_Unit_Sample
       objectReference: {fileID: 0}
+    - target: {fileID: 1964709220826597166, guid: 5e68483885310c2479513cadb6fdcd10, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4289779409619602548, guid: 5e68483885310c2479513cadb6fdcd10, type: 3}
       propertyPath: m_LocalPosition.x
       value: -1.74777
@@ -8531,9 +8535,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RandomSummon
   UnitList:
-  - {fileID: 1808669204507063515, guid: cce28fbf6424d564cbd5bd0655968647, type: 3}
   - {fileID: 4738340183245435754, guid: 1139e74508f07e746b36864f06de8bbd, type: 3}
   - {fileID: 9205745887583988702, guid: b7ca3e53f8e238444a04aa25cf87b706, type: 3}
+  - {fileID: 2638229226871113096, guid: 3da85483df516be439ad9308e7c93c0c, type: 3}
+  - {fileID: 2638229226871113096, guid: 3d5833dccb7f5cf4f9570e816862594f, type: 3}
+  - {fileID: 2638229226871113096, guid: 1e42903ddedd62b4e84d2504b57274b9, type: 3}
+  - {fileID: 2638229226871113096, guid: 2ec3c3497ec7fcd4aa3cdde74d03c320, type: 3}
+  - {fileID: 2638229226871113096, guid: 67aca874a72f3f04d88fc0eb4cf3ce74, type: 3}
   normalUnitList: []
   rareUnitList: []
   uniqueUnitList: []
@@ -9101,8 +9109,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Sangmin.ObjectPoolManager
   objectInfos:
-  - prefab: {fileID: 1808669204507063515, guid: cce28fbf6424d564cbd5bd0655968647, type: 3}
-    count: 3
   - prefab: {fileID: 4098904906678458094, guid: 314ff5ae531d76648938be4257da88ed, type: 3}
     count: 3
   - prefab: {fileID: 8935922844047154205, guid: 9b795a203e239c84a83360c2eef362f7, type: 3}
@@ -9112,6 +9118,20 @@ MonoBehaviour:
   - prefab: {fileID: 7777117128670843503, guid: 09dc011a4ebba9a4cba2911314309034, type: 3}
     count: 3
   - prefab: {fileID: 9205745887583988702, guid: b7ca3e53f8e238444a04aa25cf87b706, type: 3}
+    count: 3
+  - prefab: {fileID: 2638229226871113096, guid: 3da85483df516be439ad9308e7c93c0c, type: 3}
+    count: 3
+  - prefab: {fileID: 2638229226871113096, guid: 3d5833dccb7f5cf4f9570e816862594f, type: 3}
+    count: 3
+  - prefab: {fileID: 2638229226871113096, guid: 1e42903ddedd62b4e84d2504b57274b9, type: 3}
+    count: 3
+  - prefab: {fileID: 6649118888864313249, guid: 0a88b6a370547c44ab17415871b8426b, type: 3}
+    count: 3
+  - prefab: {fileID: 2638229226871113096, guid: 2ec3c3497ec7fcd4aa3cdde74d03c320, type: 3}
+    count: 3
+  - prefab: {fileID: 6649118888864313249, guid: 40869ca8ada2d5b46b28d5489b49a52d, type: 3}
+    count: 3
+  - prefab: {fileID: 2638229226871113096, guid: 67aca874a72f3f04d88fc0eb4cf3ce74, type: 3}
     count: 3
 --- !u!1001 &1853041734
 PrefabInstance:

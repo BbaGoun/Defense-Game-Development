@@ -13,15 +13,8 @@ namespace Sangmin
 
         public override void Initialize(Unit self)
         {
-            // 프리팹을 미지정한 경우 UnitData의 attackEffect를 사용해준다.
-            if (projectilePrefab == null)
-            {
-                projectilePrefab = self.unitData.projectilePrefab;
-            }
-            if (attackEffectPrefab == null)
-            {
-                attackEffectPrefab = self.unitData.attackEffect;
-            }
+            projectilePrefab = self.unitData.projectilePrefab;
+            attackEffectPrefab = self.unitData.attackEffect;
         }
 
         public override void Attack(Unit self, Transform startPos, Enemy mainTarget)
